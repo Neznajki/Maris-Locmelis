@@ -32,8 +32,8 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           action: "upload"
-          app_location: "front"           # where your package.json is
-          output_location: "front/build"  # where React outputs index.html
+          app_location: "front/my-page"           # where your package.json is
+          output_location: "front/my-page/build"  # where React outputs index.html
 
       - name: Extract tag name
         run: echo "REACT_APP_VERSION=${GITHUB_REF_NAME}" >> $GITHUB_ENV
