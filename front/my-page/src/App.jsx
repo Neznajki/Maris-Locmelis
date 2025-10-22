@@ -48,6 +48,8 @@ function App() {
           </a>
         </div>
       </Spoiler>
+
+      <p>Version: {process.env.REACT_APP_VERSION}</p>
     </>
   )
 }
