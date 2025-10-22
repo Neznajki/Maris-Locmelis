@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
-import sunFlight from '/sunFlight.jpg'
-import viteLogo from '/vite.svg'
+import sunFlight from './assets/sunFlight.jpg'
+import viteLogo from './assets/vite.svg'
 import PopupSpoiler from './components/PopupSpoiler'
 import Spoiler from './components/Spoiler'
 import './App.css'
@@ -47,8 +47,6 @@ function App() {
           </a>
         </div>
       </Spoiler>
-
-      <p>Version: {process.env.REACT_APP_VERSION}</p>
     </>
   )
 }
