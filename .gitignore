@@ -1,0 +1,32 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+out/
+!/.idea/runConfigurations/
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Maven
+target/
+
+# Logs
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# JetBrains Fleet
+.fleet/
+
+# Optional: ignore temporary files
+*.tmp
+*.swp
+*~
+
+# TypeScript
+*.tsbuildinfo
