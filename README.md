@@ -1,2 +1,1 @@
-# maris-locmelis
-my personal page.
+© Māris Ločmelis
