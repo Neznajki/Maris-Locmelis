@@ -5,7 +5,6 @@ import viteLogo from '/vite.svg'
 import PopupSpoiler from './components/PopupSpoiler'
 import Spoiler from './components/Spoiler'
 import './App.css'
-import './App.css'
 import './assets/popupSpoiler.css'
 import './assets/spoiler.css'
 
