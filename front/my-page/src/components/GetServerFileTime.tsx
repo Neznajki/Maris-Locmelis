@@ -1,4 +1,4 @@
-const cache = {}
+const cache: Record<string, string> = {}
 
 export default async function GetServerFileTime(url: string) {
   if (cache[url]) {
