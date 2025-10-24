@@ -2,10 +2,10 @@
 import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
 
-export const PersonalityTitle = 'Recommendations'
-export const Personality: React.FC = () => {
+export const RecommendationsTitle = 'Recommendations'
+export const Recommendations: React.FC = () => {
   return (
-    <PageContainer title={PersonalityTitle}>
+    <PageContainer title={RecommendationsTitle}>
       <p className="text-gray-600">Every recommendation you give try to follow it by yourself</p>
       <p className="text-gray-600">SOLID, even if you can't try to do closest option</p>
       <p className="text-gray-600">Make code more readable (Clean Code, DRY)</p>
@@ -16,7 +16,8 @@ export const Personality: React.FC = () => {
       <p className="text-gray-600">If you need respect from someone start from respecting this person</p>
       <p className="text-gray-600">If you would like to change something, think twice sometimes changing mind about this problem is easier and better</p>
       <p className="text-gray-600">YARGNI - use it always and you will find some free time.</p>
+      <p className="text-gray-600">Don't take new tools while You doesn't master existing ones.</p>
     </PageContainer>
   )
 }
-export default Personality
+export default Recommendations

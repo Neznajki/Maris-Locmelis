@@ -4,7 +4,9 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { TopMenu2D } from '@/components/TopMenu2D'
 import { menuItems } from '@/data/menuItems'
 import { allRoutes } from '@/types/menu'
+import SpaceBackground from './components/SpaceBackground';
 import Home from '@/pages/HomePage'
+import './index.css'
 
 const Loader = () => (
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
@@ -20,8 +22,8 @@ export default function App() {
   return (
     <>
       <TopMenu2D items={menuItems} />
-
-      <main className="pt-16">
+      {/* <SpaceBackground /> */}
+      <main className="pt-16 relative z-10 text-white p-8">
         <Suspense fallback={<Loader />}>
           <Routes>
           <Route path="/" element={<Home />} />
