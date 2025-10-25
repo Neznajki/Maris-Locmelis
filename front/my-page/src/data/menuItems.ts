@@ -9,9 +9,12 @@ const Contacts        = lazy(() => import('@/pages/ContactsPage'))
 const Tech            = lazy(() => import('@/pages/SiteTechStackPage'))
 const Recommendations = lazy(() => import('@/pages/RecommendationsPage'))
 const CvPage          = lazy(() => import('@/pages/CvPage'))
+const FunPage          = lazy(() => import('@/pages/FunPage'))
+const WhatsDone          = lazy(() => import('@/pages/WhatsDonePage'))
 
 export const menuItems: MenuItem[] = [
   { kind: 'item', id: 'home', path: '/', title: HomeTitle, body: Home },
+  { kind: 'item', id: 'fun', path: '/fun', title: 'Page For Fun', body: FunPage },
   {
     kind: 'group',
     id: 'info',
@@ -31,6 +34,7 @@ export const menuItems: MenuItem[] = [
       sections: [
         { id: 'cv',          path: '/cv',          title: 'My CV',          body: CvPage },
         { id: 'recruitersContacts',    path: '/contacts',    title: 'Contacts',       body: Contacts },
+        { id: 'whatsDone',    path: '/whats-done',    title: 'Whats done page',       body: WhatsDone },
       ],
     },
   // You can add more 1D items or groups here.

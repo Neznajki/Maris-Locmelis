@@ -2,3 +2,5 @@
 
 * for first time it will support only English (sorry for now)
 
+
+* TODO made game >> https://www.youtube.com/watch?v=hJwTkolNS0s

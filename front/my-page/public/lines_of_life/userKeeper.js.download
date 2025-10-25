@@ -1,0 +1,8 @@
+(function(window) {
+var __jsRegistry = {},
+	__globalRegistry = window.okModules || (window.okModules = {}),
+	document = window.document,
+	__js_temp_htmlTag=document.documentElement,
+	undefined;
+
+__globalRegistry["uVMF5QA"] || (__globalRegistry["uVMF5QA"] = (function(){function m(n){"@swc/helpers - typeof";return n&&typeof Symbol<"u"&&n.constructor===Symbol?"symbol":typeof n}window.userKeeper=(function(){var n=[],f=void 0,i=Date.now,y=i(),c=(typeof performance>"u"?"undefined":m(performance))=="object"&&performance,d=function(){return c?c.now():i()-y},p=function(t,e){n.push([t,0,e!=f?e:d()])},r=function(t,e,u){e==f||e>=0||e<0||(u=e,e=f),n.push([t,1,e!=f?e:d(),u])};return n.add=function(o,t,e,u){p(o,t),r(o,e,u)},n.time=p,n.timeEnd=r,n})()})()||window);})(this);

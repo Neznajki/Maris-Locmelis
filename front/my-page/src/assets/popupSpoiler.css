@@ -28,6 +28,7 @@
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 12px;
+  width: 1500px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   animation: fadeIn 0.2s ease-in-out;
 }

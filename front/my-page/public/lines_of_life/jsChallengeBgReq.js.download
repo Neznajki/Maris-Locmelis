@@ -1,0 +1,50 @@
+;(function() {
+
+    listenToBgRequests()
+
+
+    let isRedirectRequested = false;
+
+    function redirect(source) {
+        if (!isRedirectRequested) {
+            try {
+                const target = new URL(source);
+                // пользователь вернётся на исходную страницу (которая была забанена)
+                target.searchParams.append('back', window.location.href);
+
+                isRedirectRequested = true;
+                window.location.href = target.toString();
+            } catch (e) {
+                // это маловероятно и проблема где-то в hitman
+                OK.errorReporter.setErrorKey('hitman', source);
+                OK.errorReporter.sendError(new Error((`js-challenge redirect failed with ${e} and source: ${source}`)))
+                OK.errorReporter.removeErrorKey('hitman');
+            }
+        }
+    }
+
+    function listenToBgRequests() {
+        if (!('PerformanceObserver' in window)) {
+            return;
+        }
+
+        const observer = new PerformanceObserver((list) => {
+            list.getEntries().forEach((entry) => {
+                if (!('serverTiming' in entry)) {
+                    return
+                }
+                entry.serverTiming
+                    .forEach((serverEntry) => {
+                        if (serverEntry.name !== 'challenge') {
+                            return;
+                        } // Performance API используется здесь, чтобы получить информацию из заголовка Server-Timing
+
+                    const { origin } = new URL(entry.name);
+                    redirect(origin + serverEntry.description);
+                });
+            });
+        });
+
+        observer.observe({ entryTypes: ['navigation', 'resource'] });
+    }
+})();
