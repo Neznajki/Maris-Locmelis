@@ -5,11 +5,11 @@ import SoftSkills from '@/assets/360-Degree-Soft skill review Marisl Locmelis Fe
 import PopupSpoiler from '@/components/PopupSpoiler'
 import '@/assets/popupSpoiler.css'
 import '@/styles/WhatsDonePageCss.css'
+import { WhatsDoneTitle } from '@/pages/meta/WhatsDone.meta'
 
-export const WhatsDonePageTitle = 'What I have done'
 export const WhatsDonePage: React.FC = () => {
   return (
-    <PageContainer title={WhatsDonePageTitle}>
+    <PageContainer title={WhatsDoneTitle}>
       <div className="WhatsDonePage">
         <p>Please notice that I will write only what I can and remember.</p>
         <p>Everything related to server means &gt; you have PC with hard drive and ssh connection, after that you make everything to get final result</p>

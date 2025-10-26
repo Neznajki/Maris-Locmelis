@@ -2,8 +2,8 @@
 import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
 import sunFlight from '@/assets/sunFlight.jpg'
+import { HomeTitle } from '@/pages/meta/Home.meta'
 
-export const HomeTitle = 'Home'
 export const Home: React.FC = () => {
   return (
     <PageContainer title={HomeTitle}>

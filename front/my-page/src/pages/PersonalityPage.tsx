@@ -1,8 +1,8 @@
 
 import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
+import { PersonalityTitle } from '@/pages/meta/Personality.meta'
 
-export const PersonalityTitle = 'Personality'
 export const Personality: React.FC = () => {
   return (
     <PageContainer title={PersonalityTitle}>

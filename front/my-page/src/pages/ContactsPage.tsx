@@ -1,8 +1,8 @@
 
 import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
+import { ContactsTitle } from '@/pages/meta/Contacts.meta'
 
-export const ContactsTitle = 'Contacts'
 export const Contacts: React.FC = () => {
   return (
     <PageContainer title={ContactsTitle}>

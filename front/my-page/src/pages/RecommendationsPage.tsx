@@ -1,8 +1,8 @@
 
 import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
+import { RecommendationsTitle } from '@/pages/meta/Recommendations.meta'
 
-export const RecommendationsTitle = 'Recommendations'
 export const Recommendations: React.FC = () => {
   return (
     <PageContainer title={RecommendationsTitle}>

@@ -1,8 +1,8 @@
 
 import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
+import { AboutMeTitle } from '@/pages/meta/AboutMe.meta'
 
-export const AboutMeTitle = 'About Me'
 export const AboutMe: React.FC = () => {
   return (
     <PageContainer title={AboutMeTitle}>

@@ -3,8 +3,8 @@ import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
 import RocketInvestigation from '@/assets/fun/rocket_investigation.jpg'
 import RocketRide from '@/assets/fun/rocket_ride.jpg'
+import { FunTitle } from '@/pages/meta/Fun.meta'
 
-export const FunTitle = 'Fun Page'
 export const Fun: React.FC = () => {
   return (
     <PageContainer title={FunTitle}>

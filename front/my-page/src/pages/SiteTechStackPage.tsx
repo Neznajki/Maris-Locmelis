@@ -1,8 +1,8 @@
 
 import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
+import { SiteTechStackTitle } from '@/pages/meta/SiteTechStack.meta'
 
-export const SiteTechStackTitle = 'Site Tech Stack'
 export const SiteTechStack: React.FC = () => {
   return (
     <PageContainer title={SiteTechStackTitle}>

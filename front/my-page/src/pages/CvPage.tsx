@@ -5,8 +5,8 @@ import AutoSizedPdf from '@/components/AutoSizedPdf';
 import GetServerFileTime from '@/components/GetServerFileTime';
 import CvPdf from '@/assets/MyCV.pdf'
 import '@/assets/popupSpoiler.css'
+import { CvTitle } from '@/pages/meta/Cv.meta'
 
-export const CvTitle = 'My CV'
 export const Cv: React.FC = () => {
   return (
     <PageContainer title={CvTitle}>
