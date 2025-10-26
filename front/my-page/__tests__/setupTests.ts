@@ -17,13 +17,17 @@ console.warn = (...args: unknown[]) => {
   originalWarn(...args)
 }
 
+const originalError = console.error.bind(console)
+
 console.error = (...args: unknown[]) => {
-  const msg = String(args[0] ?? '')
-  if (
-    msg.includes('DOMMatrix is not defined') ||
-    msg.includes('Not implemented: navigation to another Document')
-  ) return
-  _error(...args)
+  const [msg] = args
+  if (typeof msg === 'string' && (
+    msg.includes('Not implemented: navigation to another Document') ||
+    msg.includes('There was an error during concurrent rendering') ||
+    msg.includes('Warning: Each child in a list should have a unique "key"')
+  )) return
+
+  originalError(...(args as Parameters<typeof originalError>))
 }
 
 // Minimal DOMMatrix so pdfjs checks don’t explode

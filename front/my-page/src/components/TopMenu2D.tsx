@@ -12,16 +12,17 @@ export const TopMenu2D: React.FC<TopMenu2DProps> = ({ items }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
 
-  const menuRef = useRef<HTMLDivElement | null>(null)
+  const menuRef = useRef<HTMLElement | HTMLDivElement | null>(null)
   const location = useLocation()
 
   useEffect(() => {
-    const onClick = (e: Event) => {
+    const onClick = (e: MouseEvent) => {
       if (!menuRef.current) return
       if (!menuRef.current.contains(e.target as Node)) setOpenIndex(null)
     }
-    document.addEventListener('onClick', onClick)
-    return () => document.removeEventListener('onClick', onClick)
+
+    document.addEventListener('click', onClick)
+    return () => document.removeEventListener('click', onClick)
   }, [])
 
   useEffect(() => {
@@ -40,7 +41,7 @@ export const TopMenu2D: React.FC<TopMenu2DProps> = ({ items }) => {
   useEffect(() => { setOpenIndex(null); setMobileOpen(false) }, [location.pathname])
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 bg-white/80 backdrop-blur border-b">
+    <header ref={menuRef} className="fixed top-0 inset-x-0 z-50 bg-white/80 backdrop-blur border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <span className="text-xl font-bold tracking-tight">
@@ -53,7 +54,7 @@ export const TopMenu2D: React.FC<TopMenu2DProps> = ({ items }) => {
             })()}
           </span>
 
-          <div ref={menuRef} className="flex items-center">
+          <div className="flex items-center">
             <div className="hidden md:flex flex-1 items-center justify-end">
               <DesktopNav
                 items={items}
