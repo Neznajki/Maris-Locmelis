@@ -20,7 +20,7 @@ jobs:
         run: npm run test:coverage
 
       - name: Generate coverage badge
-        uses: jaywcjlove/coverage-badges-cli@v1
+        uses: jaywcjlove/coverage-badges-cli@main
         with:
           source: coverage/coverage-summary.json
           output: coverage/badge.svg
