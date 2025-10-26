@@ -24,11 +24,8 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
-  min-height: 100vh;
-  margin: 0;
+  min-height: 100dvh;
   overflow-x: hidden;
 }
 
@@ -69,45 +66,7 @@ button:focus-visible {
   }
 }
 
-/* Star layers */
-.stars, .stars2, .stars3 {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-repeat: repeat;
-  background-size: contain;
-  animation: moveStars 200s linear infinite;
-  top: 0;
-  left: 0;
-}
-
-.stars {
-  background-image: radial-gradient(2px 2px at 20px 30px, white, transparent),
-                    radial-gradient(1.5px 1.5px at 100px 150px, #bbb, transparent),
-                    radial-gradient(2px 2px at 200px 80px, white, transparent),
-                    radial-gradient(1px 1px at 300px 200px, #888, transparent);
-  animation-duration: 200s;
-  opacity: 0.8;
-}
-
-.stars2 {
-  background-image: radial-gradient(2px 2px at 50px 50px, #999, transparent),
-                    radial-gradient(1px 1px at 150px 100px, white, transparent),
-                    radial-gradient(2px 2px at 250px 300px, #666, transparent);
-  animation-duration: 300s;
-  opacity: 0.6;
-}
-
-.stars3 {
-  background-image: radial-gradient(1px 1px at 10px 200px, #aaa, transparent),
-                    radial-gradient(2px 2px at 400px 150px, white, transparent),
-                    radial-gradient(1px 1px at 600px 100px, #777, transparent);
-  animation-duration: 400s;
-  opacity: 0.4;
-}
-
-/* Subtle drifting animation */
-@keyframes moveStars {
-  from { transform: translateY(0); }
-  to { transform: translateY(-2000px); }
+.body-lock {
+  overflow: hidden;
+  touch-action: none; /* blocks background gestures on mobile */
 }

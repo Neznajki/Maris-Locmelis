@@ -16,7 +16,7 @@ export const TopMenu2D: React.FC<TopMenu2DProps> = ({ items }) => {
   const location = useLocation()
 
   useEffect(() => {
-    const onClick = (e: MouseEvent) => {
+    const onClick = (e: Event) => {
       if (!menuRef.current) return
       if (!menuRef.current.contains(e.target as Node)) setOpenIndex(null)
     }
