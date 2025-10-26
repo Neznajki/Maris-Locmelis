@@ -25,7 +25,7 @@ jobs:
       - name: Generate coverage badge
         uses: jaywcjlove/coverage-badges-cli@main
         with:
-          source: coverage/coverage-summary.json
+          source: front/my-page/coverage/coverage-summary.json
           output: coverage/badge.svg
 
       - name: Commit badge to repo
