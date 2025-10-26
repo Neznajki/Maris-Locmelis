@@ -4,4 +4,4 @@
 
 
 * TODO made game >> https://www.youtube.com/watch?v=hJwTkolNS0s
-* ![Coverage](./front/my-page/reports/coverage/badge.svg)
+* ![Coverage](./front/my-page/reports/coverageBadge.svg)

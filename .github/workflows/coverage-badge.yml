@@ -26,12 +26,12 @@ jobs:
         uses: jaywcjlove/coverage-badges-cli@main
         with:
           source: front/my-page/coverage/coverage-summary.json
-          output: front/my-page/reports/coverage/badge.svg
+          output: front/my-page/reports/coverageBadge.svg
 
       - name: Commit badge to repo
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'actions@github.com'
-          git add reports/coverage/badge.svg
+          git add reports/coverageBadge.svg
           git commit -m "Update coverage badge"
           git push
