@@ -17,6 +17,7 @@ export interface MobileNavProps {
   items: MenuItem[]
   openIndex: number | null
   onToggle: (index: number) => void
+  onNavigate?: () => void
 }
 
 export const MobileNav: React.FC<MobileNavProps> = ({ items, openIndex, onToggle }) => {
