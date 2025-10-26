@@ -52,5 +52,4 @@ function LazyElement({ id }: { id: string }) {
       }
     }
   }
-  return null
 }

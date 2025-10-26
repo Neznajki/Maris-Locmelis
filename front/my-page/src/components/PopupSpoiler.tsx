@@ -9,7 +9,6 @@ const PopupSpoiler: React.FC<PopupSpoilerProps> = ({ title, children }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
-  // Close popup if clicked outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
