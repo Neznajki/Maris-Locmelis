@@ -22,8 +22,7 @@ export default function App() {
   return (
     <>
       <TopMenu2D items={menuItems} />
-      {/* <SpaceBackground /> */}
-      <main className="pt-16 relative z-10 text-white p-8">
+      <main className="pt-16 relative z-10 p-8">
         <Suspense fallback={<Loader />}>
           <Routes>
           <Route path="/" element={<Home />} />

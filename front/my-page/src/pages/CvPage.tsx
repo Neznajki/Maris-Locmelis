@@ -4,13 +4,19 @@ import { PageContainer } from '@/components/PageRenderer'
 import AutoSizedPdf from '@/components/AutoSizedPdf';
 import GetServerFileTime from '@/components/GetServerFileTime';
 import CvPdf from '@/assets/MyCV.pdf'
+import '@/assets/popupSpoiler.css'
 
 export const CvTitle = 'My CV'
 export const Cv: React.FC = () => {
   return (
     <PageContainer title={CvTitle}>
       <div style={{ padding: 16 }}>
-        <h1><a href={CvPdf} download="Maris_Locmelis_2025_10_19_CV.pdf" className="text-gray-600">Download CV updated  {GetServerFileTime(CvPdf)}</a></h1>
+        <div className="popup-spoiler">
+          <button className="popup-trigger">
+            <a style={{ color: "#ededed" }} href={CvPdf} download="Maris_Locmelis_2025_10_19_CV.pdf" className="text-gray-600">Download pdf CV updated  {GetServerFileTime(CvPdf)}</a>
+          </button>
+        </div>
+        <h1></h1>
         <AutoSizedPdf file={CvPdf} maxWidth={900} />
       </div>
     </PageContainer>

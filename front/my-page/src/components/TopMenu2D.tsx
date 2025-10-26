@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react'
 import { DesktopNav } from './DesktopNav'
 import { MobileNav } from './MobileNav'
@@ -12,13 +11,14 @@ export interface TopMenu2DProps {
 export const TopMenu2D: React.FC<TopMenu2DProps> = ({ items }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const navRef = useRef<HTMLDivElement | null>(null)
+
+  const menuRef = useRef<HTMLDivElement | null>(null)
   const location = useLocation()
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
-      if (!navRef.current) return
-      if (!navRef.current.contains(e.target as Node)) setOpenIndex(null)
+      if (!menuRef.current) return
+      if (!menuRef.current.contains(e.target as Node)) setOpenIndex(null)
     }
     document.addEventListener('mousedown', onClick)
     return () => document.removeEventListener('mousedown', onClick)
@@ -39,32 +39,34 @@ export const TopMenu2D: React.FC<TopMenu2DProps> = ({ items }) => {
         <div className="flex h-16 items-center justify-between">
           <span className="text-xl font-bold tracking-tight">
             {(() => {
-              const path = location.pathname;
-              const current =
-                items
-                  .flatMap(i => i.kind === "group" ? i.sections : [i])
-                  .find(s => s.path === path);
-              return current ? current.title : "Home";
+              const path = location.pathname
+              const current = items
+                .flatMap(i => i.kind === 'group' ? i.sections : [i])
+                .find(s => s.path === path)
+              return current ? current.title : 'Home'
             })()}
           </span>
 
-          <div ref={navRef} className="flex-1 flex items-center justify-end">
-            <DesktopNav
-              items={items}
-              openIndex={openIndex}
-              onToggle={(i) => setOpenIndex((p) => (p === i ? null : i))}
-            />
-          </div>
+          <div ref={menuRef} className="flex items-center">
+            <div className="hidden md:flex flex-1 items-center justify-end">
+              <DesktopNav
+                items={items}
+                openIndex={openIndex}
+                onToggle={(i) => setOpenIndex((p) => (p === i ? null : i))}
+              />
+            </div>
 
-          <button
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 ml-2"
-            aria-label="Toggle navigation"
-            onClick={() => setMobileOpen(v => !v)}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-6 h-6">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
+            <button
+              className="md:hidden p-2 rounded-lg hover:bg-gray-100 ml-2"
+              aria-label="Toggle navigation"
+              aria-expanded={mobileOpen}
+              onClick={() => setMobileOpen(v => !v)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         {mobileOpen && (
@@ -72,9 +74,10 @@ export const TopMenu2D: React.FC<TopMenu2DProps> = ({ items }) => {
             items={items}
             openIndex={openIndex}
             onToggle={(i) => setOpenIndex((p) => (p === i ? null : i))}
+            onNavigate={() => setMobileOpen(false)}
           />
         )}
       </div>
-          </header>
+    </header>
   )
 }
