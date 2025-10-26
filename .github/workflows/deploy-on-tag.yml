@@ -22,6 +22,9 @@ jobs:
         run: npm install
         working-directory: front/my-page
 
+      - name: Build project
+        run: npm run test
+        working-directory: front/my-page
 
       - name: Build project
         run: npm run build
