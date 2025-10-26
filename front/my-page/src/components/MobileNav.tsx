@@ -20,7 +20,7 @@ export interface MobileNavProps {
   onNavigate?: () => void
 }
 
-export const MobileNav: React.FC<MobileNavProps> = ({ items, openIndex, onToggle }) => {
+export const MobileNav: React.FC<MobileNavProps> = ({ items, openIndex, onToggle, onNavigate }) => {
   return (
     <div className="md:hidden py-2">
       <ul className="space-y-1">
@@ -28,7 +28,11 @@ export const MobileNav: React.FC<MobileNavProps> = ({ items, openIndex, onToggle
           if (item.kind === 'item') {
             return (
               <li key={item.id}>
-                <Link className="w-full block text-left px-3 py-2 rounded-lg hover:bg-gray-100" to={item.path}>
+                <Link
+                  className="w-full block text-left px-3 py-2 rounded-lg hover:bg-gray-100"
+                  to={item.path}
+                  onClick={onNavigate}
+                >
                   {item.title}
                 </Link>
               </li>
@@ -46,6 +50,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({ items, openIndex, onToggle
                 <span className="font-medium">{item.title}</span>
                 <ChevronDown className={cx('h-4 w-4 transition-transform', isOpen && 'rotate-180')} />
               </button>
+
               {isOpen && (
                 <ul className="px-2 pb-2">
                   {item.sections.map((s) => (
@@ -53,6 +58,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({ items, openIndex, onToggle
                       <Link
                         className="block text-left rounded-lg px-3 py-2 text-sm hover:bg-gray-100"
                         to={s.path}
+                        onClick={onNavigate}
                       >
                         {s.title}
                       </Link>
