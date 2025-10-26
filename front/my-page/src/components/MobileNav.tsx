@@ -58,7 +58,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({ items, openIndex, onToggle
                       <Link
                         className="block text-left rounded-lg px-3 py-2 text-sm hover:bg-gray-100"
                         to={s.path}
-                        onClick={onNavigate}
+                        onClick={(e) => { e.stopPropagation(); onNavigate?.() }}
                       >
                         {s.title}
                       </Link>

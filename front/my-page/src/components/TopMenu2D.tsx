@@ -20,9 +20,15 @@ export const TopMenu2D: React.FC<TopMenu2DProps> = ({ items }) => {
       if (!menuRef.current) return
       if (!menuRef.current.contains(e.target as Node)) setOpenIndex(null)
     }
-    document.addEventListener('mousedown', onClick)
-    return () => document.removeEventListener('mousedown', onClick)
+    document.addEventListener('onClick', onClick)
+    return () => document.removeEventListener('onClick', onClick)
   }, [])
+
+  useEffect(() => {
+    if (mobileOpen) document.body.classList.add('body-lock')
+    else document.body.classList.remove('body-lock')
+    return () => document.body.classList.remove('body-lock')
+  }, [mobileOpen])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpenIndex(null) }
