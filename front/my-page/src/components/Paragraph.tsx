@@ -1,10 +1,10 @@
 
 import React from 'react'
 
-export const Paragraph: React.FC<{children: React.ReactNode }> = ({ children }) => {
+export const Paragraph: React.FC<{ title: React.ReactNode, children: React.ReactNode }> = ({ title, children }) => {
   return (
-    <Paragraph>
+    <p className="text-gray-600">
       {children}
-    </Paragraph>
+    </p>
   )
 }
