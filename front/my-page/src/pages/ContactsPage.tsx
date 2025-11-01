@@ -2,11 +2,12 @@
 import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
 import { ContactsTitle } from '@/pages/meta/Contacts.meta'
+import { Paragraph } from '@/components/Paragraph'
 
 export const Contacts: React.FC = () => {
   return (
     <PageContainer title={ContactsTitle}>
-      <p className="text-gray-600">How to reach me.</p>
+      <Paragraph>How to reach me.</Paragraph>
       <a href="mailto:neznajki@gmail.com" className="text-blue-600 underline">
         neznajki@gmail.com
       </a>
