@@ -8,6 +8,10 @@ export const Contacts: React.FC = () => {
   return (
     <PageContainer title={ContactsTitle}>
       <Paragraph>How to reach me.</Paragraph>
+      <a href="mailto:dev@maris-locmelis.lv" className="text-blue-600 underline">
+        dev@maris-locmelis.lv
+      </a><br/>
+      AKA<br/>
       <a href="mailto:neznajki@gmail.com" className="text-blue-600 underline">
         neznajki@gmail.com
       </a>

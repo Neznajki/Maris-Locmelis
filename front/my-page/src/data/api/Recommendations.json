@@ -1,0 +1,13 @@
+[
+  { "id": 1, "text": "Every recommendation you give, try to follow it yourself." },
+  { "id": 2, "text": "SOLID — even if you can't fully apply it, aim for the closest option." },
+  { "id": 3, "text": "Make code more readable (Clean Code, DRY)." },
+  { "id": 4, "text": "Try to follow KISS, but if it's impossible, keep it complex only when necessary." },
+  { "id": 5, "text": "Don't expect others to do something you wouldn't do yourself." },
+  { "id": 6, "text": "Before changing anything, try creating something new instead." },
+  { "id": 7, "text": "Gather suggestions and do something if they are to many." },
+  { "id": 8, "text": "If you need respect from someone, start by respecting that person." },
+  { "id": 9, "text": "If you'd like to change something, think twice — sometimes changing your mind about the problem is easier and better." },
+  { "id": 10, "text": "YARGNI — use it always and you'll find some free time." },
+  { "id": 11, "text": "Don't take new tools until you've mastered the existing ones." }
+]
