@@ -16,9 +16,13 @@ function renderParagraph(text: string) {
 }
 
 export const Paragraph: React.FC<{children: React.ReactNode }> = ({ children }) => {
-  return (
-    <p className="text-gray-600">
-      {renderParagraph(children)}
-    </p>
-  )
+  if (typeof children === "string") {
+    return (
+      <p className="text-gray-600">
+        {renderParagraph(children)}
+      </p>
+    )
+  }
+
+  return (<></>);
 }

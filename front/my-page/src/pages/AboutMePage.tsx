@@ -3,7 +3,7 @@ import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
 import { AboutMeTitle } from '@/pages/meta/AboutMe.meta'
 import { Paragraph } from '@/components/Paragraph'
-import PageData  from '@/data/api/AboutMe'
+import PageData  from '@/data/api/AboutMe.json'
 
 export const AboutMe: React.FC = () => {
   return (

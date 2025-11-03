@@ -3,7 +3,7 @@ import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
 import { CoverLetterTitle } from '@/pages/meta/CoverLetter.meta'
 import { Paragraph } from '@/components/Paragraph'
-import PageData  from '@/data/api/CoverLetter'
+import PageData  from '@/data/api/CoverLetter.json'
 
 export const CoverLetter: React.FC = () => {
   return (

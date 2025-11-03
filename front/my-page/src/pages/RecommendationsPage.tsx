@@ -3,7 +3,7 @@ import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
 import { Paragraph } from '@/components/Paragraph'
 import { RecommendationsTitle } from '@/pages/meta/Recommendations.meta'
-import PageData  from '@/data/api/Recommendations'
+import PageData  from '@/data/api/Recommendations.json'
 
 export const Recommendations: React.FC = () => {
   return (

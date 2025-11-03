@@ -7,7 +7,7 @@ import PopupSpoiler from '@/components/PopupSpoiler'
 import '@/assets/popupSpoiler.css'
 import '@/styles/WhatsDonePageCss.css'
 import { WhatsDoneTitle } from '@/pages/meta/WhatsDone.meta'
-import PageData from '@/data/api/WhatsDone'
+import PageData from '@/data/api/WhatsDone.json'
 
 export const WhatsDonePage: React.FC = () => {
   return (

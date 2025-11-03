@@ -3,7 +3,7 @@ import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
 import { Paragraph } from '@/components/Paragraph'
 import { PersonalityTitle } from '@/pages/meta/Personality.meta'
-import PageData  from '@/data/api/Personality'
+import PageData  from '@/data/api/Personality.json'
 
 export const Personality: React.FC = () => {
   return (
