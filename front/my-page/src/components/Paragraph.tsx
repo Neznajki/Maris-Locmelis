@@ -24,5 +24,5 @@ export const Paragraph: React.FC<{children: React.ReactNode }> = ({ children }) 
     )
   }
 
-  return (<></>);
+  return (<>{children} <br/></>);
 }
