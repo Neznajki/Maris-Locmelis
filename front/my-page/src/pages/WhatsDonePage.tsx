@@ -18,20 +18,18 @@ export const WhatsDonePage: React.FC = () => {
           ))}
 <br/><br/>
       <PopupSpoiler title="PingnetGames">
-        <>
-          <Paragraph id="piratello_game">
-            <a href="/piratello_game.html" target="_blank">
-              Social Network Game Piratello
-            </a>{" "}
-            &lt;-- everything related to server
-          </Paragraph>
-          <Paragraph id="lines_of_life">
-            <a href="/lines_of_life.html" target="_blank">
-              Social Network Game lines of life
-            </a>{" "}
-            &lt;-- everything related to server
-          </Paragraph>
-        </>
+        <Paragraph key="piratello_game">
+          <a href="/piratello_game.html" target="_blank">
+            Social Network Game Piratello
+          </a>{" "}
+          &lt;-- everything related to server
+        </Paragraph>
+        <Paragraph key="lines_of_life">
+          <a href="/lines_of_life.html" target="_blank">
+            Social Network Game lines of life
+          </a>{" "}
+          &lt;-- everything related to server
+        </Paragraph>
       </PopupSpoiler>
       <br />
       <br />
