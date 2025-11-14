@@ -1,0 +1,1194 @@
+
+var checkTimer = 0;
+var lastVar = 0;
+var cState = 0;
+
+var slimit = 3;
+var addressOk= true;
+
+function likeButtonShow(field){
+	var form = document.getElementById('likeButtonForm');
+	var layout = false;
+	if( form["like[layout]"][1].checked ){
+		layout = 'bubble';
+	}
+	if( form["like[layout]"][2].checked ){
+		layout = 'icon';
+	}
+	var linkAuto = form["like[link]"][0];
+	var link = form["like[link_val]"];
+	T.Forms.disable( link, linkAuto.checked );
+	var titleAuto = form["like[title]"][0];
+	var title = form["like[title_val]"];
+	T.Forms.disable( title, titleAuto.checked );
+	//var titlePrefixAuto = form["like[titlePrefix]"][0];
+	//var titlePrefix = form["like[titlePrefix_val]"];
+	var extName = form["like[name]"];
+	var text = form["like[text]"];
+	var popup = form["like[popup]"];
+	var mobile = form["like[mobile]"];
+	var onAdd = form["like[onAdd]"];
+    var picUrl = form["like[picUrl]"];
+	//T.Forms.disable( titlePrefix, titlePrefixAuto.checked );
+	var button = document.getElementById('draugiemLike');
+	clearNode(button);
+	var code = document.getElementById('likeButtonCode');
+	clearNode(code);
+	T.Forms.error( link, false );
+	if( !linkAuto.checked ){
+		var a = mkE( {
+			tag:'a',
+			href:link.value
+		} );
+		if( empty( a.protocol ) || empty( a.host ) ){
+			if( field !== 'like[link_val]' ){
+				T.Forms.error( link, '' );
+			}
+			return;
+		}
+	}
+	var p = {
+		layout:layout,
+		link:( linkAuto.checked ? false : link.value ),
+		title:( titleAuto.checked ? false : title.value ),
+		titlePrefix:false,//( titlePrefixAuto.checked ? false : titlePrefix.value ),
+		text:( text.value || '' ),
+		name:extName.value,
+		popup:popup.checked,
+		mobile:mobile.checked,
+		onAdd:onAdd.value,
+        picUrl:picUrl.value
+	};
+	var isSettings = false;
+	for( var k in p ){
+		if( p[k] ){
+			isSettings = true;
+			break;
+		}
+	}
+	var like = new DApi.Like(p);
+	like.append(button);
+	var codeText = [];
+	if(isSettings){
+		var codeText = [
+			"var p = {"
+		];
+		var objParams = [];
+		for( var k in p ){
+			if( !p[k] ){
+				continue;
+			}
+			objParams.push( ' ' + k + ':' + JSON.encode( p[k] ) );
+		}
+		codeText.push( objParams.join(",\n") );
+		codeText.push("};");
+		codeText.push("new DApi.Like(p).append('draugiemLike');");
+	} else {
+		codeText.push("new DApi.Like().append('draugiemLike');");
+	}
+	mkE( {
+		tag:'div',
+		els:[
+			'<script type="text/javascript" src="//www.draugiem.lv/api/api.js"></script>',
+			"\n",
+			'<div id="draugiemLike"></div>',
+			"\n",
+			'<script type="text/javascript">',
+			"\n",
+			codeText.join("\n"),
+			"\n",
+			'</script>'
+		]
+	} ).append(code);
+}
+
+function likeButtonHelp(name){
+	D.smallPopUp.html( '', { width:444 } );
+	mkE( {
+		tag:'img',
+		src:D.PIMG + 'applications/img/docs/say/' + name + '.png'
+	} ).append( D.smallPopUp.content );
+}
+
+function likeButtonShow_(el){
+	clearTimeout( likeButtonShow_.to );
+	likeButtonShow_.to = setTimeout( function(){
+		likeButtonShow(el);
+		if( el && el.focus ){
+			el.focus();
+		}
+	}, 200 );
+}
+
+
+var Apps = {
+	rpc : new RPC( '/applications/rq/_app.php' ),
+	followPage: function(biz_id){
+		Apps.rpc.send(
+			'followpage',{
+				'biz_id':biz_id
+			}, 
+			function(){
+				$('.followPage .button_container').remove();
+			}	
+		);	
+	},
+	unapprove: function(app_id){
+		Apps.rpc.send(
+			'unapprove',{
+				'app_id':app_id
+			}, 
+			function(){
+				if( D.MMenu ) {
+					D.MMenu.resetMenu();
+				}
+				if(app_id == 15016789){
+					window.location = '/applications/' + app_id + '/';
+				}else{
+					D.reload();
+				}
+			}	
+		);	
+	},
+	
+	appPermissions: function(app_id){
+		Apps.rpc.send(
+			'permissions',{
+				'app_id':app_id,
+				'data':$('#app_permissions').serialize()
+			}, 
+			function(){
+				InfoBox.close();
+			}	
+		);
+	},
+	
+	formatAppList: function(){
+		$('.appThumbList .app').each(function(){
+			if($(this).find('.actions .title').height() > 25){
+				$(this).find('.actions .button').css('margin-top', '23px');
+				$(this).find('.actions .friends').remove();
+			}
+			var image = $(this).find('.app_image img:not(.resized)');
+			$(image).css('visibility', 'hidden');
+			$(image).attr('src', $(image).attr('src') + '?' + new Date().getTime()); // IE
+			$(image).load(function() {
+				var height = $(this).height();
+				var width = $(this).width();
+
+				if(width >= height){
+					if(width > 236){
+						var prop = (width / 236);
+						var newheight = parseInt(height / prop);
+						$(this).css('width', '236');
+						$(this).css('height', newheight+'px');
+						
+						if(newheight > 134){
+							$(this).css('top', '-' + parseInt(parseInt(newheight-134) / 2) + 'px');
+						}	
+						height = newheight;
+					}
+				}else{
+					if(height > 134){
+						var prop = (height / 134);
+						var newwidth = parseInt(width / prop);
+						$(this).css('height', '134');
+						$(this).css('width', newwidth+'px');
+						$(this).css('min-width', newwidth+'px')
+						
+						if(newwidth > 236){
+							$(this).css('left', '-' + parseInt(parseInt(newwidth-134) / 2) + 'px');
+						}
+						width = newwidth;
+					}	
+				}
+				if(width < 236){
+					$(this).css('left', parseInt(parseInt(236-width) / 2) + 'px');
+				}
+				if(height < 134){
+					$(this).css('top', parseInt(parseInt(134-height) / 2) + 'px');
+				}
+				$(image).addClass('resized');
+				$(image).css('visibility', 'visible');
+			});			
+		});
+	},
+	appUploadImage: function(par){
+		var data = {
+			id:'tmp',
+			type:par.type
+		};
+		data[ par.nonce.name ] = par.nonce.value;
+		data['DS'] = par.DS;
+		var ret = function( par ){
+			//D.console.info( par );
+			this.picUploadError( par );
+			if( par.ok ){
+				$('#appPreviewImage').attr('src',D.PIMG+'i/px.gif');
+				$('#appPreviewImage').show();
+				$('#appPreviewImage').attr('src',par.urlMiddle);
+				$('#appPreviewImage').after('<a href="javascript:;" class="deleteIcon" onclick="return Apps.appRemoveImage(\'Image\');" title="Dzēst"></a>');
+				$('#appDeleteImage').show();
+				$('#appImage').val(par.id);
+				return;
+			}
+		};
+
+		return {
+			url:D.UPL + 'pic/upload.php',
+			data:data,
+			onUpload:ret
+		};
+	},
+
+	appUploadImage2: function(par){
+		var data = {
+			id:'tmp',
+			type:par.type
+		};
+		data[ par.nonce.name ] = par.nonce.value;
+		data['DS'] = par.DS;
+		var ret = function( par ){
+			D.console.info( par );
+			this.picUploadError( par );
+			if( par.ok ){
+				$('#appPreviewImage2').attr('src',D.PIMG+'i/px.gif');
+				$('#appPreviewImage2').show();
+				$('#appPreviewImage2').attr('src',par.urlSmall);
+				$('#appDeleteImage').show();
+				$('#appImage2').val(par.id);
+				return;
+			}
+		};
+
+		return {
+			url:D.UPL + 'pic/upload.php',
+			data:data,
+			onUpload:ret
+		};
+	},
+
+	appUploadIcon: function(par){
+		var data = {
+			id:'tmp',
+			type:par.type
+		};
+		data[ par.nonce.name ] = par.nonce.value;
+		data['DS'] = par.DS;
+		var ret = function( par ){
+			D.console.info( par );
+			this.picUploadError( par );
+			if( par.ok ){
+				$('#appPreviewIcon').attr('src',D.PIMG+'i/px.gif');
+				$('#appPreviewIcon').show();
+				$('#appPreviewIcon').attr('src',par.urlSmall);				
+				$('#appPreviewIcon').parent().after('<a href="javascript:;" class="deleteIcon icon" onclick="$(this).remove();return Apps.appRemoveImage(\'Icon\');" title="Dzēst"></a>');
+				$('#appDeleteIcon').show();
+				$('#appIcon').val(par.id);
+				return;
+			}
+		};
+
+		return {
+			url:D.UPL + 'pic/upload.php',
+			data:data,
+			onUpload:ret
+		};
+	},
+	
+	changeGiftType: function( type ) {
+		if ( type === 1 ) {
+			$('#adsTextFormatting, #adsSenderFormatting').hide();
+			$('#adsNumberFormatting').show();
+		} else {
+			$('#adsNumberFormatting').hide();
+			$('#adsTextFormatting, #adsSenderFormatting').show();
+		}
+	},
+	
+	adsChangeFontSize: function( type, slider ) {
+		document.getElementById('gifts' + type ).style.fontSize = slider.to + 'px';
+	},
+	
+	adsChangeFontWeight: function( type, checkbox ) {
+		document.getElementById('gifts' + type ).style.fontWeight = ( checkbox.checked ? 'bold' : 'normal' );
+	},
+	
+	appAdsColorPicker: function( type ) {
+		var currentColor = document.getElementById('gifts' + type ).style.color;
+		
+		var par = { width: 350, title: 'Izvēlies krāsu', withoutOverlay: true };
+		InfoBox.html( '', par );
+		var colorPicker = mkE( {
+			tag: 'div',
+			id: 'colorPicker'
+		} ).append( InfoBox.content );
+
+		var p;
+		p = $.farbtastic(colorPicker );
+		p.setColor(currentColor);
+
+		p.linkTo( function( color ){
+			colorCodeNode.value = color;
+		} );
+		var colorCodeNode = T.Forms.input( {
+			caption: 'Krāsas kods:',
+			value: currentColor
+		} ).append( InfoBox.content );
+		T.Forms.footer( {
+			'els': [
+				T.submitButton( {
+					caption: 'Saglabāt',
+					onclick: function() {
+						document.getElementById('gifts' + type ).style.color = colorCodeNode.value;
+						InfoBox.close();
+						return false;
+					}
+				} ),
+				T.submitButton( {
+					caption: 'Atcelt',
+					color: 'link',
+					onclick: function() {
+						InfoBox.close();
+						return false;
+					}
+				} )
+			]
+		} ).append( InfoBox.content );
+	},
+			
+	appUploadAdsIcon: function(par){
+		var data = {
+			id: 'tmp',
+			type: par.type
+		};
+		data[ par.nonce.name ] = par.nonce.value;
+		data['DS'] = par.DS;
+		var ret = function( par ){
+			D.console.info( par );
+			this.picUploadError( par );
+			if ( par.ok ) {
+				$('#appPreviewAdsIcon').attr('src', par.url);
+				$('#appPreviewAdsIcon').show();
+				$('#appDeleteAdsIcon').show();
+				$('#appAdsIcon').val(par.id);
+				return;
+			}
+		};
+
+		return {
+			url: D.UPL + 'pic/upload.php',
+			data: data,
+			onUpload: ret
+		};
+	},
+		
+	appUploadAdsBrandSay: function(par){
+		var data = {
+			id: 'tmp',
+			type: par.type
+		};
+		data[ par.nonce.name ] = par.nonce.value;
+		data['DS'] = par.DS;
+		var ret = function( par ){
+			D.console.info( par );
+			this.picUploadError( par );
+			if ( par.ok ) {
+				$('#appPreviewAdsBrandSay').attr('src', par.url);
+				$('#appPreviewAdsBrandSay').show();
+				$('#appDeleteAdsBrandSay').show();
+				$('#appAdsBrandSay').val(par.id);
+				return;
+			}
+		};
+
+		return {
+			url: D.UPL + 'pic/upload.php',
+			data: data,
+			onUpload: ret
+		};
+	},	
+			
+	appUploadAdsGift: function(par){
+		var data = {
+			id: 'tmp',
+			type: par.type
+		};
+		data[ par.nonce.name ] = par.nonce.value;
+		data['DS'] = par.DS;
+		var ret = function( par ){
+			D.console.info( par );
+			this.picUploadError( par );
+			if ( par.ok ) {
+				$('#appPreviewAdsGift').attr('src', par.url);
+				$('#appPreviewAdsGift').show();
+				$('#appDeleteAdsGift').show();
+				$('#appAdsGift').val(par.id);
+				$('#giftsElementsContainer').show();
+				return;
+			}
+		};
+
+		return {
+			url: D.UPL + 'pic/upload.php',
+			data: data,
+			onUpload: ret
+		};
+	},
+
+	appUploadSpotlight: function(par){
+		var data = {
+			id:'tmp',
+			type:par.type
+		};
+		data[ par.nonce.name ] = par.nonce.value;
+		data['DS'] = par.DS;
+		var ret = function( par ){
+			D.console.info( par );
+			this.picUploadError( par );
+			if( par.ok ){
+				//$('#appPreviewSpotlight').attr('src',D.PIMG+'i/px.gif');
+
+				$('#appPreviewSpotlight').attr('src',par.urlMiddle);
+				$('#appPreviewSpotlight').show();
+				$('#appDeleteSpotlight').show();
+				$('#appPreviewSpotlight').after('<a href="javascript:;" class="deleteIcon" onclick="return Apps.appRemoveImage(\'Spotlight\');" title="Dzēst"></a>');
+				$('#appSpotlight').val(par.id);
+				return;
+			}
+		};
+
+		return {
+			url:D.UPL + 'pic/upload.php',
+			data:data,
+			onUpload:ret
+		};
+	},
+
+	appUploadFp: function(par){
+		var data = {
+			id:'tmp',
+			type:par.type
+		};
+		data[ par.nonce.name ] = par.nonce.value;
+		data['DS'] = par.DS;
+		var ret = function( par ){
+			D.console.info( par );
+			this.picUploadError( par );
+			if( par.ok ){
+				$('#appPreviewFp').attr('src',par.urlMiddle);
+				$('#appPreviewFp').show();
+				$('#appDeleteFp').show();
+				$('#appPreviewFp').after('<a href="javascript:;" class="deleteIcon" onclick="return Apps.appRemoveImage(\'Fp\');" title="Dzēst"></a>');
+				$('#appFp').val(par.id);
+				return;
+			}
+		};
+
+		return {
+			url:D.UPL + 'pic/upload.php',
+			data:data,
+			onUpload:ret
+		};
+	},
+
+	appUploadOpaSpotlight: function(par){
+		var data = {
+			id:'tmp',
+			type:par.type
+		};
+		data[ par.nonce.name ] = par.nonce.value;
+		data['DS'] = par.DS;
+		var ret = function( par ){
+			D.console.info( par );
+			this.picUploadError( par );
+			if( par.ok ){
+				//$('#appPreviewSpotlight').attr('src',D.PIMG+'i/px.gif');
+
+				$('#appPreviewOpaSpotlight').attr('src',par.urlMiddle);
+				$('#appPreviewOpaSpotlight').show();
+				$('#appDeleteOpaSpotlight').show();
+				$('#appPreviewOpaSpotlight').after('<a href="javascript:;" class="deleteIcon" onclick="return Apps.appRemoveImage(\'OpaSpotlight\');" title="Dzēst"></a>');
+				$('#appOpaSpotlight').val(par.id);
+				return;
+			}
+		};
+
+		return {
+			url:D.UPL + 'pic/upload.php',
+			data:data,
+			onUpload:ret
+		};
+	},
+
+	appUploadOpaPreview: function(par){
+		var data = {
+			id:'tmp',
+			type:par.type
+		};
+		data[ par.nonce.name ] = par.nonce.value;
+		data['DS'] = par.DS;
+		var ret = function( par ){
+			D.console.info( par );
+			this.picUploadError( par );
+			if( par.ok ){
+				//$('#appPreviewSpotlight').attr('src',D.PIMG+'i/px.gif');
+
+				$('#appPreviewOpaPreview').attr('src',par.urlMiddle);
+				$('#appPreviewOpaPreview').show();
+				$('#appDeleteOpaPreview').show();
+				$('#appPreviewOpaPreview').after('<a href="javascript:;" class="deleteIcon" onclick="return Apps.appRemoveImage(\'OpaPreview\');" title="Dzēst"></a>');
+				$('#appOpaPreview').val(par.id);
+				return;
+			}
+		};
+
+		return {
+			url:D.UPL + 'pic/upload.php',
+			data:data,
+			onUpload:ret
+		};
+	},
+
+	appRemoveImage: function(name) {
+		$('#app'+name).val(-1);
+		$('#appDelete'+name).hide();
+		$('#appPreview'+name).hide();
+		$('#appPreview'+name+'2').hide();
+		return false;
+	},
+			
+	appSubmit:function() {
+		var itype = $('#appType').val();
+		var isExt = (itype == 6);
+
+		if(!isEdit && isExt && $('#isAvailable').css('display')=='none') {
+			alert(xApiDev['empty_form']);
+			return false;
+		}
+
+        // Submit form for validation.
+        var form = $("#appEditForm");
+        var postData = form.serializeArray();
+        var formURL = form.attr("action");
+
+        $.ajax({
+            url : formURL,
+            type: "POST",
+            data : postData,
+            success:function(data, textStatus, jqXHR)
+            {
+                try {
+                    var fields = form.find('.formItem');
+                    var response = jQuery.parseJSON(data);
+                    Apps.showErrors(fields, response);
+                } catch (e){
+                    // Not json - unnecessary reload, data saved.
+                    location.reload();
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert(D.Lang.get('required', 'xApplications'));
+            }
+        });
+        return false;
+	},
+
+    // Add error messages to fields.
+    showErrors:function(fields, response) {
+        var errors = response;
+        var scrollTo;
+        $.each(fields, function(i) {
+            var showField = false;
+            var field = $(this);
+
+            // Search error fields.
+            $.each(errors, function(i, item) {
+                if (errors.length > 0 && field.find("[name='"+item.name+"']").length > 0) {
+                    showField = true;
+                    field.addClass('formItemError');
+                    field.children(".help").hide();
+                    field.children('.error').remove();
+                    // Add errors
+                    field.append('<span class="error">'+item.message+'</span>');
+                    if(!scrollTo) {
+											scrollTo = field;
+										}
+                }
+            });
+
+            // Hide
+            if (!showField) {
+                field.removeClass('formItemError');
+                field.children(".help").show();
+                field.children('.error').remove();
+            }
+        });
+				if( scrollTo ) {
+					D.scrollIntoView(scrollTo[0]);
+				}
+    },
+
+	ApiPreview: function( par ){
+		par = par || {};
+		this.items = {};
+		this.itemsToUpload = {};
+		this.append = par.append || false;
+		var $upload = this;	
+		this.UPL = par.UPL || D.UPL;
+		this.uploader = new Uploader( {
+			DS:par.DS || false,
+			caption:par.caption,
+			append:par.append || false,
+			UPL: par.UPL || D.UPL,
+
+			onSelect:function( par ){			
+				var item = new Apps.ApiPreview.item( $upload, par );
+				item.uploader = this;	
+				if( !item.ok ){
+					this.remove( par.id );
+					return false;
+				}
+				$upload.itemsToUpload[ par.id ] = $upload.items[ par.id ] = item;
+				$upload.upload();		
+			},
+			onUploadStatus:function( par ){
+				$upload.items[ par.id ].onUploadStatus( par );				
+			},
+			onUploadProgress:function( par ){
+				$upload.items[ par.id ].onUploadProgress( par );	
+			},
+			onUploadComplete:function( par ){
+				$upload.status = '';			
+				$upload.items[ par.id ].onUploadComplete( par );
+				if ($upload.uploader.list()) {
+					$upload.upload();
+				}
+			},
+			onUploadCompleteData:function( par ){
+				$upload.items[ par.id ].onUploadCompleteData( par );
+				$upload.upload();
+			},		
+			onRemove:function( par ){
+				if( !$upload.items[ par.id ] ){
+					return;
+				}
+				$upload.items[ par.id ].onRemove( par );
+			}
+		} );
+
+		this.node = document.getElementById( 'apipreview_content' );
+
+		D.onLoad( 'Drag', function(){
+			$upload.drag = new D.Drag( {
+				node:'apipreview_content',
+				query:'.apipreview',
+				dragWithQuery:'.apipreviewimg'
+			} );
+		} );
+	
+		this.uploader.append( document.getElementById( 'ApiPreviewButton_' ) );
+	},
+	
+	stopAutoPayment: function(id, app_id, title, text){
+		return D.messageBox({title:title,text:text,type:'YESNO'}, function(val) {
+			if(val) {
+				var rpc = new RPC( '/applications/rq/_app.php' );
+				rpc.send(
+					'stopAutoPayment',
+					{
+						id:id,
+						app_id:app_id
+					},
+					function(){
+						D.reload();
+					}
+				);
+			}
+		});
+	},
+
+	madWithdraw: function( appId, ym, sender ) {
+		var rpc = new RPC('/bananaa/rq/mini.php');
+
+		rpc.send('appWithdraw', {
+			appId: appId,
+			ym: ym
+		}, function( re ){
+			if ( !re ) {
+				return false;
+			}
+
+			var current = $(sender).text();
+			if ( current == 'Ir' ) {
+				$(sender).text('Nav');
+			} else {
+				$(sender).text('Ir');
+			}
+		});
+	},
+	madStatsDateChange: function( disableDays ) {
+		var wdFrom = document.getElementById('wdFrom')._form;
+		var wdTo = document.getElementById('wdTo')._form;
+		var wdDay = document.getElementById('wdDay')._form;
+		var wdSubmit = document.getElementById('wdSubmit');
+		var wdError = document.getElementById('wdError');
+
+		var ym = wdFrom.value().split('-');
+		var ym2 = wdTo.value().split('-');
+
+		if ( wdFrom.value() == wdTo.value() && disableDays !== false ) {
+			var opts = [];
+			var days = new Date(ym[0], ym[1], 0).getDate();
+			opts.push({
+				caption: 'Viss mēnesis',
+				value: 0
+			});
+			for ( var i = 1; i <= days; i++ ) {
+				opts.push({
+					caption: i + '. ' + D.Lang.get('m' + parseInt( ym[1] )),
+					value: i
+				});
+			}
+			wdDay.setOptions( opts );
+			wdDay.show();
+		} else {
+			wdDay.value(0);
+			wdDay.hide();
+		}
+
+		if( !wdSubmit ){
+			return;
+		}
+		if( ym > ym2 ){
+			wdSubmit._form.disable(true);
+			wdError.style.display = '';
+			setNodeText(wdError, 'Beigu datums nedrīkst būt mazāks par sākuma datumu');
+		}else{
+			wdSubmit._form.disable(false);
+			wdError.style.display = 'none';
+		}
+	}
+};
+
+Apps.ApiPreview.beforeSubmit = function() {
+	var order = 1;
+	$('.apipreview_order').each(function() {
+		$(this).val(order++);
+	});
+	return true;
+};
+
+Apps.ApiPreview.fixImage = function() {
+	var $img = $('.preview_large .main');
+	var height = $img.height();
+	if (height < 480) {
+		$img.css({marginTop: ((480 - height)/2) + 'px'});
+		return;
+	}
+	$img.css({marginTop: 0});
+};
+
+Apps.ApiPreview.thumbScroll = function() {
+	var $count = $('.apipreview-thumb').length;
+	var $contentWidth = 152 * $count + 15;
+	var $container = $('#apipreview_thumbs_cont');
+	var $thumbs = $('#apipreview_thumbs');
+	var $thumbScroll = this;
+	$container.on('mousemove mouseover', function(){
+		var y = findPosY(this);
+		var x = findPosX(this);
+		var step = 0;
+		var regLen = 150;
+		var regK = 5;
+		if (/*D.mouseY > y &&  D.mouseY < y + 60 &&*/ D.mouseX < x + regLen) {
+			step = regLen / regK - Math.max(5 * regK, D.mouseX - x) / regK;
+		}
+		if (/*D.mouseY > y &&  D.mouseY < y + 60 &&*/ D.mouseX > x + $thumbs[0].offsetWidth - regLen) {
+			step = regLen / regK - Math.max(5 * regK, (x + $thumbs[0].offsetWidth) - D.mouseX) / regK;
+			step = -step;
+		}
+		if ($thumbScroll.interval) {
+			clearInterval($thumbScroll.interval);
+		}
+		step = Math.floor(step);
+		if (!step) {
+			return;
+		}
+		$thumbScroll.interval = setInterval(function() {
+			if ($thumbs[0].offsetLeft + step > 0) {
+				$thumbs.css({left: 0 + 'px'});
+				return false;
+			}
+			if ($thumbs[0].offsetLeft + step < -($contentWidth - $container[0].offsetWidth)) {
+				$thumbs.css({left: -($contentWidth - $container.width()) + 'px'});
+				return false;
+			}
+			$thumbs.css({left: $thumbs[0].offsetLeft + step + 'px'});
+		}, 100);
+	});
+	$container.on('mouseout', function(){
+		if ($thumbScroll.interval) {
+			clearInterval($thumbScroll.interval);
+		}
+		$thumbScroll.interval = false;
+	});
+};
+
+Apps.ApiPreview.prototype.upload = function(){
+	if( this.status == 'uploading' ){
+		return false;
+	}	
+	var f = reset( this.itemsToUpload );
+	if( ! f ){
+		return false;
+	}
+	this.status = 'uploading';
+	delete this.itemsToUpload[ f.id ];
+	f.upload();
+};
+
+Apps.ApiPreview.item = function( $upload, par ){
+	var $uploadItem = this;
+	this.$upload = $upload;
+	O2O( this, par );
+	this.ok = false;
+
+	this.node = mkE( {
+		tag:'div',
+		className:'apipreview loading',
+		els:[
+			this.position = mkE( {
+				tag:'div',
+				className:'container ',
+
+				els:[
+					this.img = mkE( {
+						tag:'img',
+						className:'apipreviewimg',
+						style:{
+							display: 'none'
+						}
+					} ),
+					this.closeIcon = mkE( {
+						tag:'a',
+						className:'deleteIcon',
+						prop:{
+							href:'javascript:',
+							onclick:function(){
+								Apps.ApiPreview.deleteItem( $(this).attr("rel"), {node:this.node} );
+							}
+						}
+					} )
+
+				]
+			}),
+			this.descr = mkE( {
+				tag:'textarea',
+				prop:{
+					placeholder: D.Lang.get('add_description', 'xApplications') + '...'
+				}
+			} ),
+			this.order = mkE({
+				tag:'input',
+				className:'apipreview_order',
+				prop:{
+					'type':'hidden'
+				}
+			})
+		]
+	} );
+
+	this.node.append( $upload.node );
+	$( '#apipreview_content_content' ).css('display','block');
+
+	this.ok = true;
+	this.$upload.upload();
+};
+
+	Apps.ApiPreview.deleteItem = function( id, par ){
+		par = par || {};
+
+		var rpc = new RPC( '/applications/rq/_app.php' );
+		 D.confirmDelete(
+				function(){
+
+				rpc.send(
+					'deleteAppPreview',
+					{
+						id:id
+					},
+					function( ){								
+					}
+				);
+				var el = par.node || document.getElementById( 'apipreviewitem' + id );
+				$( el ).fadeOut( function(){
+					removeNode( el );
+				} );
+		
+			});
+
+		return false;
+	};
+
+	Apps.ApiPreview.item.prototype.upload = function(){
+		var url = this.$upload.UPL + 'pic/api/apipreview.php';
+
+		var post = {	
+			app_id: Apps.ApiPreview.APP,
+			type: 86,
+			DS: APPS_DS
+		};
+
+		//D.console.info( post );
+		this.uploader.upload( {id:this.id, url:url, data:post} );
+	};
+	
+	Apps.ApiPreview.item.prototype.onUploadProgress = function( par ){	
+		if(this.progress){	
+			this.progress.style.display = '';
+			this.progressC.style.width = Math.round( par.bytesLoaded / par.bytesTotal * 100 ) + '%';			 
+		}		
+	};
+
+	Apps.ApiPreview.item.prototype.onUploadComplete = function(){
+		if(this.progress){
+			this.progress.style.display = 'none';		
+		}	
+	};	
+	
+	Apps.ApiPreview.item.prototype.onUploadCompleteData = function( par ){
+		if( typeof par.data == 'object'  ){
+			this.data = par.data;
+		} else {
+			this.data = JSON.decode( par.data );
+		}
+		this.pi = this.data.pi || 0;
+		this.img.src = this.data.icon;
+		$(this.img).css('display','');
+
+		$(this.closeIcon).attr("rel", this.data.id);
+		this.node.id = 'apipreviewitem'+this.data.id;
+		$(this.node).removeClass('loading');
+
+		this.descr.name = 'apipreview_desc[' + this.data.id + ']';
+		this.order.name = 'apipreview_order[' + this.data.id + ']';
+
+		if(this.data.count >= 10){
+			this.$upload.itemsToUpload = {};
+			alert(D.Lang.get('max_spotlight_images', 'xApiDev'));				
+		}
+		
+		if(!(parseInt(this.data.id) > 0)){
+			$(this.node).remove();
+		}	
+		if(jQuery.isEmptyObject(this.$upload.itemsToUpload)){
+			$('#apipreview_content').find('.loading').remove();
+		}
+	};	
+
+var Spotlight = {
+	timeout:null,
+	init:function(){
+		Spotlight.initTimeout();
+		$('#spotlightItems').bind('mouseleave',Spotlight.initTimeout).bind('mouseenter',Spotlight.removeTimeout);
+	},
+	removeTimeout:function(){
+		if(Spotlight.timeout){
+			clearTimeout(Spotlight.timeout);
+			Spotlight.timeout = null;
+		}	
+	},
+	initTimeout:function(){
+		Spotlight.timeout = setTimeout(Spotlight.next,5000);
+	},
+	next: function(){
+		var	items = $('#spotlightBlock li'),
+		current = items.filter('.current');
+		var index = current.index();
+		var next = items.get(index+1);
+		if(!next){
+			next = items.get(0);
+		}
+		Spotlight.show(next);
+	},
+	prev: function(){
+		var	items = $('#spotlightBlock li'),
+			current = items.filter('.current');
+		var index = current.index();
+		var next = items.get(index-1);
+		if(!next){
+			next = items.get(0);
+		}
+		Spotlight.show(next);
+	},
+	show: function(which) {
+		var	spotlights = $('#spotlightBlock'),
+		images = spotlights.find('a'),
+		links = spotlights.find('li'),
+		current = $(which);
+		var currentid = links.index(current);
+		links.removeClass('current');
+		current.addClass('current');
+
+		images.filter(':lt('+currentid+')').addClass('previous');
+		images.filter(':gt('+currentid+')').removeClass('previous');
+		images.filter('.current').removeClass('current');
+		$('#' + current.attr('id')).removeClass('previous').addClass('current');
+		Spotlight.removeTimeout();
+		Spotlight.initTimeout();
+	}
+};
+
+$(document).ready(function(){
+	$('#frAddress').change(function(){
+		var cVal = $('#frAddress').val();
+		if(checkTimer) clearTimeout(checkTimer);
+
+		checkTimer = setTimeout(function(){
+			$.ajax({
+				type: "GET",
+				url: "/applications/rq/rq_check.php",
+				data: "short=0&type="+$('#appType').val()+"&url=" + escape(cVal),
+				success: function(msg) {
+					if(msg == '?'){
+						addressOk = false;
+						setAppUrlState('fail');
+					} else {
+						addressOk = true;
+						setAppUrlState('ok', msg);
+					}
+				}
+			});
+		}, 1000);
+	});
+
+
+});
+
+
+// Aplikaaciju blokjeeshana
+D.AppBan = {
+	passMinLenght: 0,
+	nodes: {},
+
+	onSubmitPassReset: function() {
+		var passOnce = document.getElementById('pass_once');
+		var passTwice = document.getElementById('pass_twice');
+		var errorsCont = document.getElementById('errorsCont');
+
+		clearNode(errorsCont);
+
+		if (passOnce.value.length < this.passMinLenght) {
+			T.error(D.Lang.get('appb_pass_min_length', 'xApplications').replace('%1', this.passMinLenght)).appendTo(errorsCont);
+			$(passOnce).select();
+			return false;
+		}
+
+		if (passOnce.value != passTwice.value) {
+			T.error(D.Lang.get('appb_pass_dont_match', 'xApplications')).appendTo(errorsCont);
+			$(passOnce).select();
+			return false;
+		}
+
+		return true;
+	},
+
+	onSubmitSetup: function() {
+		var passCheck = this.onSubmitPassReset();
+		if (!passCheck) {
+			return false;
+		}
+
+		var recoveryEmail = document.getElementById('recoveryEmail');
+		if ($.trim(recoveryEmail.value) == '') {
+			T.error(D.Lang.get('appb_fill_email', 'xApplications')).appendTo(errorsCont);
+			recoveryEmail.focus();
+			return false;
+		}
+
+		return true;
+	},
+
+	initAppForm: function() {
+		this.nodes.acsCont = document.getElementById('appSearch');
+		if (!this.nodes.acsCont) {
+			return false;
+		}
+		return true;
+	},
+
+	addAc: function(data) {
+		var item = mkE({
+			tag: 'div',
+			className: 'item'
+		}).append(this.nodes.acsCont);
+
+		D.onLoad('multiAC', D.closure(this, function(){
+			var ac = new MultiAc({
+				method: 'searchApplication',
+				inputName: 'apps[]',
+				infoText: D.Lang.get('appb_search_info', 'xApplications'),
+				maxLength: 1,
+				hideOnlineStatus: true
+			});
+			if (!data.caption) {
+				ac.onChange = D.closure(this, function() {
+					this.addAc({});
+					ac._appRemoveNode.style.display = 'block';
+				});
+			}
+			ac.append(item);
+
+			ac._appRemoveNode = mkE({
+				tag: 'a',
+				className: 'remove',
+				href: 'javascript:',
+				prop: {
+					onclick: D.closure(this, function() {
+						removeNode(item);
+					})
+				}
+			}).append(item);
+			if (!data.caption) {
+				ac._appRemoveNode.style.display = 'none';
+			}
+
+			if(data.caption){
+				ac.addValue({
+					caption: htmlspecialchars_decode(data.caption),
+					value: data.value,
+					icon: data.icon
+				});
+			}
+		}));
+
+	}
+};
+
+D.apps = {
+	CATEGORIES: {
+		'1': 'cat_wordgames',
+		'3': 'cat_lovegames',
+		'4': 'cat_cardgames',
+		'5': 'cat_rpg',
+		'6': 'cat_puzzle',
+		'7': 'cat_simulation',
+		'8': 'cat_education',
+		'9': 'cat_strategy',
+		'10': 'cat_realtime',
+		'11': 'cat_children',
+		'12': 'cat_farms',
+		'13': 'cat_reaction',
+		'14': 'cat_ingenuity'
+	},
+	l: new D.Lang('xApplications'),
+	categoryIdsToNames: function ( categories ) {
+		var arr = [];
+		for( var i = 0; i < categories.length; i++ ) {
+			var category = categories[i];
+			arr.push(this.l.get(this.CATEGORIES[category]));
+		}
+		return arr;
+	}
+};

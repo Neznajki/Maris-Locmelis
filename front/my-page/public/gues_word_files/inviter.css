@@ -1,0 +1,217 @@
+
+.inviterList {
+	margin-bottom: 5px;
+	max-height: 264px;
+	overflow: hidden;
+}
+
+.inviterList .more {
+	display: block;
+	margin: 3px 0;
+}
+
+.inviterList .frInvite {
+	line-height: 32px;
+	height: 32px;
+	position: relative;
+	padding: 6px 116px 6px 40px;
+}
+
+.inviterList .frInvite:before {
+	content: '';
+	display: inline-block;
+	vertical-align: middle;
+	min-height: 32px;
+}
+
+.inviterList .frInvite .img {
+	position: absolute;
+	top: 6px;
+	left: 0;
+	height: 32px;
+	width: 32px;
+	text-align: center;
+	border-radius: 4px;
+}
+
+.inviterList .frInvite .img:after {
+	content: '';
+	width: 32px;
+	height: 32px;
+	border-radius: 4px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.inviterList .frInvite .img .online {
+	position: absolute;
+	content: '';
+	top: -4px;
+	right: -4px;
+	border: 2px solid #fff;
+	border-radius: 6px;
+	background-color: #FF6600;
+	width: 6px;
+	height: 6px;
+	z-index: 1;
+}
+
+.inviterList .frInvite .img .onlineWWW {
+	background-color: #FF6600;
+}
+
+.inviterList .frInvite .img .onlineWAP,
+.inviterList .frInvite .img .onlineIPHONE {
+	background-color: #539DD8;
+}
+
+.inviterList .frInvite img {
+	width: 32px;
+	height: 32px;
+	border-radius: 4px;
+}
+
+.inviterList .invitationSent .peepTitle,
+.inviterList .invitationSent .img {
+	opacity: 0.5;
+}
+
+.inviterList .frInvite .peepTitle {
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 13px;
+	line-height: 17px;
+	color: #1e1e1e;
+}
+.inviterList .frInvite .peepTitle a {
+	font-weight: bold;
+}
+.inviterList .frInvite .peepTitle.disabled {
+	color: #c9c9c9;
+}
+.inviterList .frInvite .img.disabled {
+	opacity: 0.5;
+}
+.inviterList .frInvite .inviterRight {
+	position: absolute;
+	top: 6px;
+	right: 0;
+	height: 32px;
+}
+.inviterList .frInvite .inviterRight:before {
+	content: '';
+	display: inline-block;
+	vertical-align: middle;
+	min-height: 32px;
+}
+
+.inviterList .frInvite.invitationSent:before {
+	position: absolute;
+	width: auto;
+	right: 0;
+	height: 30px;
+	border-radius: 3px;
+}
+
+.inviterList .frInvite.invitationSent:before {
+	content: '';
+	display: block;
+	top: 4px;
+	background: transparent url(//frype.com/i/icons/grey16/yes.png) no-repeat center;
+}
+
+.inviterList .frInvite .buttonLarge,
+.inviterList .frInvite .buttonLarge button,
+.inviterList .frInvite.invitationSent:before {
+	height: 30px;
+	width: 30px;
+}
+
+.inviterList .frInvite .buttonLarge .buttonC {
+	padding: 0;
+	text-align: center;
+}
+
+.inviterList .frInvite .button span.icon {
+	padding-left: 18px;
+	position: relative;
+	top: -1px;
+}
+
+.inviterList .frInvite.aboutToBeRemoved {
+	-webkit-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+}
+
+.inviterList .frInvite.hidden {
+	opacity: 0;
+	height: 0;
+	padding: 0;
+	border: 0;
+	overflow: hidden;
+}
+
+.inviterList .frInvite.invitationSent .button {
+	display: none;
+}
+
+.inviterList .frInvite .closeIcon {
+	visibility: hidden;
+	position: absolute;
+	top: 10px;
+	right: 35px;
+}
+
+.inviterList .frInvite:hover .closeIcon {
+	visibility: visible;
+}
+
+.inviterWrap .search input {
+	background: url('//ifrype.com/i/icons/search.png') right center no-repeat white;
+	padding-right: 20px;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.inviterWrap .formItem {
+	margin-bottom: 8px;
+}
+
+.inviterWrap > .top {
+	padding: 0 0 8px 0;
+}
+
+.inviterWrap > .top > * {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.inviterWrap > .top > .formItem {
+	width: 67%;
+	margin-bottom: 0;
+}
+
+.inviterWrap > .top > a {
+	width: 33%;
+	text-align: right;
+}
+
+.inviterWrap .inviteAll {
+	text-align: center;
+	margin: 0 0 16px 0;
+}
+
+.inviterWrap .inviteAll > p {
+	font-size: 13px;
+	margin: 12px 0;
+}
+
+.inviterWrap .inviteAll > div > a {
+	margin-left: 10px;
+}

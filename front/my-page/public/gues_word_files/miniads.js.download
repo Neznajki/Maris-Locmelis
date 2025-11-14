@@ -1,0 +1,4209 @@
+"use strict";
+
+if (typeof(D) === 'undefined') {
+	var D = {};
+}
+
+D.MiniAds = {
+	rpc: new RPC('/bananaa/rq/mini.php'),
+	l: new D.Lang('xMiniAds'),
+
+	linkType: '',
+
+	// aizpildaas no php puses
+	TEXT_LEN_TITLE_DEFAULT: 0,
+	TEXT_LEN_TEXT_DEFAULT: 0,
+	TEXT_LEN_TITLE_NO_PIC: 0,
+	TEXT_LEN_TEXT_NO_PIC: 0,
+	TEXT_LEN_TITLE_SPECIAL: 0,
+	TEXT_LEN_TEXT_SPECIAL: 0,
+	TEXT_LEN_TEXT_PF2: 0,
+
+	MIN_DAILY_BUDGET: 1000,
+	MIN_TOTAL_BUDGET: 1500,
+	MIN_AUTO_BUDGET: 500,
+	MAX_AUTO_BUDGET: 10000,
+
+	CODE_TYPE_ONLY_CODE: 1,
+	CODE_TYPE_ADDITIONAL: 2,
+
+	n: {
+		addImageModal: null,
+		addVideoModal: null,
+		npModal: null
+	},
+
+	paymentTypes: [], // array of { caption: '', value: '' }
+	walletBalances: [], // array of { value: '', balance: '' }
+
+	lastBizLinkValue: '',
+
+	currency: function( amount, par ) {
+		par = par || {};
+		var sum = ( amount / 100 ).toFixed(2);
+
+		if ( par.withoutSign ) {
+			return sum;
+		} else {
+			return '€ ' + sum;
+		}
+	},
+
+	onPaymentChange: function (el) {
+		var container;
+		var autoCbx;
+		var autoAmount;
+		if (document.getElementById('AdHasRecurringPayment').value == 0) {
+			container = $('#Forms_AdRecurringPaymentSettings');
+			autoCbx = $('#Forms_AdPaymentAutoCbx');
+			autoAmount = $('#Forms_AdPaymentAutoAmount');
+			if (el.value === 'card') {
+				container.show();
+				autoCbx.show();
+				if ( autoCbx.get(0)._form.value() ) {
+					autoAmount.show();
+					D.MiniAds.onPaymentAutoChange();
+				} else {
+					autoAmount.hide();
+				}
+			} else {
+				container.hide();
+				autoCbx.hide();
+				autoAmount.hide();
+				var AdRecurringPaymentSettingsNode = document.getElementById('AdRecurringPaymentSettings');
+				if ( AdRecurringPaymentSettingsNode ) {
+					AdRecurringPaymentSettingsNode._form.value( false );
+				}
+			}
+		} else {
+			container = $('#AdRecurringPaymentStop');
+			autoAmount = $('#Forms_AdPaymentAutoAmount');
+			autoCbx = $('#Forms_AdPaymentAutoCbx');
+			if (el.value === 'card') {
+				container.fadeIn('fast');
+				autoCbx.show();
+				if ( autoCbx.get(0)._form.value() ) {
+					autoAmount.show();
+					D.MiniAds.onPaymentAutoChange();
+				} else {
+					autoAmount.hide();
+				}
+			} else {
+				container.fadeOut('fast');
+				autoCbx.hide();
+				autoAmount.hide();
+			}
+		}
+		if ( el.value == 'wallet_new' ) {
+			this.showNewPagePopup();
+		}
+		this.showHideBonusInfo();
+	},
+
+	generateItemReport: function ( par ) {
+		var data = {
+			aid: par.aid
+		};
+		O2O(data, par.filtering);
+		this.rpc.send('generateReport', data, D.closure(this, this._generateReport, par.el));
+	},
+
+	generateCampaignReport: function (par) {
+		var data = {
+			cid: par.cid
+		};
+		O2O(data, par.filtering);
+		if ( par.bid ) {
+			data.bid = par.bid;
+		}
+		this.rpc.send('generateReport', data, D.closure(this, this._generateReport, par.el));
+	},
+
+	_generateReport: function (el, re) {
+		if (re) {
+			var parent = el.parentNode;
+			removeNode(el);
+			mkE({
+				tag: 'span',
+				text: this.l.get('stats_report_generating')
+			}).append(parent);
+		}
+	},
+
+	stopRecurringPayment: function (el, par) {
+		this.rpc.send(
+			'stopRecurringPayment', {},
+			function (re) {
+				if ( par && par.reload ) {
+					window.location.reload();
+					return;
+				}
+				$(document.getElementById("AdRecurringPaymentStop")).fadeOut('fast');
+				$(document.getElementById("Forms_AdRecurringPaymentSettings, #Forms_AdPaymentAutoCbx")).fadeIn('fast');
+				document.getElementById("AdHasRecurringPayment").value = 0;
+			}
+		);
+	},
+
+	_addEmbedTA: null,
+	addEmbedVideo: function () {
+		var $this = this;
+		InfoBox.html('', { width: 400 });
+		mkE({
+			tag: 'div',
+			els: [
+				{
+					tag: 'h2',
+					text: 'Kā pievienot embed?'
+				}, // h2
+				{
+					tag: 'img',
+					src: D.PIMG + 'gallery/img/embed_link2.png'
+				}, // img
+				{    tag: 'br' },
+				{    tag: 'br' },
+				{
+					tag: 'a',
+					prop: {
+						href: 'http://www.youtube.com',
+						target: '_blank'
+					},
+					els: [
+						{
+							tag: 'img',
+							src: D.PIMG + 'gallery/img/youtube.png'
+						}
+					]
+				},
+				{
+					tag: 'a',
+					prop: {
+						href: 'http://www.vimeo.com',
+						target: '_blank'
+					},
+					els: [
+						{
+							tag: 'img',
+							src: D.PIMG + 'gallery/img/vimeo.png'
+						}
+					]
+				},
+				this._addEmbedTA = T.Forms.textarea({
+					caption: ''
+				}),
+				T.Forms.footer({
+					els: [
+						T.submitButton({
+							caption: 'Pievienot video',
+							onclick: function () {
+								$this._addEmbedTA.disable = true;
+								$this.rpc.send(
+									'mediaAddEmebed',
+									{
+										embed: $this._addEmbedTA.value
+									},
+									$this._addEmbedRe,
+									$this
+								);
+							}
+						}), // button
+						T.submitButton({
+							caption: 'Atcelt',
+							color: 'link',
+							onclick: function () {
+								$this._addEmbedTA = null;
+								InfoBox.close();
+							}
+						})
+					]
+				}) // footer
+			]
+		}).append(InfoBox.content);
+	},
+
+	_addEmbedRe: function (re) {
+		if (!re) {
+			D.blink({
+				node: this._addEmbedTA
+			});
+			T.Forms.error(this._addEmbedTA, '');
+			return;
+		}
+
+		$('#AdContentEmbedTmp').val(re.embed);
+		$('#AdContentImageRemove').val(0);
+
+		var ad = $('.rt_container .mAdsDefaultBox');
+		ad.find('img').remove();
+		ad.find('.mAdContent').prepend(mkE({
+			tag: 'img',
+			src: re.thumb,
+			className: 'mAdImage',
+			style: {
+				maxWidth: '240px'
+			}
+		})).show();
+
+		this.showHideAddRemMediaButtons();
+
+		InfoBox.close();
+
+		this.previewDesigner.checkTextMaxLength();
+		return false;
+	},
+
+	uploadVideo: function (par) {
+		var data = {
+			id: 'tmp',
+			type: par.type,
+			DS: par.DS
+		};
+		data[ par.nonce.name ] = par.nonce.value;
+
+		var upload = {
+			color: 'link',
+			url: D.VUPL + 'video/upload.php',
+			data: data,
+			limit: 1,
+
+			onUpload: function (re) {
+				if (!re.errorNr) {
+					document.getElementById("mAdTmpVideoId").value = re.tmpId;
+					document.getElementById("mAdTmpVideoPreview").value = re.tempImage.GM;
+
+					$('<img class="mAdTmpPreview" src="' + re.tempImage.GM + '" />').load(function () {
+						$('.mAdTmpVidPreview').empty().css('height', '123px').append(this);
+					});
+					var submit = $(document.getElementById("mAdTmpVideoSubmit"))
+						.removeClass('buttonDisabled')
+						.attr('disabled', false);
+					submit.children('.buttonDisabledO').remove();
+					submit.find('button').removeAttr('disabled').removeAttr('onclick');
+				} else {
+					if ( re.errorNr == 4 ) {
+						alert( D.MiniAds.l.get('err_video_upload_unsupported_file'));
+					}
+				}
+			}
+		};
+
+		return upload;
+	},
+
+	uploadImage: function (par) {
+		var data = {
+			id: 'tmp',
+			type: par.type,
+			DS: par.DS
+		};
+		data[ par.nonce.name ] = par.nonce.value;
+		var upload = {
+			color: 'link',
+			url: D.UPL + 'pic/upload.php',
+			data: data,
+			limit: 1,
+			caption: 'Izvēlies failu (1200 x 628)',
+
+			onUpload: function (re) {
+				if (!re.errorNr) {
+					document.getElementById("mAdTmpImageId").value = re.id;
+					document.getElementById("mAdTmpUrl").value = re.url;
+
+					$('<img class="mAdTmpPreview" src="' + re.url + '" />').load(function () {
+						$('.mAdTmpImgPreview').empty().css('height', '123px').append(this);
+					});
+					var submit = $(document.getElementById("mAdTmpImgSubmit"))
+						.removeClass('buttonDisabled')
+						.attr('disabled', false);
+					submit.children('.buttonDisabledO').remove();
+					submit.find('button').removeAttr('disabled').removeAttr('onclick');
+				} else {
+					var text = '';
+					switch (re.errorNr) {
+						case 1:
+							text = D.MiniAds.l.get('image_upl_fail_perm');
+							break;
+						case 3:
+						case 4:
+							text = D.MiniAds.l.get('image_upl_fail_min');
+							break;
+						default:
+							text = D.MiniAds.l.get('image_upload_fail');
+							break;
+					}
+
+					D.messageBox({
+						title: D.MiniAds.l.get('image_upl_fail_title'),
+						text: text
+					});
+				}
+			}
+		};
+
+		return upload;
+	},
+
+	tmpImage: function (form) {
+		var data = D.ajaxPostData(form);
+		this.tmpImageCb({
+			tmpUrl: data.tmpUrl,
+			tmpId: data.tmpId
+		});
+
+		return false;
+	},
+
+	tmpImageCropperCb: function( par2 ) {
+		var re = D.JSON.decode( par2.data );
+		this.tmpImageCb({
+			tmpUrl: re.url,
+			tmpId: re.id
+		});
+	},
+
+	tmpImageCb: function( data ) {
+		document.getElementById('AdContentImageTmp').value = data.tmpId;
+		document.getElementById('AdContentImageRemove').value = 0;
+
+		var ad = $('.rt_container .mAdsDefaultBox');
+		ad.find('img').remove();
+		ad.find('.mAdContent').prepend(mkE({
+			tag: 'img',
+			src: data.tmpUrl,
+			className: 'mAdImage',
+			style: {
+				maxWidth: '240px'
+			}
+		})).show();
+
+		this.showHideAddRemMediaButtons();
+		this.previewDesigner.checkTextMaxLength();
+
+		if ( this.n.addImageModal ) {
+			this.n.addImageModal.close();
+		}
+
+		return false;
+	},
+
+	tmpVideoImage: function (el) {
+		var data = D.ajaxPostData(el);
+
+		document.getElementById("AdContentVideoTmp").value = data.tmpId;
+		document.getElementById("AdContentImageRemove").value = 0;
+
+		var ad = $('.rt_container .mAdsDefaultBox');
+		ad.find('img').remove();
+		ad.find('.mAdContent').prepend(mkE({
+			tag: 'img',
+			src: data.tmpPreview,
+			className: 'mAdImage'
+		}) ).show();
+
+		this.showHideAddRemMediaButtons();
+		this.previewDesigner.checkTextMaxLength();
+
+		this.n.addVideoModal.close();
+
+		return false;
+	},
+
+	addVideoFromAlbums: function () {
+		InfoBox.html('', { width: 700 });
+
+		var gal = new D.GalleryApi({
+			type: 'VIDEO',
+			albumsPerPg: 8,
+			picsPerPg: 8,
+			withSelected: true,
+			showPreview: false,
+			maxLength: 1
+		});
+		gal.append(InfoBox.content);
+		T.submitButton({
+			caption: D.Lang.get('add_video', 'xMiniAds'),
+			onclick: function () {
+				if (empty(gal.valueObj())) {
+					InfoBox.close();
+					return;
+				}
+				D.loadingOverlay(InfoBox.content);
+				D.MiniAds.rpc.send(
+					'addVideoFromAlbum',
+					{
+						pids: gal.value()
+					},
+					function (re) {
+						InfoBox.close();
+
+						if (re.status) {
+							$('#AdId').val(re.id);
+							$('#AdContentImageContainer').hide();
+							$('#miniAdsContainer3').find('.miniad').addClass('miniadVideo').prepend('<img src="' + re.icon + '">')
+								.find('.click').removeAttr('onclick').unbind('click').click(function (event) {
+									event.preventDefault();
+									D.Ads.showMiniAdsVideo({
+										id: $('#AdId').val(),
+										title: $('#AdContentTitle').val(),
+										text: $('#AdContentBody').val(),
+										l: ''
+									});
+								}).show();
+							$('#AdContentVideoRemove').removeClass('hidden');
+						} else {
+							alert('Neizdevās pievienot izvēlēto video no Tavas gallerijas!');
+						}
+					}
+				);
+			}
+		}).append(InfoBox.content);
+
+	},
+
+	removeMedia: function () {
+		$('.rt_container .mAdsDefaultBox').find('img').remove();
+		$('.rt_container .mAdsDefaultBox').find('.mAdImage').remove();
+
+		document.getElementById("AdContentImageTmp").value = 0;
+		document.getElementById("AdContentVideoTmp").value = 0;
+		document.getElementById("AdContentEmbedTmp").value = 0;
+		document.getElementById("AdContentImageRemove").value = 1;
+
+		this.showHideAddRemMediaButtons();
+		this.previewDesigner.checkTextMaxLength();
+	},
+
+	removeEventImage: function() {
+		document.getElementById('AdEventImageRemove').value = 1;
+		document.getElementById('mAdRemoveEventImage').style.display = 'none';
+		document.getElementById('eventAdPreview').style.display = 'none';
+	},
+
+	removeHCImage: function() {
+		document.getElementById('AdHcImageRemove').value = 1;
+		document.getElementById('hcImageId').value = '';
+		document.getElementById('hcHasImage').value = '0';
+		document.getElementById('mAdRemoveHcImage').style.display = 'none';
+		$('.mAdsHighlightCustom > div:first-child', '#adHighlightCustomOptions').css('backgroundImage', 'url(/ads/mini/img/hc2_blue_pattern.gif)');
+	},
+	removeHC2Image: function() {
+		document.getElementById('AdHc2ImageRemove').value = 1;
+		document.getElementById('hc2ImageId').value = '';
+		document.getElementById('hc2HasImage').value = '0';
+		document.getElementById('mAdRemoveHc2Image').style.display = 'none';
+		$('.mAdsHighlightCustom2 > div:first-child', '#adHighlightCustomOptions2').css('backgroundImage', 'url(/ads/mini/img/hc2_blue_pattern.gif)');
+	},
+	removeHCMImage: function() {
+		document.getElementById('AdHcMImageRemove').value = 1;
+		document.getElementById('hcMImageId').value = '';
+		document.getElementById('hcMHasImage').value = '0';
+		document.getElementById('mAdRemoveHcMImage').style.display = 'none';
+		$('#hcMPreviewCont').find('.hcAction img').get(0).src = '/ads/mini/img/hc2_blue_pattern_360x180.png';
+	},
+	removeHC3Image: function() {
+		document.getElementById('AdHc3ImageRemove').value = 1;
+		document.getElementById('hc3ImageId').value = '';
+		document.getElementById('hc3HasImage').value = '0';
+		document.getElementById('mAdRemoveHc3Image').style.display = 'none';
+		$('.mAdsHighlightCustom3 .img', '#adHighlightCustomOptions3').css('backgroundImage', 'url(/ads/mini/img/hc2_blue_pattern.gif)');
+	},
+
+	submitForm: function () {
+		if (!$('#AdSummary').length) {
+			if ( !D.MiniAds.Steps.validateAll({ loadStepOnError: $('#adStepsMenu').length  }) ) {
+				return false;
+			}
+
+			// vai kamapanjas nosaukums nav tukshs
+			T.Forms.setError( "#AdURLCampaignName", false);
+			if ( $('#Forms_AdURLCampaignName').is(':visible') && $.trim( $('#AdURLCampaignName').val() ) == '' ) {
+				T.Forms.setError( "#AdURLCampaignName", D.Lang.get('folder_name_empty_error', 'xMiniAds') );
+				$('html, body').animate({
+					scrollTop: $("#AdURLCampaignName").offset().top - 70
+				}, 500);
+				return false;
+			}
+
+
+			// paarbaudam lokaaciju
+			var validLocation = D.Ads.isValidMiniLocation( window.adsLoc.value() );
+			if ( !validLocation ) {
+				T.Forms.setError( "#Forms_AdTargetLoc", D.Lang.get('region_highlight_error', 'xMiniAds') );
+				$('html, body').animate({
+					scrollTop: $("#Forms_AdTargetLoc").offset().top - 70
+				}, 500);
+				return false;
+			}
+
+			// vai ir ir min auditorija
+			var validAudience = D.Ads.checkMiniAudience();
+			if ( !validAudience ) {
+				return false;
+			}
+
+			/* Pārbaudam vai ir valid promo kods, ja tāds atzīmēts. */
+			var validatePayments = true;
+			if ($('#AdBudgetPromoUse').is(':checked')) {
+				if (!$('#AdPromoCode').data('valid')) {
+					alert(this.l.get('err_wrong_promo_code'));
+					return false;
+				}
+				if ( $('#AdPromoCode').data('type') == D.MiniAds.CODE_TYPE_ONLY_CODE ) {
+					validatePayments = false;
+				}
+			}
+			if ( validatePayments ) {
+				var payerLegalNode = document.getElementById('AdPaymentPayerLegal');
+				if ( payerLegalNode && payerLegalNode._form.value() && document.getElementById('adPaymentSource').value == 'direct' ) {
+					var toValidate = ['title', 'address', 'vatnum', 'email'];
+
+					for ( var i = 0, len = toValidate.length; i < len; i++ ) {
+						var legalNode = $('[name="ad[payment][legal]['+ toValidate[i] +']"]').get(0);
+						if ( empty( legalNode._form.value() ) ) {
+							legalNode._form.error(true);
+							D.scrollIntoView( legalNode );
+							return false;
+						} else {
+							legalNode._form.error(false);
+						}
+					}
+
+					if ( !D.Vat.isValidEUVAT( document.getElementById('legalVatNum'), document.getElementById('legalCountry') ) ) {
+						return false;
+					}
+				} else if ( document.getElementById('AdPaymentPayerPrivate') && document.getElementById('AdPaymentPayerPrivate')._form.value() ) {
+					var toValidate = ['name', 'personid'];
+
+					for ( var i = 0, len = toValidate.length; i < len; i++ ) {
+						var legalNode = $('[name="ad[payment][private]['+ toValidate[i] +']"]').get(0);
+						if ( empty( legalNode._form.value() ) ) {
+							legalNode._form.error(true);
+							D.scrollIntoView( legalNode );
+							return false;
+						} else {
+							legalNode._form.error(false);
+						}
+					}
+				}
+			}
+
+			/* GA: > Step: 3 - Izvēlējies budžetu un saglabājis reklāmu. */
+			_gaq.push(
+				['_trackEvent', 'jauns-miniad', 'saglabasana'],
+				['_trackPageview', '/jauns-mini/saglabasana']
+			);
+		}
+
+		$('#AdForm').submit();
+	},
+
+	selectLinkType: function (el) {
+		$('.fromLinkType').css('position', 'absolute').hide();
+		$('#customUrlHelp').hide();
+
+		var type = $(el).val();
+		if (type !== 'profile') {
+			$('#AdLinkType_' + type).css('position', '').show();
+		}
+
+		this.linkType = type;
+
+		// aareejai saitei ir papildus mob lauks
+		if ( type == 'link' ) {
+			$('#AdLinkType_mlink').css('position', '').show();
+		}
+
+		if ( type == 'biz' ) {
+			// biz jaaparaada papildus input lauks custom urlim
+			$('#Forms_AdLinkType_biz2').css('position', '').show();
+			$('#customUrlHelp').show();
+
+			// page follow
+			if ( !$.isEmptyObject( bizData ) && document.getElementById('designTypePF') ) {
+				document.getElementById('designTypePF')._form.disable( false );
+			}
+
+			// interests
+			var urlNode = document.getElementById('AdURLBiz');
+			var bid = urlNode.value.substr( 0, urlNode.value.indexOf('@') );
+			if ( bid ) {
+				D.MiniAds.loadExampleInterests( bid );
+			}
+		} else {
+			// page follow
+			if ( $('#designTypePF').is(':checked') ) {
+				document.getElementById('designTypeStandart')._form.value( true );
+				D.MiniAds.previewDesigner.selectDesignType('standart');
+			}
+			if ( document.getElementById('designTypePF') ) {
+				document.getElementById('designTypePF')._form.disable( true );
+			}
+
+			// interests
+			clearNode( document.getElementById('exampleInterestList') );
+		}
+
+		// pasaakumiem
+		var eventsHelpDisplay = 'none';
+		if ( type == 'event' && !$.isEmptyObject( evImages ) ) {
+			if ( $('#designTypeStandart').is(':checked') ) {
+				document.getElementById('adStandartEventOptions').style.display = 'block';
+				document.getElementById('eventAdPreview').style.display = 'block';
+				eventsHelpDisplay = 'block';
+			} else {
+				document.getElementById('adStandartEventOptions').style.display = 'none';
+				document.getElementById('eventAdPreview').style.display = 'none';
+			}
+		} else {
+			document.getElementById('adStandartEventOptions' ).style.display = 'none';
+			document.getElementById('eventAdPreview').style.display = 'none';
+		}
+		if ( document.getElementById('eventsHelp') ) {
+			document.getElementById('eventsHelp').style.display = eventsHelpDisplay;
+		}
+
+		if ( eventsHelpDisplay == 'none' ) {
+			$('.rt_container').removeClass('rtContContent');
+		} else {
+			$('.rt_container').addClass('rtContContent');
+		}
+
+		this.updateDisplayHeaderDesign21();
+
+		T.Forms.setError('#Forms_AdURLType', false);
+		if ( document.getElementById('Forms_AdURLBiz') ) {
+			T.Forms.setError('#Forms_AdURLBiz', false);
+		}
+		if ( document.getElementById('Forms_AdURLAddress') ) {
+			T.Forms.setError( '#Forms_AdURLAddress', false );
+		}
+		if ( document.getElementById('Forms_AdURLBlog') ) {
+			T.Forms.setError( '#Forms_AdURLBlog', false );
+		}
+		if ( document.getElementById('Forms_AdURLApp') ) {
+			T.Forms.setError( '#Forms_AdURLApp', false );
+		}
+		if ( document.getElementById('Forms_AdURLEvent') ) {
+			T.Forms.setError( '#Forms_AdURLEvent', false );
+		}
+	},
+
+	updateDisplayHeaderDesign21: function() {
+		var currentStyle = D.MiniAds.previewDesigner.currentStyle;
+		var display = 'none';
+		if ( currentStyle == 'highlight_custom' || currentStyle == 'page_follow' ) {
+			display = 'block';
+		} else if ( currentStyle == 'standart' ) {
+			var linkVal = document.getElementById('AdURLType')._form.value();
+			if ( linkVal == 'event' ) {
+				display = 'block';
+			}
+		}
+
+		$('.galleryDesignItem1').css({ display: display });
+	},
+
+	onUrlLinkChange: function( input ) {
+		this.rpc.send('urlLinkCheckBiz', {
+			link: input.value
+		}, D.closure( this, function( re ) {
+			if ( !re ) {
+				clearNode( document.getElementById('exampleInterestList') );
+				return;
+			}
+			D.MiniAds.loadExampleInterests( re );
+		}));
+	},
+
+	selectGallery: function (gallery) {
+		$(gallery).find('input').prop('checked', true);
+	},
+
+	updateTitle: function (e) {
+		var textarea = $('#AdContentTitle');
+
+		// filtreejam nost page_follow2
+		var tmpCont = $('.mAdTitle');
+		var container = [];
+		$.each( tmpCont, function( idx, val ) {
+			if ( !$(val).parents('#adPageFollow2Options').length ) {
+				container.push(val);
+			}
+		});
+		container = $(container);
+
+		var text = textarea.val();
+
+		if (e.type !== 'focus') {
+			container.text(text);
+		}
+	},
+
+	updateText: function (e) {
+		var textarea = $('#AdContentBody');
+		var container = $('.mAdText');
+		var text = textarea.val();
+
+		if (e.type !== 'focus') {
+			container.text(text);
+		}
+	},
+
+	updateCreditNote: function(e) {
+		var creditNote = $('#AdCreditNote' ).val();
+		var container = $('.mAdCreditNote');
+		container.text( creditNote );
+	},
+
+	toggleHeros: function () {
+		var checked = $('#AdTargetBd').is(':checked');
+		if (checked) {
+			$('#AdTargetBdDescription').fadeIn();
+		} else {
+			$('#AdTargetBdDescription').fadeOut();
+		}
+	},
+
+	addSharing: function( cid ) {
+		this.rpc.send(
+			'addSharing',
+			{
+				cid: cid,
+				uids: sharingUids.value(),
+				bizpage: document.getElementById('bizpage') ? document.getElementById('bizpage').value : null,
+				url: document.getElementById('draurl').value
+			}, function(re) {
+				rq( '/ads/mini/rq/share.php?cid=' + cid + '&' + ( re ? 'ok' : 'error' ), InfoBox.content, { hash: false } );
+			}
+		);
+	},
+
+	stopSharing: function (cid, uid) {
+		D.MiniAds.rpc.send('stopSharing', {cid: cid, uid: uid}, function (re) {
+			$('#campUser' + uid).fadeOut(function () {
+				$(this).remove();
+				var items = $('.campUser').length;
+				if (items === 0) {
+					$('#campUserText').fadeIn();
+				}
+			});
+		});
+	},
+
+	promoHelp: function (text, title) {
+		return D.smallPopUp.open(false, {title: title}, text);
+	},
+
+	showHideBonusInfo: function() {
+		var el = document.getElementById('AdBudget');
+		var elval = el.value;
+		if (elval.search(".00") == -1 || elval.search(".00") == 0) {
+			elval = elval + '.00';
+		}
+
+		var isPrivatePayer = $('#AdPaymentPayerPrivate').is(':checked');
+		var paymentSource = $('#adPaymentSource').val();
+		var bonusNode = $('.pageFollowBonus');
+		var paymentType = $('#AdPaymentType').val();
+		if ( bonusNode.length && (isPrivatePayer || paymentSource == 'direct') && elval >= 50 && paymentType != 'byhand' ) {
+			bonusNode.show();
+		} else {
+			bonusNode.hide();
+		}
+	},
+
+	updatePriceLimits: function (el) {
+		if (!/^\d+.\d{2}$/.test(el.value) && !/^\d+$/.test(el.value)) {
+			return;
+		}
+
+		var price = parseFloat(el.value);
+		if ( isNaN(price) ) {
+			price = 0;
+		}
+
+		if (el.name === 'ad[total_budget][readable]') {
+			this.updateTotalAmount( price );
+		}
+
+		if (el.name !== 'ad[daily_budget][readable]') {
+			this.updateBudget();
+		}
+
+		this.updateClicks(el);
+	},
+
+	updateTotalAmount: function( price ) {
+		$('#AdTotalAmount').val( Math.round(price * 100) );
+
+		this.showHideBonusInfo();
+
+		this.updateWalletOptions( price );
+	},
+
+	cleanField: function (el) {
+		if (empty(el.value) && isset( $(el).data('default') ) ) {
+			el.value = $(el).data('default');
+			return el.value;
+		}
+
+		el.value = el.value.replace(',', '.'); // replace comma with dot, if user used 12,99 format
+		el.value = el.value.replace(/[^.\d]+/g, ''); // replace any dirty characters other than 0-9 and "."
+		//el.value = el.value.replace(/\..*$/, '.00'); // clean the price tag ending so it would match ".00"
+		var val = parseFloat(el.value);
+		if ( isNaN(val) ) {
+			val = 0;
+		}
+		el.value = val.toFixed(2);
+
+		return el.value;
+	},
+
+	alert: function (html) {
+		D.messageBox({html: html, type: 'OK', width: 200}, function () {
+		});
+	},
+
+	confirmDelete: function (el) {
+		D.messageBox({ text: 'Dzēšot reklāmu pievienotais budžets tiks neatgriezeniski dzēsts! Vai tiešām vēlies dzēst?', title: D.domain, width: 290 }, function (v) {
+			if (v) {
+				document.location.href = el.href;
+			}
+		});
+		return false;
+	},
+
+	_totalBudget: 0,
+	minTotalBudget: 0,
+	maxTotalBudget: 0,
+	minDailyBudget: 0,
+	maxDailyBudget: 0,
+
+	fixDailyBudget: function (el) {
+		el.value = this.cleanField(el);
+		var price = parseFloat(el.value);
+		if (price < this.minDailyBudget) {
+			this.alert( this.l.get('err_min_daily2') + this.minDailyBudget.toFixed(2) + '.' );
+			price = this.minDailyBudget;
+		}
+		if ( parseFloat(el.value) > this.maxDailyBudget ) {
+			el.value = this.maxDailyBudget;
+		}
+		$('#AdDailyAmount').val(price * 100);
+	},
+
+	clearPriceFields: function (el, id) {
+		el.value = this.cleanField(el);
+
+		var price = parseFloat(el.value);
+		var promoPrice = $('#AdBudgetPromoUse').is(':checked') && $('#AdPromoCode').data('type') == D.MiniAds.CODE_TYPE_ONLY_CODE;
+		if (el.name === 'ad[total_budget][amount]' && !promoPrice && price < this.minTotalBudget) {
+			alert('Minimālais budžets, lai izveidotu reklāmu ir Eur ' + parseFloat(this.minTotalBudget).toFixed(2) + '!');
+			price = this.minTotalBudget;
+		} else {
+			if (!D.MiniAds.MINIADS_ADMIN && price < this.minTotalBudget) {
+				alert('Minimālais budžets, par kuru var papildināt reklāmu ir Eur ' + parseFloat(this.minTotalBudget).toFixed(2) + '.');
+				price = this.minTotalBudget;
+			}
+		}
+
+		if (el.name === 'ad[total_budget][readable]') {
+			if ( parseFloat(el.value) > this.maxTotalBudget ) {
+				el.value = this.maxTotalBudget;
+				price = el.value;
+			}
+
+			this.updateTotalAmount(price);
+		}
+
+		D.MiniAds.updateBudget();
+
+		el.value = parseFloat(price).toFixed(2);
+	},
+
+	updateClicks: function(sender) {
+		if ( sender.id == 'AdBudget' ) {
+			document.getElementById('AdBudgetClicks').value = this.ClickPrice.calcClicks( sender.value );
+		} else if ( sender.id == 'AdBudgetDaily' ) {
+			document.getElementById('AdBudgetDailyClicks').value = this.ClickPrice.calcClicks( sender.value );
+		}
+	},
+
+	updatePrice: function(sender) {
+		if ( sender.id == 'AdBudgetClicks' ) {
+			document.getElementById('AdBudget').value = this.ClickPrice.calcPrice( sender.value );
+			this.updateTotalAmount( document.getElementById('AdBudget').value );
+
+			var price = this.ClickPrice.calcPrice( sender.value );
+			if ( price >= this.maxTotalBudget ) {
+				price = this.maxTotalBudget;
+				document.getElementById('AdBudgetClicks').value = this.ClickPrice.calcClicks( price );
+			}
+		} else if ( sender.id == 'AdBudgetDailyClicks' ) {
+			var price = this.ClickPrice.calcPrice( sender.value );
+			if ( price >= this.maxDailyBudget ) {
+				price = this.maxDailyBudget;
+				document.getElementById('AdBudgetDailyClicks').value = this.ClickPrice.calcClicks( price );
+			}
+			document.getElementById('AdBudgetDaily').value = price;
+		}
+	},
+
+	ClickPrice: {
+		calcClicks: function( price ) {
+			if ( price > D.MiniAds.maxTotalBudget ) {
+				price = D.MiniAds.maxTotalBudget;
+			}
+
+			return Math.round( (price * 100) / this._getClickPrice() );
+		},
+		calcPrice: function( clicks ) {
+			var price = (( clicks * this._getClickPrice() ) / 100).toFixed(2);
+
+			if ( price > D.MiniAds.maxTotalBudget ) {
+				price = D.MiniAds.maxTotalBudget;
+			}
+			return price;
+		},
+		_getClickPrice: function() {
+			var style;
+			var type = 'simple';
+			if ( D.MiniAds.linkType == 'biz' ) {
+				type = 'biz';
+			}
+			var s;
+			if ( !D.MiniAds.previewDesigner ) {
+				s = D.MiniAds.initialStyle;
+			} else {
+				s = D.MiniAds.previewDesigner.currentStyle;
+			}
+			if ( s != 'standart' && s != 'highlight_custom' && s != 'page_follow' ) {
+				style = 'classic'
+			} else {
+				style = s;
+			}
+			return D.MiniAds.prices[type][style];
+		}
+	},
+
+	fixAutoBudget: function(el) {
+		el.value = this.cleanField(el);
+		var price = el.value.split('.', 2);
+		var amount = parseInt(price[0], 10);
+		if (amount < this.minAutoBudget) {
+			this.alert( this.l.get('err_min_auto').replace('%s', this.minAutoBudget.toFixed(2)) );
+			amount = this.minAutoBudget;
+		} else if (amount > this.maxAutoBudget) {
+			this.alert( this.l.get('err_max_auto' ).replace('%s', this.maxAutoBudget.toFixed(2) ) );
+			amount = this.maxAutoBudget;
+		}
+
+		el.value = amount + '.00';
+	},
+
+	/**
+	 * enable disabled wallet options
+	 * @param price
+	 */
+	updateWalletOptions: function( price ) {
+		for ( var i = 0, len = this.walletBalances.length; i < len; i++ ) {
+			var adPaymentTypeJq = $('#AdPaymentType');
+			var option = adPaymentTypeJq.find('[value=' + this.walletBalances[i].value + ']').get(0);
+			if ( option ) {
+				var disabled = this.walletBalances[i].balance == 0 || this.walletBalances[i].balance < price;
+				option.disabled = disabled;
+				if ( (!adPaymentTypeJq.val() || adPaymentTypeJq.val() == this.walletBalances[i].value) && disabled ) {
+					adPaymentTypeJq.val('card');
+				}
+			}
+		}
+	},
+
+	promoCode: function (el) {
+		if ($(el).prop('checked')) {
+			this.hidePayment();
+		} else {
+			this.showPayment( false );
+		}
+	},
+
+	showPayment: function( withPromo ) {
+		if ( !withPromo ) {
+			$('#Forms_AdPromoCode, #AdPromoBudget').fadeOut('fast').find('.help > span').hide();
+			$('#AdPromoCode').val('');
+		}
+
+		$('#AdPaymentContainer, #Forms_AdBudget, #Forms_AdBudgetClicks').fadeIn('fast');
+		$('#AdBudget').prop('readonly', false).val(this.minTotalBudget + '.00');
+		$('#Forms_AdBudget').removeClass('formItemDisabled');
+
+		$('.total strong').text( this.currency(this.minTotalBudget * 100) );
+	},
+	hidePayment: function() {
+		$('#AdPaymentContainer, #Forms_AdBudget, #Forms_AdBudgetClicks').fadeOut('fast', function () {
+			$('#Forms_AdPromoCode, #AdPromoBudget').fadeIn('fast');
+			$('#AdBudget').prop('readonly', true).val('0.00');
+			$('.total strong').text('€ 0.00');
+		});
+	},
+
+	checkPromo: function (el, where) {
+		var code = trim( $(el).val() );
+
+		var rpc = new RPC('/bananaa/rq/mini.php');
+		rpc.send(
+			'checkPromo',
+			{
+				c: code
+			},
+			function (re) {
+				if (re.valid) {
+					var priceConverted;
+					priceConverted = D.MiniAds.currency( re.code.balance );
+
+					T.Forms.setError('#Forms_AdPromoCode', false);
+					$('#AdPromoCode').data('valid', true);
+					$('#AdPromoCode').data('type', re.code.type);
+					$('#Forms_AdPromoCode').find('.help > span').show();
+
+					var promoCodeLang = 'promo_code_amount';
+					if ( re.code.type === D.MiniAds.CODE_TYPE_ADDITIONAL ) {
+						promoCodeLang = 'promo_code_amount_additional';
+					}
+					$('#AdPromoBudget').show().find('div').html(this.l.get(promoCodeLang).replace('%s', priceConverted));
+
+					if ( where === 'new' ) {
+						$('#AdBudget').val( D.MiniAds.currency( re.code.balance, { withoutSign: true } ) );
+						$('.total strong').text('€ 0.00');
+
+						if ( re.code.type === D.MiniAds.CODE_TYPE_ADDITIONAL ) {
+							this.showPayment( true );
+						}
+					} else if ( where === 'increase' ) {
+						if ( re.code.type === D.MiniAds.CODE_TYPE_ADDITIONAL ) {
+							this.showIncreasePayment( true );
+							$('#AdPromoBudgetValue').val(0);
+						} else {
+							$('#AdPromoBudgetValue').val( re.code.balance / 100 );
+							if ( typeof increaseBudget != 'undefined' ) {
+								increaseBudget.splitPromo();
+							}
+						}
+					}
+				} else {
+					var errMsg = 'err_wrong_promo_code';
+					if ( re.error === 'no_balance' ) {
+						errMsg = 'err_wrong_promo_code_used';
+					}
+					T.Forms.setError('#Forms_AdPromoCode', this.l.get(errMsg));
+					$('#AdPromoCode').data('valid', false);
+					$('#AdPromoCode').removeData('type');
+					$('#AdPromoBudget').hide();
+
+					if ( where === 'new' ) {
+						var value = $('#AdBudget').val();
+						$('.total strong').text('€ ' + value);
+					} else if ( where === 'increase' ) {
+						$('#AdPromoBudgetValue').val(0);
+					}
+
+				}
+			},
+			this
+		);
+	},
+
+	// promo koda izmantoshana increase sadaljaa
+	promoCodeIncrease: function( el ) {
+		var val = el._form.value();
+		if ( val ) {
+			this.hideIncreasePayment();
+		} else {
+			this.showIncreasePayment();
+		}
+	},
+
+	showIncreasePayment: function( withPromo ) {
+		if ( !withPromo ) {
+			$('#Forms_AdPromoCode, #Forms_AdPromoBudget').hide();
+		}
+		$('#paymentContainer').show();
+	},
+	hideIncreasePayment: function() {
+		$('#Forms_AdPromoCode, #Forms_AdPromoBudget').show();
+		$('#paymentContainer').hide();
+		$('#AdPromoCode').focus();
+	},
+
+	updateBudget: function () {
+		var totalJq = $('.total strong');
+		if (!totalJq.length) {
+			return;
+		}
+
+		var sum = 0;
+
+		$('.amount').each(function (i, el) {
+			sum += parseInt($(el).val(), 10);
+		});
+
+		if ($('#AdForm.increaseBudget').length) {
+			var button = $('.buttonBuy button');
+			if (sum === 0) {
+				button.attr('disabled', true).attr('onclick', 'return false');
+				$('.buttonBuy .buttonDisabledO').show();
+			} else {
+				button.attr('disabled', false).attr('onclick', '');
+				$('.buttonBuy .buttonDisabledO').hide();
+			}
+		}
+
+		totalJq.text( this.currency( sum ) );
+	},
+
+	selectPublicationType: function (select, type) {
+		if (select.value === 'ondate') {
+			if (type === 'from') {
+				$('.mAdsShowFrom').show();
+			} else if (type === 'to') {
+				$('.mAdsShowTo').show();
+			}
+		} else {
+			if (type === 'from') {
+				$('.mAdsShowFrom').hide();
+			} else if (type === 'to') {
+				$('.mAdsShowTo').hide();
+			}
+		}
+	},
+
+	payerType: function (input) {
+		if (input.value === 'legal') {
+			$('#AdPaymentPrivateForm').fadeOut();
+			var paymentSource = document.getElementById('adPaymentSource')._form;
+			var wallets = 0;
+			for ( var i = 0, len = this.paymentTypes.length; i < len; i++ ) {
+				if ( this.paymentTypes[i].value.indexOf('wallet_') != -1 && this.paymentTypes[i].value != 'wallet_new' ) {
+					wallets++;
+				}
+			}
+			if ( wallets >= 1 ) {
+				$('#AdPaymentLegalForm').fadeOut();
+				paymentSource.value('wallet');
+			} else {
+				$('#AdPaymentLegalForm').fadeIn();
+			}
+			paymentSource.show();
+		} else {
+			$('#AdPaymentPrivateForm').fadeIn();
+			$('#AdPaymentLegalForm').fadeOut();
+			document.getElementById('adPaymentSource')._form.hide();
+		}
+		this.updatePaymentTypeList();
+		D.MiniAds.onPaymentChange(document.getElementById('AdPaymentType'));
+	},
+
+	updatePaymentTypeList: function() {
+		var privateChecked = $('#AdPaymentPayerPrivate').prop('checked');
+		var ptOptions = this.paymentTypes;
+		var showWallets = !privateChecked && document.getElementById('adPaymentSource').value == 'wallet';
+		var optionsToAdd = [];
+
+		for ( var i = 0, len = ptOptions.length; i < len; i++ ) {
+			var opt = ptOptions[i];
+
+			if ( opt.value == 'empty' ) {
+				continue;
+			}
+
+			if ( opt.value.indexOf('wallet_') != -1 ) {
+				if ( showWallets ) {
+					optionsToAdd.push( opt );
+				}
+			} else {
+				if ( !showWallets ) {
+					optionsToAdd.push( opt );
+				}
+			}
+		}
+
+		var pt = document.getElementById('AdPaymentType')._form;
+		pt.setOptions( optionsToAdd );
+
+		if ( document.getElementById('AdBudget') ) {
+			this.updateWalletOptions( document.getElementById('AdBudget').value );
+		}
+
+		// uzliekam kaa value pirmo aktiivo
+		var notDisabledOptions = $('#AdPaymentType').find('option:not(:disabled)');
+		if ( notDisabledOptions.length ) {
+			pt.value( notDisabledOptions[0].value );
+		}
+
+		// ja nepietiekams skaits itemu, tad pieliek -izveelies-
+		if ( showWallets && notDisabledOptions.length < 2 ) {
+			for ( i = 0, len = ptOptions.length; i < len; i++ ) {
+				opt = ptOptions[i];
+				if ( opt.value == 'empty' ) {
+					mkE({
+						tag: 'option',
+						text: ' - ' + opt.caption + ' - ',
+						prop: {
+							value: opt.value
+						}
+					} ).prepend( pt._inputNode );
+					pt.value( opt.value );
+					break;
+				}
+			}
+		}
+	},
+
+	onChangePaymentSource: function( sender ) {
+		if ( sender.value == 'direct' ) {
+			$('#AdPaymentLegalForm').fadeIn();
+		} else if ( sender.value == 'wallet' ) {
+			$('#AdPaymentLegalForm').fadeOut();
+			$('#Forms_AdRecurringPaymentSettings').hide();
+			document.getElementById('AdRecurringPaymentSettings' )._form.value( false );
+		}
+		this.updatePaymentTypeList();
+
+		if ( sender.value == 'direct' ) {
+			D.MiniAds.onPaymentChange(document.getElementById('AdPaymentType'));
+		} else {
+			this.showHideBonusInfo();
+		}
+	},
+
+
+
+	showNewPagePopup: function( par ) {
+		par = par || {};
+		D.MiniAds.n.npModal = new D.Modal({
+			width: 700,
+			overlayClose: false
+		});
+		D.MiniAds.n.npModal.open('/ads/mini/rq/bizreg/0_info.php' + ( par.tour ? '?tour' : '' ) );
+	},
+
+	reloadPaymentList: function() {
+		var g = new Get();
+		var uid = g.v('uid');
+		if ( !uid ) {
+			uid = D.ID;
+		}
+
+		this.rpc.send(
+			'getPaymentOptions',
+			{
+				uid: uid
+			},
+			D.closure( this, function (re) {
+				this.walletBalances = re.walletBalances;
+				this.paymentTypes = re.options;
+				this.updatePaymentTypeList();
+			}),
+			this
+		);
+	},
+
+	showMap: function () {
+		this.map = new D.MiniAds.Map();
+		this.map.value(window.adsLoc.value());
+		this.map.onSave = function () {
+			window.adsLoc.clear({
+				withoutAnimation: true
+			});
+			var v = this.value();
+			if (v.all) {
+				window.adsLoc.addValue({
+					caption: 'Latvija',
+					value: 'lv'
+				});
+				if ( v.hasForeign ) {
+					window.adsLoc.addValue({
+						caption: 'Ārvalstis',
+						value: 'nlv'
+					});
+				}
+				return;
+			}
+			var $Map = D.MiniAds.Map;
+			for (var i in v.regions) {
+				var region = v.regions[i];
+				if ( region == 7 ) {
+					continue;
+				}
+				window.adsLoc.addValue({
+					caption: $Map.loc.regions[region].n,
+					value: region
+				});
+			}
+			for (var j in v.places) {
+				var place = v.places[j];
+				window.adsLoc.addValue({
+					caption: $Map.loc.places[place].n,
+					value: place
+				});
+			}
+		};
+	},
+
+	campAdd: function (focus) {
+		document.getElementById('Forms_AdURLCampaignId').style.display = 'none';
+		document.getElementById('Forms_AdURLCampaignName').style.display = 'block';
+
+		document.getElementById('AdURLCampaignId').value = 0;
+
+		if (focus) {
+			$(document.getElementById('AdURLCampaignName')).focus();
+		}
+	},
+
+	campSelect: function (focus) {
+		document.getElementById('Forms_AdURLCampaignId').style.display = 'block';
+		document.getElementById('Forms_AdURLCampaignName').style.display = 'none';
+
+		document.getElementById('AdURLCampaignName').value = '';
+
+		if (focus) {
+			$(document.getElementById('AdURLCampaignId')).focus();
+		}
+	},
+
+	checkBudget: function () {
+		var par = {
+			buttons: [
+				{value: 'sag', caption: 'Saglabāt un papildināt budžetu'},
+				{value: 'nesag', caption: 'Saglabāt'}
+			],
+			html: 'Šai reklāmai beidzies budžets. Lūdzu, papildiniet reklāmas budžetu.'
+		};
+		D.messageBox(par, function (val) {
+			if (val) {
+				if (val == 'sag') {
+					$('#AdToBudget').val(true);
+				} else {
+					$('#AdToBudget').val(0);
+				}
+				$('#AdForm').submit();
+			}
+		});
+		return false;
+
+	},
+
+
+	togglePaymentDetails: function (node, orderId) {
+		var detailsNode = document.getElementById('mAdsPaymentDetails_' + orderId);
+		if (!detailsNode) {
+			return;
+		}
+
+		if (existsClassName(node, 'mAdsOpen')) {
+			removeClassName(node, 'mAdsOpen');
+			addClassName(detailsNode, 'mAdsDetailsHidden');
+		} else {
+			addClassName(node, 'mAdsOpen');
+			removeClassName(detailsNode, 'mAdsDetailsHidden');
+		}
+	},
+
+	showSuggestionForm: function() {
+		var modal = new D.Modal({
+			width: 400
+		});
+		modal.html('');
+
+		var formCont, contactsNode, suggestionNode;
+		formCont = mkE({
+			tag: 'div',
+			els:[
+				contactsNode = T.Forms.input({
+					caption: this.l.get('suggestions_contacts') + ':'
+				}),
+				suggestionNode = T.Forms.textarea({
+					caption: this.l.get('suggestions_suggestion') + ':',
+					require: true,
+					maxLength: 1000
+				}),
+				T.submitButton({
+					caption: D.Lang.get('chat Send'),
+					onclick: D.closure( this, function() {
+						if ( empty( suggestionNode.value ) ) {
+							T.Forms.error( suggestionNode, this.l.get('suggestions_required') );
+							return;
+						}
+
+						this.rpc.send(
+							'sendSuggestion',
+							{
+								contacts: contactsNode.value,
+								suggestion: suggestionNode.value
+							},
+							D.closure( this, function() {
+								$(formCont).replaceWith( T.success( this.l.get('suggestions_received') ) );
+							} )
+						);
+					})
+				})
+			]
+		} ).append( modal.content );
+	},
+
+	showHighlightCloseMsg: function() {
+		var modal = new D.Modal({
+			width: 400,
+			className: 'highlightClosePopup'
+		});
+		modal.html('');
+
+		var buttonPar = new T.Form.ButtonPar();
+		buttonPar.color = 'link';
+		buttonPar.href = '/ads/mini/?tab=12';
+		buttonPar.caption = this.l.get('highlight_close_prices_btn');
+
+		mkE({
+			tag: 'div',
+			els:[
+				{
+					tag: 'p',
+					text: this.l.get('highlight_close_message')
+				},
+				new T.Form.Button( buttonPar )
+			]
+		}).append( modal.content );
+	},
+
+	switchPriceTable: function( bonusType ) {
+		document.getElementById('pageFollowContainer').style.display = bonusType != 0 ? 'block' : 'none';
+		return D.rq('/ads/mini/rq/price_table.php?type=' + bonusType, 'mads_price_table', { hash: false, replace: true, withoutLoading: true });
+	},
+
+	showHideAddRemMediaButtons: function() {
+		var pd = D.MiniAds.previewDesigner;
+		if ( typeof pd == 'undefined' ) {
+			return;
+		}
+		if ( pd.currentStyle == 'highlight_custom' || pd.currentStyle == 'page_follow' ) {
+			$('.mAdAddMedia, #mAdRemoveMedia').fadeOut('fast');
+			return;
+		}
+
+		var isAdded = (
+			document.getElementById("AdContentImageTmp").value != '0' ||
+			document.getElementById("AdContentVideoTmp").value != '0' ||
+			document.getElementById("AdContentEmbedTmp").value != '0' ||
+			$('.rt_container').find('.mAdImage').length
+		);
+		if ( isAdded ) {
+			$('#mAdRemoveMedia').show();
+			$('.mAdAddMedia').hide();
+		} else {
+			$('#mAdRemoveMedia').hide();
+			$('.mAdAddMedia').show();
+		}
+	},
+
+	budgetMoveHistory: function(aid, pg) {
+		var modal = new D.Modal({
+			width: 800
+		});
+		pg = pg != null ? '&pg=' + pg : '';
+		modal.open('/ads/mini/rq/move_budget_log.php?aid=' + aid + pg);
+	},
+
+	showGoogleAnalyticsInfo: function() {
+		var modal = new D.Modal({
+			modal: 500
+		});
+		modal.open('/ads/mini/rq/ga_info.php');
+	}
+};
+
+
+D.MiniAds.AmountInput = function (par) {
+	var amount;
+
+	this.node = mkE({
+		tag: 'div',
+		className: 'formItem mAdsPriceInput'
+	});
+
+	if ( !empty( par.caption ) ) {
+		mkE({
+			tag: 'label',
+			text: par.caption
+		} ).append( this.node );
+		delete par.caption;
+	}
+
+	this._formNode = mkE({
+		tag: 'div',
+		className: 'formItemBorder radius3',
+		els: [{
+			tag: 'table',
+			els: [{
+				tag: 'tbody',
+				els: [{
+					tag: 'tr',
+					els: [
+						amount = mkE({
+							tag: 'td',
+							className: 'mAdsEditableAmount'
+						}),
+						{
+							tag: 'td',
+							className: 'mAdsDisabledAmount radius3',
+							els: [{
+								tag: 'div',
+								className: 'formItemPadding',
+								text: par.text
+							}]
+						}]
+				}]
+			}]
+		}]
+	}).append(this.node);
+
+	delete par.text;
+	par.onfocus = D.closure( this, function() {
+		addClassName(this.node, 'formItemFocus');
+	});
+	par.onblur = D.closure( this, function() {
+		removeClassName(this.node, 'formItemFocus');
+	});
+	this._inputNode = mkE({
+		tag: 'input',
+		prop: par
+	}).append(amount);
+
+	return this;
+};
+D.MiniAds.AmountInput.prototype.disable = function(v) {
+	if ( isset(v) ) {
+		this._inputNode.disabled = v;
+
+		if (v) {
+			addClassName( this._formNode, 'formItemDisabled' );
+		} else {
+			removeClassName( this._formNode, 'formItemDisabled' );
+		}
+	}
+
+	return this._inputNode.disabled;
+};
+D.MiniAds.AmountInput.prototype.value = function(v) {
+	if(isset(v)){
+		v = v || '';
+		this._prevValue = v;
+		this._inputNode.value = v;
+	}
+	return this._inputNode.value;
+};
+D.MiniAds.AmountInput.prototype.append = function(parent){
+	this.node.append(parent);
+	return this;
+};
+
+
+D.MiniAds.copyAd = function( aid ) {
+	var times = prompt('Cik vēl reklāmas veidot? (max: 10)', '1');
+	if ( !times ) {
+		return;
+	}
+
+	this.rpc.send('copyAd', {
+		aid: aid,
+		times: times
+	}, function( re ) {
+		if ( !re ) {
+			alert('Kopēšana nenotika.');
+			return;
+		}
+
+		window.location.href = '/ads/mini/' + re;
+	});
+};
+
+D.MiniAds.rejectAd = function( href ) {
+	var reason = prompt('Ieraksti noraidīšanas iemeslu.', 'Ievietotā reklāma neatbilst noteikumiem');
+	if ( !reason ) {
+		return false;
+	}
+
+	window.location.href = href + '&reason=' + encodeURIComponent( reason );
+
+	return false;
+};
+
+var map = D.MiniAds.Map = function () {
+	var $Map = this.constructor;
+	$Map.n = ++$Map.n || 1;
+	$Map.inst[ $Map.n ] = this;
+	if ($Map.loc) {
+		this._draw();
+		return;
+	}
+	var rpc = new RPC('/bananaa/rq/mini.php');
+	rpc.send(
+		'getMapRegions',
+		{},
+		function (re) {
+			$Map.loc = re;
+			for (var k in $Map.loc.places) {
+				var place = $Map.loc.places[k];
+				if (!$Map.loc.regions[ place.r ]) {
+					continue;
+				}
+				if (!$Map.loc.regions[ place.r ].places) {
+					$Map.loc.regions[ place.r ].places = [];
+				}
+				$Map.loc.regions[ place.r ].places.push(k);
+			}
+			$Map.loc.regions[7] = {
+				n: "Rīgas rajons",
+				places: ["100003036", "100015380", "100015428", "100015444", "100015460", "100015485", "100015493", "100015516", "100015557", "100015565", "100015604", "100015620", "100015725", "100015950", "100016011", "100016028", "100016077"]
+			};
+			$Map.loc.regions.nlv = {
+				n: "Ārvalstis",
+				places: [0]
+			};
+			this._draw();
+		},
+		this
+	);
+};
+
+map.prototype._draw = function () {
+	var $Map = this.constructor;
+	var $map = this;
+	this.selected = {};
+	InfoBox.html('', { title: D.MiniAds.l.get('map_selecting_regions'), width: 820 });
+	var so = new SWFObject(D.PIMG + 'i/v' + D.JS + '/lv_regions_map.swf', 'regionsMap', '620', '350', '10', '#FFFFFF');
+	so.addParam('wmode', 'opaque');
+	so.addParam('play', 'true');
+	so.addParam('allowScriptAccess', 'always');
+	var p = {
+		id: D.MiniAds.Map.n,
+		regions: {}
+	};
+	for (var k in $Map.loc.places) {
+		p.regions[k] = $Map.loc.places[k].n;
+	}
+	so.addVariable('par', encodeURIComponent(D.JSON.encode(p)));
+	var mc, regionList;
+	mkE({
+		tag: 'div',
+		className: 'MiniAdsMap',
+		els: [
+			mc = mkE({
+				tag: 'div',
+				className: 'MiniAdsMapC'
+			}),
+			{
+				tag: 'div',
+				className: 'MiniAdsMapRight',
+				els: [
+					{
+						tag: 'h3',
+						text: D.MiniAds.l.get('map_predefined_regions')
+					},
+					regionList = mkE({
+						tag: 'div'
+					}),
+					this.selectedRegionsBox = mkE({
+						tag: 'div',
+						els: [
+							T.sep(),
+							{
+								tag: 'h3',
+								text: D.MiniAds.l.get('map_selected_regions')
+							},
+							this.selectedRegions = mkE({
+								tag: 'div'
+							})
+						],
+						style: {
+							display: 'none'
+						}
+					})
+				]
+			}, // .MiniAdsMapRight
+			{
+				tag: 'div',
+				className: 'formFooter',
+				els: [
+					T.submitButton({
+						caption: D.MiniAds.l.get('save'),
+						onclick: function () {
+							$map.onSave();
+							InfoBox.close();
+						}
+					}),
+					T.submitButton({
+						caption: D.MiniAds.l.get('cancel'),
+						color: 'link',
+						onclick: function () {
+							InfoBox.close();
+						}
+					})
+				]
+			} // .formFooter
+		]
+	}).append(InfoBox.content);
+	so.write(mc);
+	this.regionCheckboxs = {};
+	this.regionCheckboxs[100003003] = T.Forms.checkbox({
+		caption: 'Rīga',
+		onclick: function () {
+			if (this.checked) {
+				$map.select([100003003]);
+			} else {
+				$map.unselect([100003003]);
+			}
+		}
+	}).append(regionList);
+
+	// region order
+	var regionOrder = [7, 2, 3, 4, 5, 6, 'nlv'];
+
+	//for (var k in $Map.loc.regions) {
+	for ( var n = 0, len = regionOrder.length; n < len; n++ ) {
+		var k = regionOrder[n];
+		var r = $Map.loc.regions[k];
+		this.regionCheckboxs[k] = T.Forms.checkbox({
+			caption: r.n,
+			d: {
+				region: r
+			},
+			onclick: function () {
+				if (this.checked) {
+					$map.select(this.d.region.places);
+				} else {
+					$map.unselect(this.d.region.places);
+				}
+			}
+		}).append(regionList);
+	}
+};
+
+map.prototype.ready = function () {
+	this._ready = true;
+	if (this._value) {
+		this.value(this._value);
+	}
+};
+
+D.MiniAds.Map.inst = {};
+
+map.prototype.select = function (ids) {
+	for (var k in ids) {
+		this.selected[ ids[k] ] = true;
+	}
+	D.flash('regionsMap', 'selectRegions', ids);
+	this.showSelected();
+};
+
+map.prototype.unselect = function (ids) {
+	for (var k in ids) {
+		delete this.selected[ ids[k] ];
+	}
+	if ( ids.length ) {
+		D.flash('regionsMap', 'unSelectRegions', ids);
+	}
+	this.showSelected();
+};
+
+map.prototype.value = function (v) {
+	var $Map = this.constructor;
+	if (!this._ready) {
+		if (v) {
+			this._value = v;
+		}
+		return;
+	}
+	if (v) {
+		this.unselect(array_keys(this.selected));
+		for (var k in v) {
+			if (v[0] == 'lv') {
+				this.select(array_keys($Map.loc.places));
+				if ( isset(v[1]) && v[1] == 'nlv' ) {
+					this.select([0]);
+				}
+				break;
+			}
+			if ($Map.loc.regions[ v[k] ]) {
+				this.select($Map.loc.regions[ v[k] ].places);
+				delete v[k];
+			}
+		}
+		this.select(v);
+	}
+	var $map = this;
+	var regions = {};
+	for (var k in $Map.loc.regions) {
+		var region = $Map.loc.regions[k];
+		var all = true;
+		for (var i in region.places) {
+			if (!this.selected[ region.places[i] ]) {
+				all = false;
+				break;
+			}
+		}
+		if (all) {
+			regions[k] = true;
+		}
+	}
+	var places = [];
+	var hasRiga = false;
+	var hasForeign = false;
+	for (var k in this.selected) {
+		var place = $Map.loc.places[k];
+		if (!place) {
+			continue;
+		}
+		if (regions[ place.r ]) {
+			continue;
+		}
+		if ( place.r == 1 ) {
+			hasRiga = true;
+		}
+		if ( regions.nlv ) {
+			hasForeign = true;
+		}
+		places.push(k);
+	}
+	var asid = {
+		all: hasRiga && regions[2] && regions[3] && regions[4] && regions[5] && regions[6],
+		hasForeign: hasForeign,
+		regions: array_keys(regions),
+		places: places
+	};
+	return asid;
+};
+
+map.prototype.showSelected = function () {
+	var $Map = this.constructor;
+	var $map = this;
+	var value = this.value();
+	for (var k in this.regionCheckboxs) {
+		this.regionCheckboxs[k].checked = false;
+	}
+	for (var k in value.regions) {
+		var regionId = value.regions[k];
+		this.regionCheckboxs[regionId].checked = true;
+	}
+	for (var k in value.places) {
+		var placeId = value.places[k];
+		if (!this.regionCheckboxs[placeId]) {
+			continue;
+		}
+		this.regionCheckboxs[placeId].checked = true;
+	}
+	// hacks, lai nebuutu abi kjeksi Pieriiga/Riigas rajons
+	if ( this.regionCheckboxs[2].checked && this.regionCheckboxs[7].checked ) {
+		this.regionCheckboxs[7].checked = false;
+	}
+
+	var onclick = function () {
+		$map.unselect([ this.d.placeId ]);
+		this.remove();
+	};
+	clearNode(this.selectedRegions);
+	var show = false;
+	for (var k in value.places) {
+		var placeId = value.places[k];
+		if (this.regionCheckboxs[placeId]) {
+			continue;
+		}
+		show = true;
+		var place = $Map.loc.places[placeId];
+		mkE({
+			tag: 'div',
+			els: [
+				place.n,
+				{
+					tag: 'a',
+					className: 'icon closeIcon',
+					prop: {
+						d: {
+							placeId: placeId
+						},
+						onclick: onclick
+					}
+				} // span.icon
+			]
+		}).append(this.selectedRegions);
+	}
+	this.selectedRegionsBox.style.display = ( show ? '' : 'none' );
+};
+
+function addRegion(id, i) {
+	D.MiniAds.Map.inst[i].select([id]);
+}
+
+function removeRegion(id, i) {
+	D.MiniAds.Map.inst[i].unselect([id]);
+}
+
+function mapInitComplete(i) {
+	D.MiniAds.Map.inst[i].ready();
+}
+
+
+D.MiniAds.Stats = function (type, data) {
+	if (type === 'ad') {
+		this.aid = data.aid;
+	} else {
+		this.cid = data.cid;
+		this.bid = data.bid;
+	}
+
+	this.dateFrom = data.dateFrom;
+	this.dateTo = data.dateTo;
+	this.ageFrom = data.ageFrom;
+	this.ageTo = data.ageTo;
+	this.sex = data.sex;
+	this.region = data.region;
+	this.type = type;
+	if ( !empty(data.onlyAids) ) {
+		this.onlyAids = data.onlyAids;
+	}
+	if ( !empty( data.uid ) ) {
+		this.uid = data.uid;
+	}
+	this._ = {};
+};
+
+D.MiniAds.Stats._datePickerLoaded = function () {
+
+};
+D.MiniAds.Stats.drawClicksChart = function (clicks) {
+	var data = [
+		[ D.MiniAds.l.get('ad_stats_date'), D.MiniAds.l.get('ad_stats_views'), D.MiniAds.l.get('ad_stats_clicks') ]
+	];
+
+	for (var date in clicks) {
+		var row = clicks[ date ];
+		data.push([ row.title, row.views, row.clicks ]);
+	}
+
+	var dataTable = google.visualization.arrayToDataTable(data);
+
+	var options = {
+		width: 900,
+		height: 200,
+		legend: 'none',
+
+		focusTarget: 'category',
+
+		hAxis: { title: D.MiniAds.l.get('ad_stats_date'), textPosition: 'out',
+			textStyle: { fontSize: 9 }
+		},
+		vAxes: [
+			{ title: D.MiniAds.l.get('ad_stats_views'),
+				textStyle: { fontSize: 10 }, minValue: 0, maxValue: 4, format: '#'
+			},
+			{ title: D.MiniAds.l.get('ad_stats_clicks'),
+				textStyle: { fontSize: 10 }, minValue: 0, maxValue: 4, format: '#'
+			}
+		],
+
+		chartArea: { top: 10 },
+		seriesType: "bars",
+		series: { 0: {}, 1: {type: "line", targetAxisIndex: 1, color: "a8c930"}}
+	};
+
+	var div = document.getElementById('clicksChart');
+	var chart = new google.visualization.ComboChart(div);
+	chart.draw(dataTable, options);
+	chart.setSelection([
+		{
+			row: dataTable.getNumberOfRows() - 1,
+			column: null
+		}
+	]);
+};
+D.MiniAds.Stats.fixYmdDate = function (date) {
+	var month = (date.getMonth() + 1);
+	if (month < 10) {
+		month = '0' + month;
+	}
+	return date.getFullYear() + '-' + month + '-' + date.getDate();
+};
+
+D.MiniAds.Stats.drawSelectAds = function (data, bid, container) {
+	var node = mkE({
+		tag: 'div',
+		className: 'selectAdsList',
+		els: [
+			{
+				tag: 'div',
+				text: D.MiniAds.l.get('stats_select_ads')
+			}
+		]
+	});
+
+	this.selectAdsItems = [];
+
+	if ( typeof this.n === 'undefined' ) {
+		this.n = {};
+	}
+	this.n.selectAdsCbxAll = new T.Form.CheckBox({
+		caption: D.Lang.get('Select all'),
+		checked: true,
+		onclick: D.closure( this, function() {
+			var val = this.n.selectAdsCbxAll.value();
+			for( var i = 0, len = this.selectAdsItems.length; i < len; i++ ) {
+				this.selectAdsItems[i].value( val );
+			}
+		})
+	}).append( node );
+
+	mkE({
+		tag: 'div',
+		className: 'topSep'
+	}).append( node );
+
+	for( var i = 0, len = data.length; i < len; i++ ) {
+		var cbx;
+
+		var widePreview = '';
+		if ( !empty( data[i].hc_style ) || !empty( data[i].pf_style ) ) {
+			widePreview = ' widePreview';
+		} else if ( !empty( data[i].style ) && ( data[i].style != 'gray' && data[i].style != 'green' ) ) {
+			widePreview = ' widePreview';
+		}
+		mkE({
+			tag: 'div',
+			className: 'row',
+			els:[
+				this._previewNode = mkE({
+					tag: 'div',
+					className: 'preview' + widePreview,
+					els:[
+						new D.MiniAds.Form.AdPreview(data[i], { type: 1 })
+					]
+				}),
+				cbx = new T.Form.CheckBox({
+					caption: D.MiniAds.l.get('cbx_select'),
+					checked: true
+				}),
+				T.clear()
+			]
+		}).append( node );
+		cbx.onclick = D.closure( this, function( c ) {
+			if ( !c.value() ) {
+				this.n.selectAdsCbxAll.value( false );
+				return;
+			}
+			var hasUnchecked;
+			for( var i = 0, len = this.selectAdsItems.length; i < len; i++ ) {
+				if ( !this.selectAdsItems[i].value() ) {
+					hasUnchecked = true;
+					break;
+				}
+			}
+			this.n.selectAdsCbxAll.value( !hasUnchecked );
+		}, cbx);
+		cbx._aid = data[i].id;
+		this.selectAdsItems.push( cbx );
+	}
+
+	mkE({
+		tag: 'div',
+		className: 'submitCont',
+		els:[
+			new T.Form.Button({
+				caption: D.MiniAds.l.get('stats_show_stats'),
+				onclick: D.closure( this, function() {
+					var aids = [];
+					var aidsUrl = '';
+					if ( !this.n.selectAdsCbxAll.value() ) {
+						for( var i = 0, len = this.selectAdsItems.length; i < len; i++ ) {
+							if ( this.selectAdsItems[i].value() ) {
+								aids.push( this.selectAdsItems[i]._aid );
+							}
+						}
+						aidsUrl = '&onlyAids=' + aids.join(',');
+					}
+
+					D.rq( '/bananaa/mini/rq/stats/campaign.php?cid=-2&bid=' + bid + aidsUrl, 'infobox3_box_content', {
+						hash: false,
+						overlay: true,
+						loadingText: D.MiniAds.l.get('long_loading_text')
+					});
+				}),
+				size: 'large'
+			})
+		]
+	}).append( node );
+
+	node.append( container );
+};
+
+D.MiniAds.Stats.prototype._reload = function () {
+	var filename = this.type == 'ad' ? 'single' : this.type;
+	var g = new Get('/bananaa/mini/rq/stats/' + filename + '.php');
+	if (this.type === 'ad') {
+		g.add('aid', this.aid);
+	} else {
+		g.add('cid', this.cid ? this.cid : '0');
+		if ( this.cid == -2 ) {
+			g.add('bid', this.bid);
+		}
+	}
+	if ( !empty( this.uid ) ) {
+		g.add('uid', this.uid);
+	}
+
+	g.add('dateFrom', this.dateFrom);
+	g.add('dateTo', this.dateTo);
+	g.add('ageFrom', this.ageFrom);
+	g.add('ageTo', this.ageTo);
+	g.add('sex', this.sex);
+	g.add('region', this.region);
+	if ( !empty(this.onlyAids) ) {
+		g.add('onlyAids', this.onlyAids);
+	}
+
+	D.rq(g.toUrl(), 'infobox3_box_content', {
+		hash: false,
+		overlay: true,
+		loadingText: D.MiniAds.l.get('long_loading_text')
+	});
+};
+D.MiniAds.Stats.prototype._onDateChange = function (period) {
+	if (typeof this._.tmpClick === 'undefined') {
+		this._.tmpClick = true;
+		this.dateFrom = period[0];
+		return;
+	}
+
+	this.dateTo = period[1];
+	this.closeCalendar();
+	this._reload();
+};
+D.MiniAds.Stats.prototype.backDays = function (days) {
+	days = days || 0;
+	if (!days) {
+		// shodien
+		var date = new Date();
+		this.dateFrom = D.MiniAds.Stats.fixYmdDate(date);
+		this.dateTo = this.dateFrom;
+	} else if (days === 1) {
+		// vakar
+		var yesterday = new Date();
+		yesterday.setDate(yesterday.getDate() - 1);
+		this.dateFrom = D.MiniAds.Stats.fixYmdDate(yesterday);
+		this.dateTo = this.dateFrom;
+	} else {
+		var dateTo = new Date();
+		this.dateTo = D.MiniAds.Stats.fixYmdDate(dateTo);
+		var dateFrom = new Date();
+		dateFrom.setDate(dateTo.getDate() - days);
+		this.dateFrom = D.MiniAds.Stats.fixYmdDate(dateFrom);
+	}
+	this._reload();
+};
+D.MiniAds.Stats.prototype.showPeriod = function( dateFrom, dateTo ) {
+	this.dateFrom = dateFrom;
+	this.dateTo = dateTo;
+	this.closeCalendar();
+	this._reload();
+};
+D.MiniAds.Stats.prototype.showFrom = function (el) {
+	$(document.getElementById('dateDatepicker')).datepicker({
+		dateFormat: 'yy-mm-dd',
+		onSelect: function (dateText, datepicker) {
+			datepicker.destroy();
+		}
+	});
+};
+D.MiniAds.Stats.prototype.showTo = function (el) {
+};
+D.MiniAds.Stats.prototype.backPeriod = function () {
+	var dateFrom = new Date( this.dateFrom );
+	var dateTo = new Date( this.dateTo );
+
+	if ( this.isSelectedWholeMonth() ) {
+		dateFrom.setMonth( dateFrom.getMonth() - 1 );
+		dateTo.setDate( 1 );
+		dateTo.setMonth( dateTo.getMonth() - 1 );
+		dateTo.setDate( this.daysInMonth(dateTo.getFullYear(), dateTo.getMonth()) );
+	} else {
+		dateTo.setMonth( dateFrom.getMonth() );
+		dateFrom.setMonth(dateFrom.getMonth() - 1);
+	}
+
+	this.dateFrom = dateFrom.getFullYear() + '-' + (dateFrom.getMonth() + 1) + '-' + dateFrom.getDate();
+	this.dateTo = dateTo.getFullYear() + '-' + (dateTo.getMonth() + 1) + '-' + dateTo.getDate();
+
+	this._reload();
+};
+D.MiniAds.Stats.prototype.nextPeriod = function () {
+	var dateFrom = new Date( this.dateFrom );
+	var dateTo = new Date( this.dateTo );
+
+	// ir vesels meenesis, tad raada naakamo veselo meenesi
+	if ( this.isSelectedWholeMonth() ) {
+		dateFrom.setMonth( dateFrom.getMonth() + 1 );
+		dateTo.setDate(1);
+		dateTo.setMonth( dateTo.getMonth() + 1 );
+		dateTo.setDate( this.daysInMonth(dateTo.getFullYear(), dateTo.getMonth()) );
+	} else {
+		dateFrom.setMonth( dateTo.getMonth() + 1 );
+		dateTo.setMonth( dateTo.getMonth() + 1 );
+	}
+
+	this.dateFrom = dateFrom.getFullYear() + '-' + (dateFrom.getMonth() + 1) + '-' + dateFrom.getDate();
+	this.dateTo = dateTo.getFullYear() + '-' + (dateTo.getMonth() + 1) + '-' + dateTo.getDate();
+
+	this._reload();
+};
+D.MiniAds.Stats.prototype.isSelectedWholeMonth = function() {
+	var dateFrom = new Date( this.dateFrom );
+	var dateTo = new Date( this.dateTo );
+
+	return dateFrom.getFullYear() == dateTo.getFullYear() &&
+		dateFrom.getMonth() == dateTo.getMonth() &&
+		dateFrom.getDate() == 1 &&
+		dateTo.getDate() == this.daysInMonth(dateTo.getFullYear(), dateTo.getMonth());
+};
+D.MiniAds.Stats.prototype.daysInMonth = function(y, m) {
+	return 32 - new Date(y, m, 32).getDate();
+};
+D.MiniAds.Stats.prototype.isCalendarOpen = function () {
+	var popover = document.getElementById('datepickerWrapper');
+	return !existsClassName(popover, 'hidden');
+};
+D.MiniAds.Stats.prototype.toogleCalendar = function () {
+	var popover = document.getElementById('datepickerWrapper');
+	if (existsClassName(popover, 'hidden')) {
+		removeClassName(popover, 'hidden');
+	} else {
+		addClassName(popover, 'hidden');
+	}
+};
+D.MiniAds.Stats.prototype.closeCalendar = function () {
+	var popover = document.getElementById('datepickerWrapper');
+	if (!existsClassName(popover, 'hidden')) {
+		addClassName(popover, 'hidden');
+	}
+};
+D.MiniAds.Stats.prototype.onSelectSex = function (select) {
+	this.sex = select.value;
+	this._reload();
+};
+D.MiniAds.Stats.prototype.onSelectRegion = function (select) {
+	this.region = select.value;
+	this._reload();
+};
+D.MiniAds.Stats.prototype.onToggleAge = function (slider) {
+	this.ageFrom = slider.from;
+	this.ageTo = slider.to;
+	this._reload();
+};
+
+
+D.MiniAds.Form = {};
+
+D.MiniAds.Form.AdPreviewTypeFrontpage = function (data, par) {
+	var contentNode = null;
+	var mAdTitleNode = null;
+	var mAdTextNode = null;
+
+	this.node = mkE({
+		tag: 'div',
+		className: 'miniAdsPreview'
+	});
+
+	if ( par.designTypeText ) {
+		mkE({
+			tag: 'div',
+			className: 'madDesignText color3',
+			text: data.designText
+		} ).append( this.node );
+	}
+
+	this._madNode = mkE({
+		tag: 'div',
+		id: 'miniAdsContainer1',
+		className: 'mAds mAdsFrontpageBox mAdsContainer radius3 front',
+		els: [
+			contentNode = mkE({
+				tag: 'div',
+				className: 'radius3',
+				els: [
+					{
+						tag: 'a',
+						className: 'mAd',
+						href: data.link,
+						target: '_blank',
+						els: [
+							mAdTitleNode = mkE({
+								tag: 'h2',
+								className: 'mAdTitle',
+								text: htmlspecialchars_decode( data.title )
+							}),
+							mAdTextNode = mkE({
+								tag: 'p',
+								className: 'mAdText',
+								text: htmlspecialchars_decode( data.text )
+							})
+							/*{
+								tag: 'span',
+								className: 'mAdVlink',
+								text: data.vlink
+							}*/
+						],
+						style: {
+							'width': 'auto',
+							'min-height': '65px'
+						}
+					},
+					{
+						tag: 'img',
+						className: 'status',
+						src: D.PIMG + 'ads/mini/img/ribbons/lv/' + data.status + '.png'
+					}
+				]
+			})
+		]
+	}).append( this.node );
+
+	// for preview link
+	var placeId = 2;
+
+	// sahakots, lai neraada veco dizainu
+	data.hc_style = null;
+
+	if (!empty(data.style)) {
+		addClassName(this._madNode, data.style);
+
+		placeId = 1;
+	} else if ( data.hc_style ) {
+		addClassName( this._madNode, 'mAdsHighlightCustom' );
+		var hcBackgroundValue = data.hc_style.border_color && data.hc_style.border_color != 'transparent' ? '#' + data.hc_style.border_color : 'transparent';
+		$( this._madNode ).css( 'background', hcBackgroundValue );
+		if ( hcBackgroundValue == 'transparent' ) {
+			addClassName( this._madNode, 'woBorder' );
+		}
+
+		var idFolder = String( data.id ).substr( 0, 2 );
+		var hcImg = D.idPicDomain( data.id ) + 'miniads_special/' + idFolder + '/v' + data.hc_style.img_version + '/' + data.id + '.jpg';
+		$( contentNode ).css( 'background', 'url('+ hcImg +')' );
+
+		mAdTitleNode.style.color = '#' + data.hc_style.title_color;
+		mAdTextNode.style.color = '#' + data.hc_style.text_color;
+		mAdTextNode.style.marginRight = data.hc_style.margin_right + 'px';
+		mAdTextNode.style.textShadow = '1px 1px 1px rgba(0, 0, 0, 0.2)';
+
+		placeId = 1;
+	} else if ( data.pf_style ) {
+		addClassName( this._madNode, 'mAdsPageFollow' );
+		var pfBackgroundValue = '#' + data.pf_style.bg_color;
+		$( this._madNode ).css( 'background-color', pfBackgroundValue );
+
+		var idFolder = String( data.id ).substr( 0, 2 );
+		var pfImg;
+		if ( !empty( data.pf_style.img_version ) ) {
+			pfImg = D.idPicDomain( data.id ) + 'miniads_special_pf/' + idFolder + '/v' + data.pf_style.img_version + '/' + data.id + '.jpg';
+		} else {
+			pfImg = D.imgUrl('business', data.pf_style.bid, 20, 'icon');
+		}
+		mkE({
+			tag: 'div',
+			className: 'mAdPageImg',
+			els: [{
+				tag: 'img',
+				src: pfImg
+			}]
+		}).append( contentNode );
+
+		mAdTitleNode.style.color = '#' + data.pf_style.title_color;
+		mAdTextNode.style.color = '#' + data.pf_style.text_color;
+
+		placeId = 1;
+	} else {
+		addClassName(this._madNode, 'orange');
+
+		placeId = 2;
+	}
+	if (!empty(data.extra)) {
+		addClassName(this._madNode, data.extra);
+	}
+
+	if ( par.previewLink ) {
+		if ( !empty( data.designType ) ) {
+			placeId = 1;
+			if ( data.designType == 'standart' ) {
+				placeId = 2;
+			}
+		}
+
+		var previewUrl = '/?mini_preview_id=' + data.id + '&placeId=' + placeId;
+		if ( isset( data.json.event_ad ) ) {
+			previewUrl = '/events/?mini_preview_id=' + data.id + '&placeId=13,14';
+		}
+
+		mkE({
+			tag: 'a',
+			prop: {
+				target: '_blank'
+			},
+			className: 'icon previewIcon',
+			href: previewUrl,
+			text: D.MiniAds.l.get('design_hc_preview')
+		}).append( this.node );
+	}
+};
+D.MiniAds.Form.AdPreviewTypeDefault = function () {
+
+};
+D.MiniAds.Form.AdPreview = function (data, par) {
+	this._data = data;
+	try {
+		this._preview = new this._types[ par.type ](this._data, par);
+		this.node = this._preview.node;
+	} catch (e) {
+		D.console.error(e);
+	}
+};
+D.MiniAds.Form.AdPreview.prototype.append = function (parent) {
+	this.node.append(parent);
+};
+
+D.MiniAds.Form.AdPreview.prototype._types = {
+	1: D.MiniAds.Form.AdPreviewTypeFrontpage,
+	2: D.MiniAds.Form.AdPreviewTypeDefault
+};
+
+
+D.MiniAds.Form.PreviewDesigner = function (currentStyle) {
+	this.currentStyle = currentStyle;
+	this._ = {};
+	var self = this;
+
+	$(function () {
+		self._.highlightOptionsNode = document.getElementById('adHighlightOptions');
+		self._.highlightCustomOptionsNode = document.getElementById('adHighlightCustomOptions');
+		self._.highlightCustomOptions2Node = document.getElementById('adHighlightCustomOptions2');
+		self._.highlightCustomOptionsMNode = document.getElementById('adHighlightCustomOptionsM');
+		self._.highlightCustomOptions3Node = document.getElementById('adHighlightCustomOptions3');
+		self._.pageFollowOptionsNode = document.getElementById('adPageFollowOptions');
+		self._.pageFollowOptions2Node = document.getElementById('adPageFollow2Options');
+		self._.standartEventOptions = document.getElementById('adStandartEventOptions');
+		self._.defaultPreviewNode = $('.rt_container .mAdsDefaultBox')[0];
+		self._.contentTitleNode = document.getElementById('AdContentTitle');
+		self._.contentBodyNode = document.getElementById('AdContentBody');
+		self._.hcTitleColorNode = document.getElementById('hcTitleColor');
+		self._.hcTextColorNode = document.getElementById('hcTextColor');
+		self._.hcBorderColorNode = document.getElementById('hcBorderColor');
+		self._.pfTitleColorNode = document.getElementById('pfTitleColor');
+		self._.pfTextColorNode = document.getElementById('pfTextColor');
+		self._.pfBgColorNode = document.getElementById('pfBgColor');
+		self._.hc2TitleColorNode = document.getElementById('hc2TitleColor');
+		self._.hc2TextColorNode = document.getElementById('hc2TextColor');
+		self._.eventAdPreview = document.getElementById('eventAdPreview');
+		self._.eventsHelp = document.getElementById('eventsHelp');
+		self._.bizAdPreview = document.getElementById('bizAdPreview');
+		self._.bizHelp = document.getElementById('bizHelp');
+		self._.creditNote = document.getElementById('AdCreditNote')._form;
+		self._.pf2GradientColor1 = document.getElementById('pf2GradientColor1');
+		self._.pf2GradientColor2 = document.getElementById('pf2GradientColor2');
+		self._.hc3TitleColorNode = document.getElementById('hc3TitleColor');
+		self._.hc3TextColorNode = document.getElementById('hc3TextColor');
+		self.setDesignPreview(currentStyle);
+	});
+
+	this._addColorPicker( document.getElementById('cpTitleHc'),  document.getElementById('hcTitleColor') );
+	this._addColorPicker( document.getElementById('cpTextHc'),   document.getElementById('hcTextColor') );
+	this._addColorPicker( document.getElementById('cpBorderHc'), document.getElementById('hcBorderColor') );
+	this._addColorPicker( document.getElementById('cpTitlePf'),  document.getElementById('pfTitleColor') );
+	this._addColorPicker( document.getElementById('cpTextPf'),   document.getElementById('pfTextColor') );
+	this._addColorPicker( document.getElementById('cpBgPf'),     document.getElementById('pfBgColor') );
+	this._addColorPicker( document.getElementById('cpTitleHc2'), document.getElementById('hc2TitleColor') );
+	this._addColorPicker( document.getElementById('cpTextHc2'),  document.getElementById('hc2TextColor') );
+	this._addColorPicker( document.getElementById('cpTitleHc3'), document.getElementById('hc3TitleColor') );
+	this._addColorPicker( document.getElementById('cpTextHc3'),  document.getElementById('hc3TextColor') );
+	if ( document.getElementById('pf2GradientColor1') ) {
+		this._addColorPicker( document.getElementById('cpPf2Gradient1'), document.getElementById('pf2GradientColor1') );
+		this._addColorPicker( document.getElementById('cpPf2Gradient2'), document.getElementById('pf2GradientColor2') );
+	}
+};
+
+D.MiniAds.Form.PreviewDesigner.prototype = {
+	selectDesignType: function( type ) {
+		switch (type) {
+			case 'standart':
+				var adUrlType = $('#AdURLType').val();
+				this.hideHighlightOptions();
+				this.hideHighlightCustomOptions();
+				this.hidePageFollowOptions();
+				if ( adUrlType == 'event' ) {
+					this.showStandartEventOptions();
+				} else if ( adUrlType == 'biz' ) {
+					this.hideStandartEventOptions();
+				} else {
+					this.hideStandartEventOptions();
+				}
+				this.setDesignPreview('standart');
+				$('.rt_container').show();
+				$('.galleryDesignItem').hide();
+				$('#design21HeaderNr').text('2.');
+				$('#design21HeaderTip').hide();
+				this._.creditNote.show();
+				break;
+
+			case 'highlight':
+				this.showHighlightOptions();
+				this.hideHighlightCustomOptions();
+				this.hidePageFollowOptions();
+				this.hideStandartEventOptions();
+				this.setDesignPreview('gray');
+				$('.rt_container').show();
+				$('.galleryDesignItem').hide();
+				$('#design21HeaderNr').text('2.');
+				$('#design21HeaderTip').hide();
+				this._.creditNote.show();
+				break;
+
+			case 'highlight_custom':
+				this.hideHighlightOptions();
+				this.showHighlightCustomOptions();
+				this.hidePageFollowOptions();
+				this.hideStandartEventOptions();
+				this.setDesignPreview('highlight_custom');
+				$('.rt_container').hide();
+				$('.galleryDesignItem').show();
+				$('#design21HeaderNr').text('2.1');
+				$('#design21HeaderTip').show();
+				$('.hcMobile').show();
+				this._.creditNote.show();
+				break;
+
+			case 'page_follow':
+				this.hideHighlightOptions();
+				this.hideHighlightCustomOptions();
+				this.showPageFollowOptions();
+				this.hideStandartEventOptions();
+				this.setDesignPreview('page_follow');
+				$('.rt_container').hide();
+				$('#AdURLBiz').change();
+				$('.galleryDesignItem').show();
+				$('#design21HeaderNr').text('2.1');
+				$('#design21HeaderTip').show();
+				$('.hcMobile').hide();
+				this._.creditNote.hide();
+				break;
+		}
+
+		D.MiniAds.updateDisplayHeaderDesign21();
+	},
+
+	showHighlightOptions: function () {
+		$(this._.highlightOptionsNode).slideDown();
+	},
+
+	hideHighlightOptions: function () {
+		$(this._.highlightOptionsNode).slideUp();
+	},
+
+	showHighlightCustomOptions: function () {
+		$(this._.highlightCustomOptionsNode).slideDown();
+		$(this._.highlightCustomOptions2Node).slideDown();
+		$(this._.highlightCustomOptionsMNode).slideDown();
+		$(this._.highlightCustomOptions3Node).slideDown();
+	},
+	hideHighlightCustomOptions: function () {
+		$(this._.highlightCustomOptionsNode).slideUp();
+		$(this._.highlightCustomOptions2Node).slideUp();
+		$(this._.highlightCustomOptionsMNode).slideUp();
+		$(this._.highlightCustomOptions3Node).slideUp();
+	},
+
+	showPageFollowOptions: function () {
+		$(this._.pageFollowOptionsNode).slideDown();
+		$(this._.pageFollowOptions2Node).slideDown();
+	},
+
+	hidePageFollowOptions: function () {
+		$(this._.pageFollowOptionsNode).slideUp();
+		$(this._.pageFollowOptions2Node).slideUp();
+	},
+
+	showStandartEventOptions: function() {
+		$( this._.standartEventOptions ).slideDown();
+		if ( $('.eventAdPreview', this._.eventAdPreview ).hasClass('hasImage') ) {
+			this._.eventAdPreview.style.display = 'block';
+		}
+		if ( this._.eventsHelp ) {
+			this._.eventsHelp.style.display = 'block';
+			$('.rt_container').addClass('rtContContent');
+		}
+	},
+	hideStandartEventOptions: function() {
+		$( this._.standartEventOptions ).slideUp();
+		this._.eventAdPreview.style.display = 'none';
+		if ( this._.eventsHelp ) {
+			this._.eventsHelp.style.display = 'none';
+			$('.rt_container').removeClass('rtContContent');
+		}
+	},
+
+	_addColorPicker: function( colorPickerNode, valueNode ) {
+		var p = $.farbtastic( colorPickerNode );
+		p.setColor( /^[a-fA-F0-9]+$/.test( valueNode.value ) ? '#' + valueNode.value : '');
+		p.linkTo(function( color ){
+			$( valueNode ).val( color.replace('#','').toUpperCase() );
+			$( valueNode ).change();
+		} );
+	},
+
+	_validateColor: function( color, defaultValue ) {
+		var val = color.replace(/[^a-fA-F0-9]/g, '');
+		return val != '' ? '#' + val.substr( 0, 6 )  : defaultValue;
+	},
+
+	previewHcTitleColor: function() {
+		var hcTitleVal = this._validateColor( this._.hcTitleColorNode.value, '#ffffff' );
+		this._.hcTitleColorNode.value = hcTitleVal.replace('#', '');
+		$('#adHighlightCustomOptions').find('.mAdTitle').css('color', hcTitleVal);
+	},
+	previewHcTextColor: function() {
+		var hcTextVal = this._validateColor( this._.hcTextColorNode.value, '#ffffff' );
+		this._.hcTextColorNode.value = hcTextVal.replace('#', '');
+		$('#adHighlightCustomOptions').find('.mAdText').css('color', hcTextVal);
+	},
+	previewHcBorderColor: function() {
+		var hcBorderVal = this._validateColor( this._.hcBorderColorNode.value, 'transparent' );
+		this._.hcBorderColorNode.value = hcBorderVal != 'transparent' ? hcBorderVal.replace('#', '') : '';
+
+		var previewNodeJq = $('#adHighlightCustomOptions').find('.mAdsHighlightCustom');
+
+		if ( hcBorderVal == 'transparent' ) {
+			previewNodeJq.addClass('woBorder');
+		} else {
+			previewNodeJq.removeClass('woBorder');
+		}
+		previewNodeJq.find('> div:first-child').css('borderColor', hcBorderVal);
+	},
+	previewHc2TitleColor: function() {
+		var hcTitleVal = this._validateColor( this._.hc2TitleColorNode.value, '#ffffff' );
+		this._.hc2TitleColorNode.value = hcTitleVal.replace('#', '');
+		if ( this._.hc2TitleColorNode.value.toLowerCase() == 'fff' || this._.hc2TitleColorNode.value.toLowerCase() == 'ffffff' ) {
+			$('.mAdsHighlightCustom2 .mAdTitle').addClass('textShadow');
+		} else {
+			$('.mAdsHighlightCustom2 .mAdTitle').removeClass('textShadow');
+		}
+		$('#adHighlightCustomOptions2').find('.mAdTitle').css('color', hcTitleVal);
+	},
+	previewHc2TextColor: function() {
+		var hcTextVal = this._validateColor( this._.hc2TextColorNode.value, '#ffffff' );
+		this._.hc2TextColorNode.value = hcTextVal.replace('#', '');
+		if ( this._.hc2TextColorNode.value.toLowerCase() == 'fff' || this._.hc2TextColorNode.value.toLowerCase() == 'ffffff' ) {
+			$('.mAdsHighlightCustom2 .mAdTitle').addClass('textShadow');
+		} else {
+			$('.mAdsHighlightCustom2 .mAdTitle').removeClass('textShadow');
+		}
+		$('#adHighlightCustomOptions2').find('.mAdText').css('color', hcTextVal);
+	},
+
+	previewHc3TitleColor: function() {
+		var hcTitleVal = this._validateColor( this._.hc3TitleColorNode.value, '#ffffff' );
+		this._.hc3TitleColorNode.value = hcTitleVal.replace('#', '');
+		if ( this._.hc3TitleColorNode.value.toLowerCase() == 'fff' || this._.hc3TitleColorNode.value.toLowerCase() == 'ffffff' ) {
+			$('.mAdsHighlightCustom3 .mAdTitle').addClass('textShadow');
+		} else {
+			$('.mAdsHighlightCustom3 .mAdTitle').removeClass('textShadow');
+		}
+		$('#adHighlightCustomOptions3').find('.mAdTitle').css('color', hcTitleVal);
+	},
+	previewHc3TextColor: function() {
+		var hcTextVal = this._validateColor( this._.hc3TextColorNode.value, '#ffffff' );
+		this._.hc3TextColorNode.value = hcTextVal.replace('#', '');
+		if ( this._.hc3TextColorNode.value.toLowerCase() == 'fff' || this._.hc3TextColorNode.value.toLowerCase() == 'ffffff' ) {
+			$('.mAdsHighlightCustom3 .mAdTitle').addClass('textShadow');
+		} else {
+			$('.mAdsHighlightCustom3 .mAdTitle').removeClass('textShadow');
+		}
+		$('#adHighlightCustomOptions3').find('.mAdText').css('color', hcTextVal);
+	},
+
+	previewPfTitleColor: function() {
+		var pfTitleVal = this._validateColor( this._.pfTitleColorNode.value, '#ffffff' );
+		this._.pfTitleColorNode.value = pfTitleVal.replace('#', '');
+		$('#adPageFollowOptions').find('.mAdTitle').css('color', pfTitleVal);
+	},
+	previewPfTextColor: function() {
+		var pfTextVal = this._validateColor( this._.pfTextColorNode.value, '#ffffff' );
+		this._.pfTextColorNode.value = pfTextVal.replace('#', '');
+		$('#adPageFollowOptions').find('.mAdText').css('color', pfTextVal);
+	},
+	previewPfBgColor: function() {
+		var pfBgVal = this._validateColor( this._.pfBgColorNode.value, '#2faacd' );
+		this._.pfBgColorNode.value = pfBgVal != 'transparent' ? pfBgVal.replace('#', '') : '';
+		$('#adPageFollowOptions').find('.mAdsPageFollow > div:first-child').css('backgroundColor', pfBgVal);
+	},
+
+	previewPf2toggleCustomGradient: function() {
+		var cbJq = $('#pf2UseCustomGradient');
+		$('#customGradientCont').toggle();
+		if ( !cbJq.prop('checked') ) {
+			$('#adPageFollow2Options').find('.mAdsPageFollow2 > div:first-child').css({
+				background: '',
+				filter: ''
+			});
+		} else {
+			this.previewPf2Color();
+		}
+	},
+	previewPf2Color: function() {
+		var color1 = this._validateColor( this._.pf2GradientColor1.value, '#000000' );
+		this._.pf2GradientColor1.value = color1.replace('#', '');
+		var color2 = this._validateColor( this._.pf2GradientColor2.value, '#000000' );
+		this._.pf2GradientColor2.value = color2.replace('#', '');
+
+		var styleNode = $('#adPageFollow2Options').find('.mAdsPageFollow2 > div:first-child').get(0).style;
+		styleNode.background = 'linear-gradient(to bottom, ' + color1 + ' 0%,' + color2 + ' 100%)'; /* W3C */
+		styleNode.background = '-o-linear-gradient(top, ' + color1 + ' 0%,' + color2 + ' 100%)'; /* Opera 11.10+ */
+		styleNode.background = '-moz-linear-gradient(top, ' + color1 + ' 0%, ' + color2 + ' 100%)'; /* FF3.6+ */
+		styleNode.background = '-webkit-gradient(linear, left top, left bottom, color-stop(0%,' + color1 + '), color-stop(100%,' + color2 + '))'; /* Chrome,Safari4+ */
+		styleNode.background = '-webkit-linear-gradient(top, ' + color1 + ' 0%,' + color2 + ' 100%)'; /* Chrome10+,Safari5.1+ */
+		styleNode.background = '-ms-linear-gradient(top, ' + color1 + ' 0%,' + color2 + ' 100%)'; /* IE10+ */
+		if ( styleNode.background.indexOf('gradient') == -1 ) {
+			styleNode['filter'] = "progid:DXImageTransform.Microsoft.gradient( startColorstr='" + color1 + "', endColorstr='" + color2 + "',GradientType=0 )"; /* IE6-9 */
+			styleNode.background = color1;
+		}
+	},
+
+
+	setDesignPreview: function (style) {
+		if (this.currentStyle === style) {
+			return false;
+		}
+
+		if (!empty(this.currentStyle)) { /* reset previous if there was any */
+			removeClassName(this._.defaultPreviewNode, this.currentStyle);
+		}
+
+		// trigger error checking
+		if ( window.adsLoc ) {
+			window.adsLoc.onChange();
+		}
+
+		switch (style) {
+			case 'standart':
+				$(this._.defaultPreviewNode).show();
+				this.currentStyle = 'standart';
+				break;
+			case 'highlight_custom':
+				this.previewHcTitleColor();
+				this.previewHcTextColor();
+				this.previewHcBorderColor();
+
+				this.currentStyle = style;
+				$([this._.contentTitleNode, this._.contentBodyNode]).trigger('onmouseup');
+				break;
+
+			case 'page_follow':
+				this.previewPfTitleColor();
+				this.previewPfTextColor();
+				this.previewPfBgColor();
+
+				this.currentStyle = style;
+				$([this._.contentTitleNode, this._.contentBodyNode]).trigger('onmouseup');
+				break;
+
+			case 'gray':
+			case 'green':
+			default:
+				$(this._.defaultPreviewNode).hide();
+				this.currentStyle = style;
+				$([this._.contentTitleNode, this._.contentBodyNode]).trigger('onmouseup');
+				break;
+		}
+
+		D.MiniAds.showHideAddRemMediaButtons();
+		this.checkTextMaxLength();
+
+		return true;
+	},
+
+	checkTextMaxLength: function() {
+		var titleMaxLength = D.MiniAds.TEXT_LEN_TITLE_DEFAULT;
+		var textMaxLength = D.MiniAds.TEXT_LEN_TEXT_DEFAULT;
+
+		// set text lengths
+		if ( $.inArray( this.currentStyle, ['gray', 'green'] ) >= 0 || this.currentStyle == 'highlight_custom' ) {
+			titleMaxLength = D.MiniAds.TEXT_LEN_TITLE_SPECIAL;
+			textMaxLength = D.MiniAds.TEXT_LEN_TEXT_SPECIAL;
+		} else if ( this.currentStyle == 'page_follow' ) {
+			titleMaxLength = D.MiniAds.TEXT_LEN_TITLE_SPECIAL;
+			textMaxLength = D.MiniAds.TEXT_LEN_TEXT_PF2;
+		} else if ( $('#mAdRemoveMedia').css('display') == 'none' ) {
+			titleMaxLength = D.MiniAds.TEXT_LEN_TITLE_NO_PIC;
+			textMaxLength = D.MiniAds.TEXT_LEN_TEXT_NO_PIC;
+		} else {
+			titleMaxLength = D.MiniAds.TEXT_LEN_TITLE_DEFAULT;
+			textMaxLength = D.MiniAds.TEXT_LEN_TEXT_DEFAULT;
+		}
+
+		var oldTitleMaxLen = this._.contentTitleNode.getAttribute('maxlength');
+
+		this._.contentTitleNode.setAttribute('maxlength', '' + titleMaxLength);
+		this._.contentBodyNode.setAttribute('maxlength', '' + textMaxLength);
+		if ( this._.contentTitleNode.value.length > titleMaxLength || this._.contentBodyNode.value.length > textMaxLength ) {
+			// trigger text preview update
+			// timeouts taapeec, lai maxlength paspeej nogriezt, ja vajag
+			setTimeout( function() {
+				D.MiniAds.updateTitle({ type: 'dummy' });
+				D.MiniAds.updateText({ type: 'dummy' });
+			}, 200);
+
+			var alertText = D.MiniAds.l.get( 'text_length_changed_warning' );
+			if ( oldTitleMaxLen == D.MiniAds.TEXT_LEN_TITLE_NO_PIC && titleMaxLength == D.MiniAds.TEXT_LEN_TITLE_DEFAULT ) {
+				alertText = D.MiniAds.l.get( 'text_length_changed_warning_pic' );
+			}
+
+			alert( alertText );
+		}
+		$([this._.contentTitleNode, this._.contentBodyNode]).trigger('onmouseup');
+	},
+
+	hcOnSlideChange: function( slider ) {
+		$('#adHighlightCustomOptions').find('.mAdText').css( {
+			'margin-right': slider.to + 'px',
+			'border-right': '2px solid #fff'
+		} );
+	},
+
+	hcOnSlideEnd: function( slider ) {
+		$('#adHighlightCustomOptions').find('.mAdText').css( {
+			'border-right': 'none'
+		} );
+	},
+
+	uploadData: [],
+	hcAddUploader: function(par) {
+		var node = document.getElementById('hcUploadCont');
+		this._.uploadErrors = document.getElementById('hcUploadContErrors');
+
+		var btn = T.submitButton({
+			type: 'html',
+			stretch: true,
+			className: 'buttonLink'
+		}).append(node);
+
+		mkE({
+			tag: 'br'
+		}).append( node );
+
+		var upl = new Uploader({
+			caption: D.Lang.get( 'design_upload_btn', 'xMiniAds' ),
+			DS: par.DS,
+			thumbWidth: 500,
+			thumbHeight: 93,
+			thumbCrop: true,
+			onBeforeSelect: D.closure(this, function() {
+				clearNode(this._.uploadErrors);
+			}),
+			onSelect: D.closure(this, function(par2) {
+				if (!par2) {
+					return;
+				}
+
+				upl.upload({id: par2.id, url: D.UPL + 'pic/upload.php', data: { id: 'tmp', type: 124 }});
+			}),
+			onThumb: D.closure(this, function(par2) {
+				if (!par2.data) {
+					return;
+				}
+
+//				$('#miniAdsContainer1 > div').css('backgroundImage', 'url(' + 'data:image/jpeg;base64,' + par2.data + ')');
+			}),
+//			onUploadProgress: D.closure(this, function(par2) {
+//				this.uploadData[par2.id].progressCNode.style.width = (par2.bytesLoaded / par2.bytesTotal * 100) + '%';
+//			}),
+			onUploadCompleteData: D.closure(this, D.closure( this, this.hcAddUploader_cb )),
+			limit: 1
+		});
+		clearNode(btn.button);
+		upl.append(btn.button);
+
+		var nativeUploader = $( btn ).find('.NativeUploader');
+		if ( nativeUploader.length ) {
+			removeClassName( btn, 'buttonStretch' );
+			addClassName( btn, 'designUploadButton' );
+			nativeUploader.find('.flashUploadLabel').css({ position: 'static' });
+		}
+	},
+	hcAddUploader_cb: function( par2 ) {
+		var data = D.JSON.decode( par2.data );
+
+		if (data.error) {
+			var errorText = D.Lang.get('pic upload error' + data.errorNr);
+			if (data.errorNr == 4) {
+				errorText += ' (500x93)';
+			}
+			alert( errorText );
+			return;
+		}
+
+		document.getElementById('hcImageId').value = data.id;
+		$('.mAdsHighlightCustom > div:first-child', '#adHighlightCustomOptions').css('backgroundImage', 'url(' + data.url + ')');
+
+		document.getElementById('mAdRemoveHcImage').style.display = '';
+		document.getElementById('hcHasImage').value = '1';
+		document.getElementById('AdHcImageRemove').value = 0;
+	},
+
+	pfAddUploader: function(par) {
+		var node = document.getElementById('pfUploadCont');
+		this._.uploadErrors = document.getElementById('pfUploadContErrors');
+
+		var btn = T.submitButton({
+			type: 'html',
+			stretch: true,
+			className: 'buttonLink'
+		}).append(node);
+
+		mkE({
+			tag: 'br'
+		}).append( node );
+
+		var upl = new Uploader({
+			caption: D.Lang.get( 'design_upload_btn', 'xMiniAds' ),
+			DS: par.DS,
+			thumbWidth: 50,
+			thumbHeight: 50,
+			thumbCrop: true,
+			onBeforeSelect: D.closure(this, function() {
+				clearNode(this._.uploadErrors);
+			}),
+			onSelect: D.closure(this, function(par2) {
+				if (!par2) {
+					return;
+				}
+
+				upl.upload({id: par2.id, url: D.UPL + 'pic/upload.php', data: { id: 'tmp', type: 126 }});
+			}),
+			onThumb: D.closure(this, function(par2) {
+				if (!par2.data) {
+					return;
+				}
+
+//				$('#miniAdsContainer1 > div').css('backgroundImage', 'url(' + 'data:image/jpeg;base64,' + par2.data + ')');
+			}),
+//			onUploadProgress: D.closure(this, function(par2) {
+//				this.uploadData[par2.id].progressCNode.style.width = (par2.bytesLoaded / par2.bytesTotal * 100) + '%';
+//			}),
+			onUploadCompleteData: D.closure(this, function (par2) {
+				var data = D.JSON.decode( par2.data );
+
+				if (data.error) {
+					var errorText = D.Lang.get('pic upload error' + data.errorNr);
+					if (data.errorNr == 4) {
+						errorText += ' (50x50)';
+					}
+					alert( errorText );
+					return;
+				}
+
+				document.getElementById('pfImageId').value = data.id;
+				$('#adPageFollowOptions').find('.mAdPageImg img').attr('src', data.url);
+			}),
+			limit: 1
+		});
+		clearNode(btn.button);
+		upl.append(btn.button);
+
+		var nativeUploader = $( btn ).find('.NativeUploader');
+		if ( nativeUploader.length ) {
+			removeClassName( btn, 'buttonStretch' );
+			addClassName( btn, 'designUploadButton' );
+			nativeUploader.find('.flashUploadLabel').css({ position: 'static' });
+		}
+	},
+
+	evAddUploader: function(par) {
+		var node = document.getElementById( par.uploadCont );
+		this._.uploadErrors = document.getElementById( par.errorCont );
+
+		var btn = T.submitButton({
+			type: 'html',
+			stretch: true,
+			className: 'buttonLink'
+		}).append(node);
+
+		mkE({
+			tag: 'br'
+		}).append( node );
+
+		var upl = new Uploader({
+			caption: D.Lang.get( 'design_upload_btn', 'xMiniAds' ),
+			DS: par.DS,
+			thumbWidth: 730,
+			thumbHeight: 180,
+			thumbCrop: true,
+			onBeforeSelect: D.closure(this, function() {
+				clearNode(this._.uploadErrors);
+			}),
+			onSelect: D.closure(this, function(par2) {
+				if (!par2) {
+					return;
+				}
+
+				upl.upload({id: par2.id, url: D.UPL + 'pic/upload.php', data: { id: 'tmp', type: 129 }});
+			}),
+			onThumb: D.closure(this, function(par2) {
+				if (!par2.data) {
+					return;
+				}
+
+//				$('#miniAdsContainer1 > div').css('backgroundImage', 'url(' + 'data:image/jpeg;base64,' + par2.data + ')');
+			}),
+//			onUploadProgress: D.closure(this, function(par2) {
+//				this.uploadData[par2.id].progressCNode.style.width = (par2.bytesLoaded / par2.bytesTotal * 100) + '%';
+//			}),
+			onUploadCompleteData: D.closure( this, this.evAddUploader_cb ),
+			limit: 1
+		});
+		clearNode(btn.button);
+		upl.append(btn.button);
+
+		var nativeUploader = $( btn ).find('.NativeUploader');
+		if ( nativeUploader.length ) {
+			removeClassName( btn, 'buttonStretch' );
+			addClassName( btn, 'designUploadButton' );
+			nativeUploader.find('.flashUploadLabel').css({ position: 'static' });
+		}
+	},
+	evAddUploader_cb: function( par2 ) {
+		var data = D.JSON.decode( par2.data );
+
+		if (data.error) {
+			var errorText = D.Lang.get('pic upload error' + data.errorNr);
+			if (data.errorNr == 4) {
+				errorText += ' (730x180)';
+			}
+			alert( errorText );
+			return;
+		}
+
+		document.getElementById('evImageId').value = data.id;
+
+		var eventAdPreview = $('#eventAdPreview');
+		$('.eventAdPreview', eventAdPreview).css({ background: 'url("' + data.url + '")'}).addClass('hasImage' ).show('fast');
+		eventAdPreview.show();
+		$('#mAdRemoveEventImage').show();
+		document.getElementById('AdEventImageRemove').value = 0;
+		$('#evStandartUploadMsg').text( D.MiniAds.l.get('image_uploaded'));
+		setTimeout(function() {
+			$('#evStandartUploadMsg').text('');
+		}, 4000)
+	},
+
+	hc2AddUploader: function(par) {
+		var node = document.getElementById('hc2UploadCont');
+		this._.uploadErrors = document.getElementById('hc2UploadContErrors');
+
+		var btn = T.submitButton({
+			type: 'html',
+			stretch: true,
+			className: 'buttonLink'
+		}).append(node);
+
+		mkE({
+			tag: 'br'
+		}).append( node );
+
+		var upl = new Uploader({
+			caption: D.Lang.get( 'design_upload_btn', 'xMiniAds' ),
+			DS: par.DS,
+			thumbWidth: 304,
+			thumbHeight: 152,
+			thumbCrop: true,
+			onBeforeSelect: D.closure(this, function() {
+				clearNode(this._.uploadErrors);
+			}),
+			onSelect: D.closure(this, function(par2) {
+				if (!par2) {
+					return;
+				}
+
+				upl.upload({id: par2.id, url: D.UPL + 'pic/upload.php', data: { id: 'tmp', type: 146 }});
+			}),
+			onThumb: D.closure(this, function(par2) {
+				if (!par2.data) {
+					return;
+				}
+
+//				$('#miniAdsContainer1 > div').css('backgroundImage', 'url(' + 'data:image/jpeg;base64,' + par2.data + ')');
+			}),
+//			onUploadProgress: D.closure(this, function(par2) {
+//				this.uploadData[par2.id].progressCNode.style.width = (par2.bytesLoaded / par2.bytesTotal * 100) + '%';
+//			}),
+			onUploadCompleteData: D.closure(this, D.closure( this, this.hc2AddUploader_cb ) ),
+			limit: 1
+		});
+		clearNode(btn.button);
+		upl.append(btn.button);
+
+		var nativeUploader = $( btn ).find('.NativeUploader');
+		if ( nativeUploader.length ) {
+			removeClassName( btn, 'buttonStretch' );
+			addClassName( btn, 'designUploadButton' );
+			nativeUploader.find('.flashUploadLabel').css({ position: 'static' });
+		}
+	},
+	hc2AddUploader_cb: function( par2 ) {
+		var data = D.JSON.decode( par2.data );
+
+		if (data.error) {
+			var errorText = D.Lang.get('pic upload error' + data.errorNr);
+			if (data.errorNr == 4) {
+				errorText += ' (304x152)';
+			}
+			alert( errorText );
+			return;
+		}
+
+		document.getElementById('hc2ImageId').value = data.id;
+		$('.mAdsHighlightCustom2 > div:first-child', '#adHighlightCustomOptions2').css('backgroundImage', 'url(' + data.url + ')');
+
+		document.getElementById('mAdRemoveHc2Image').style.display = '';
+		document.getElementById('hc2HasImage').value = '1';
+		document.getElementById('AdHc2ImageRemove').value = 0;
+	},
+
+	hcMAddUploader: function(par) {
+		var node = document.getElementById('hcMUploadCont');
+		this._.uploadErrors = document.getElementById('hcMUploadContErrors');
+
+		var btn = T.submitButton({
+			type: 'html',
+			stretch: true,
+			className: 'buttonLink'
+		}).append(node);
+
+		mkE({
+			tag: 'br'
+		}).append( node );
+
+		var upl = new Uploader({
+			caption: D.Lang.get( 'design_upload_btn', 'xMiniAds' ),
+			DS: par.DS,
+			thumbWidth: 304,
+			thumbHeight: 152,
+			thumbCrop: true,
+			onBeforeSelect: D.closure(this, function() {
+				clearNode(this._.uploadErrors);
+			}),
+			onSelect: D.closure(this, function(par2) {
+				if (!par2) {
+					return;
+				}
+
+				upl.upload({id: par2.id, url: D.UPL + 'pic/upload.php', data: { id: 'tmp', type: 158 }});
+			}),
+			onThumb: D.closure(this, function(par2) {
+				if (!par2.data) {
+					return;
+				}
+			}),
+//			onUploadProgress: D.closure(this, function(par2) {
+//				this.uploadData[par2.id].progressCNode.style.width = (par2.bytesLoaded / par2.bytesTotal * 100) + '%';
+//			}),
+			onUploadCompleteData: D.closure(this, D.closure( this, this.hcMAddUploader_cb ) ),
+			limit: 1
+		});
+		clearNode(btn.button);
+		upl.append(btn.button);
+
+		var nativeUploader = $( btn ).find('.NativeUploader');
+		if ( nativeUploader.length ) {
+			removeClassName( btn, 'buttonStretch' );
+			addClassName( btn, 'designUploadButton' );
+			nativeUploader.find('.flashUploadLabel').css({ position: 'static' });
+		}
+	},
+	hcMAddUploader_cb: function( par2 ) {
+		var data = D.JSON.decode( par2.data );
+
+		if (data.error) {
+			var errorText = D.Lang.get('pic upload error' + data.errorNr);
+			if (data.errorNr == 4) {
+				errorText += ' (1032x516)';
+			}
+			alert( errorText );
+			return;
+		}
+
+		document.getElementById('hcMImageId').value = data.id;
+
+		$('.hcAction img', '#adHighlightCustomOptionsM').get(0).src = data.url;
+
+		document.getElementById('mAdRemoveHcMImage').style.display = '';
+		document.getElementById('hcMHasImage').value = '1';
+		document.getElementById('AdHcMImageRemove').value = 0;
+	},
+
+	hc3AddUploader: function(par) {
+		var node = document.getElementById('hc3UploadCont');
+		this._.uploadErrors = document.getElementById('hc3UploadContErrors');
+
+		var btn = T.submitButton({
+			type: 'html',
+			stretch: true,
+			className: 'buttonLink'
+		}).append(node);
+
+		mkE({
+			tag: 'br'
+		}).append( node );
+
+		var upl = new Uploader({
+			caption: D.Lang.get( 'design_upload_btn', 'xMiniAds' ),
+			DS: par.DS,
+			thumbWidth: 300,
+			thumbHeight: 250,
+			thumbCrop: true,
+			onBeforeSelect: D.closure(this, function() {
+				clearNode(this._.uploadErrors);
+			}),
+			onSelect: D.closure(this, function(par2) {
+				if (!par2) {
+					return;
+				}
+
+				upl.upload({id: par2.id, url: D.UPL + 'pic/upload.php', data: { id: 'tmp', type: 185 }});
+			}),
+			onThumb: D.closure(this, function(par2) {
+				if (!par2.data) {
+					return;
+				}
+
+//				$('#miniAdsContainer1 > div').css('backgroundImage', 'url(' + 'data:image/jpeg;base64,' + par2.data + ')');
+			}),
+//			onUploadProgress: D.closure(this, function(par2) {
+//				this.uploadData[par2.id].progressCNode.style.width = (par2.bytesLoaded / par2.bytesTotal * 100) + '%';
+//			}),
+			onUploadCompleteData: D.closure(this, D.closure( this, this.hc3AddUploader_cb ) ),
+			limit: 1
+		});
+		clearNode(btn.button);
+		upl.append(btn.button);
+
+		var nativeUploader = $( btn ).find('.NativeUploader');
+		if ( nativeUploader.length ) {
+			removeClassName( btn, 'buttonStretch' );
+			addClassName( btn, 'designUploadButton' );
+			nativeUploader.find('.flashUploadLabel').css({ position: 'static' });
+		}
+	},
+	hc3AddUploader_cb: function( par2 ) {
+		var data = D.JSON.decode( par2.data );
+
+		if (data.error) {
+			var errorText = D.Lang.get('pic upload error' + data.errorNr);
+			if (data.errorNr == 4) {
+				errorText += ' (300x250)';
+			}
+			alert( errorText );
+			return;
+		}
+
+		document.getElementById('hc3ImageId').value = data.id;
+		$('.mAdsHighlightCustom3 .img', '#adHighlightCustomOptions3').css('backgroundImage', 'url(' + data.url + ')');
+
+		document.getElementById('mAdRemoveHc3Image').style.display = '';
+		document.getElementById('hc3HasImage').value = '1';
+		document.getElementById('AdHc3ImageRemove').value = 0;
+	},
+
+
+
+
+	onChangeBizPage: function( value ) {
+		var bid = value.substr( 0, value.indexOf('@') );
+
+		// interests
+		document.getElementById('exampleInterestList').style.display = 'block';
+		D.MiniAds.loadExampleInterests( bid );
+
+		// page follow
+		if ( !$('#designTypePF').is(':checked') ) {
+			return false;
+		}
+
+		var image = '//ifrype.com/business/img/50.png';
+		var text = 'Lapas nosaukums';
+		var official = false;
+
+		var lastBid = D.MiniAds.lastBizLinkValue.substr( 0, D.MiniAds.lastBizLinkValue.indexOf('@') );
+
+		if ( lastBid && bid != lastBid ) {
+			adsNotInterests.removeValue( lastBid );
+		}
+
+		if ( !empty(value) && value != '0@' ) {
+			image = bizData[bid].image;
+			text = $('#AdURLBiz option:selected').text();
+			official = bizData[bid].official;
+
+			adsNotInterests.addValue({
+				caption: text,
+				value: bid,
+				focus: false,
+				disabled: true
+			});
+
+			D.MiniAds.lastBizLinkValue = value;
+		}
+
+		$('#adPageFollowOptions, #adPageFollow2Options').find('.mAdPageImg img').attr('src', image);
+		$('#adPageFollow2Options').find('.mAdTitle').text( text );
+		if ( official ) {
+			mkE({
+				tag: 'span',
+				className: 'official'
+			} ).append( $('#adPageFollow2Options').find('.mAdTitle' ).get(0) );
+		}
+	},
+
+	pf2SetColorScheme: function(n) {
+		if ( n < 0 || n > 13 ) {
+			n = 0;
+		}
+
+		// ja ir iekjekseets "lietot citas kraasas", tad to automaatiski izkjeksee
+		var cbxOtherColors = document.getElementById('Forms_pf2UseCustomGradient');
+		if ( cbxOtherColors && cbxOtherColors._form.value() ) {
+			cbxOtherColors._form.value(false);
+			this.previewPf2toggleCustomGradient();
+		}
+
+		var pfColorSchemes = $('#pfColorSchemes');
+		pfColorSchemes.find('a').removeClass('active');
+		pfColorSchemes.find('.c' + n).addClass('active');
+		var gradientClasses = [];
+		for (var i = 1; i < 14; i++) {
+			gradientClasses.push( 'gradient' + i );
+		}
+		$('.mAdsPageFollow2 > div:first-child' ).removeClass( gradientClasses.join(' ') ).addClass('gradient' + n);
+		$('#pf2GradientId').val(n);
+	},
+
+	toggleHc2Overlay: function() {
+		if ( document.getElementById('hc2Overlay')._form.value() ) {
+			$('.mAdsHighlightCustom2 > div:first-child').addClass('overlay');
+		} else {
+			$('.mAdsHighlightCustom2 > div:first-child').removeClass('overlay');
+		}
+	},
+
+	toggleHc3Overlay: function() {
+		if ( document.getElementById('hc3Overlay')._form.value() ) {
+			if ( !$('.mAdsHighlightCustom3').find('.overlay').length ) {
+				var hcAction = $('.mAdsHighlightCustom3').find('.hcAction').get(0);
+				mkE({
+					tag: 'span',
+					className: 'overlay'
+				}).append( hcAction );
+			}
+		} else {
+			$('.mAdsHighlightCustom3').find('.overlay').remove();
+		}
+	}
+};
+
+D.MiniAds.miniadsHelpPopup = function() {
+	var modal = new D.Modal({
+		width: 750
+	});
+	modal.open('/ads/mini/rq/events_info_popup.php');
+	addClassName( modal.content, 'miniadsHelpPopup' );
+};
+
+D.MiniAds.Steps = {
+	prevStep: 0,
+	l: D.MiniAds.l,
+	rpc: D.MiniAds.rpc,
+
+	n: {},
+	current: 1,
+
+	getNodes: function() {
+		this.n.menu = document.getElementById('adStepsMenu');
+		this.n.prev = document.getElementById('adStepsPrev');
+		this.n.next = document.getElementById('adStepsNext');
+		this.n.total = $('.total').get(0);
+		this.n.submit = document.getElementById('AdFormSubmit2');
+		this.n.submitDescr = document.getElementById('submitNewDescrStep');
+	},
+
+	prev: function() {
+		this.setStep( this.current - 1 );
+	},
+
+	next: function() {
+		this.setStep( this.current + 1 );
+	},
+
+	setStep: function( step, par ) {
+		if (step == 5 && D.MiniAds.paymentTypes.length == 2){
+			alert(D.Lang.get('cannot_top_up_wallet', 'xServices2'));
+		}
+		par = par || {};
+
+		if ( step < 1 || step > 5 ) {
+			return;
+		}
+
+		if ( step < this.current ) {
+			par.skipValidate = true;
+		}
+
+		if ( !isset( par.skipValidate ) && !this.validate( this.current ) ) {
+			return;
+		}
+
+		if ( D.DEV ) {
+			if( history.pushState && this.prevStep != step && !isset( par.skipHistory ) ){
+				this.prevStep = step;
+				history.pushState( { step: step }, '' );
+			}
+		}
+
+		this.current = step;
+		this.n.next.style.display = this.current == 5 ? 'none' : '';
+		this.n.prev.style.display = this.current == 1 ? 'none' : '';
+
+		for ( var n = 1; n < 6; n++ ) {
+			document.getElementById('adStep' + n ).style.display = n == this.current ? 'block' : 'none';
+		}
+
+		$(this.n.menu).find('li').removeClass('active');
+		$(this.n.menu).find('li:nth-child(' + this.current + ')' ).addClass('active');
+
+		if ( this.current == 5 ) {
+			this.n.total.style.display = 'block';
+			this.n.submit.style.display = 'block';
+			this.n.submitDescr.style.display = 'block';
+		} else {
+			this.n.total.style.display = 'none';
+			this.n.submit.style.display = 'none';
+			this.n.submitDescr.style.display = 'none';
+		}
+
+		if ( this.current == 3 ) {
+			D.Ads.getMiniAudience();
+
+			/* Step: 1 - Atvērta pievienošanas forma un aizpildīta satura daļa. */
+			_gaq.push(
+				['_trackEvent', 'jauns-miniad', 'saturs'],
+				['_trackPageview', '/jauns-mini/saturs']
+			);
+		} else if ( this.current == 4 ) {
+			/* Step: 2 - Izgājis cauri auditorijas daļai.*/
+			_gaq.push(
+				['_trackEvent', 'jauns-miniad', 'auditorija'],
+				['_trackPageview', '/jauns-mini/auditorija']
+			);
+		}
+
+		stepsMenu.setStep( this.current - 1 );
+		D.scrollIntoView( document.getElementById('adStepsMenu') );
+	},
+
+	_validateUrl: function( url ) {
+		// http://phpjs.org/functions/parse_url/
+		var parse_url = /^(?:([^:\/?#]+):)?(?:\/\/()(?:(?:()(?:([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?))?()(?:(()(?:(?:[^?#\/]*\/)*)()(?:[^?#]*))(?:\?([^#]*))?(?:#(.*))?)/;
+		// atgriezh: ['source', 'scheme', 'authority', 'userInfo', 'user', 'pass', 'host', 'port', 'relative', 'path', 'directory', 'file', 'query', 'fragment']
+		var result = parse_url.exec(url);
+		var scheme = result[1];
+		var host = result[6];
+
+		return ( scheme == 'http' || scheme == 'https' ) && !empty( host );
+	},
+
+	validate: function( step, par ) {
+		par = par || {};
+
+		var missing = false, error = '';
+
+		if ( step == 1 ) {
+			var url = $('#AdURLType').val();
+
+			// vai kamapanjas nosaukums nav tukshs
+			T.Forms.setError( "#AdURLCampaignName", false);
+			if ( $('#Forms_AdURLCampaignName').is(':visible') && $.trim( $('#AdURLCampaignName').val() ) == '' ) {
+				error = 'folder_name_empty_error';
+				missing = true;
+				T.Forms.setError( "#AdURLCampaignName", this.l.get(error) );
+			}
+
+			if (url === 'biz') {
+				var bizUrl = $('#AdURLBiz').val();
+				if (bizUrl === '0' || (bizUrl == '0@' && !$('#AdLinkType_biz2').val() )) {
+					missing = true;
+					error = 'err_choose_biz';
+
+					T.Forms.setError('#Forms_AdURLType', this.l.get(error));
+					T.Forms.setError('#Forms_AdURLBiz');
+				} else {
+					T.Forms.setError('#Forms_AdURLType', false);
+					T.Forms.setError('#Forms_AdURLBiz', false);
+				}
+			} else if (url === 'link') {
+				var mLink = $('#AdURLMobile').val();
+				if ( !this._validateUrl($('#AdURLAddress').val()) ) {
+					missing = true;
+					error = 'err_enter_link';
+
+					T.Forms.setError( '#Forms_AdURLType', this.l.get( error ) );
+					T.Forms.setError( '#Forms_AdURLAddress' );
+				} else if ( !empty( mLink ) && !this._validateUrl( mLink ) ) {
+					missing = true;
+					error = 'err_enter_link';
+
+					T.Forms.setError( '#Forms_AdURLType', this.l.get( error ) );
+					T.Forms.setError( '#Forms_AdURLMobile' );
+				} else {
+					T.Forms.setError('#Forms_AdURLType', false);
+					T.Forms.setError('#Forms_AdURLAddress', false);
+					T.Forms.setError('#Forms_AdURLMobile', false);
+				}
+			} else if (url === 'gallery') {
+				if ( !$('[name="ad[url][gallery]"]:checked').length ) {
+					missing = true;
+					error = 'err_choose_gallery';
+
+					T.Forms.setError('#Forms_AdURLType', this.l.get(error));
+				} else {
+					T.Forms.setError('#Forms_AdURLType', false);
+				}
+			} else if (url === 'blog') {
+				var blogUrl = $('[name="ad[url][blog]"]');
+				if ( !blogUrl.length || empty(blogUrl.val()) ) {
+					missing = true;
+					error = 'err_choose_blog';
+
+					T.Forms.setError('#Forms_AdURLType', this.l.get(error));
+					T.Forms.setError('#Forms_AdURLBlog');
+				} else {
+					T.Forms.setError('#Forms_AdURLType', false);
+					T.Forms.setError('#Forms_AdURLBlog', false);
+				}
+			} else if (url === 'app') {
+				var appUrl = $('[name="ad[url][app]"]');
+				if ( !appUrl.length || empty(appUrl.val()) ) {
+					missing = true;
+					error = 'err_choose_app';
+
+					T.Forms.setError('#Forms_AdURLType', this.l.get(error));
+					T.Forms.setError('#Forms_AdURLApp');
+				} else {
+					T.Forms.setError('#Forms_AdURLType', false);
+					T.Forms.setError('#Forms_AdURLApp', false);
+				}
+			} else if (url === 'event') {
+				var eventUrl = $('[name="ad[url][event]"]');
+				if ( !eventUrl.length || empty(eventUrl.val()) ) {
+					missing = true;
+					error = 'err_choose_event';
+
+					T.Forms.setError('#Forms_AdURLType', this.l.get(error));
+					T.Forms.setError('#Forms_AdURLEvent');
+				} else {
+					T.Forms.setError('#Forms_AdURLType', false);
+					T.Forms.setError('#Forms_AdURLEvent', false);
+				}
+			} else {
+				if (empty(url)) {
+					missing = true;
+					error = 'err_choose_adtype';
+
+					T.Forms.setError('#Forms_AdURLType', this.l.get(error));
+				} else {
+					T.Forms.setError('#Forms_AdURLType', false);
+				}
+			}
+
+			if ( url === 'biz' && $('#AdLinkType_biz2').val() ) {
+				this.rpc.async = false;
+				var value = $('#AdURLBiz').val();
+				this.rpc.send('validateBizCustomUrl', {
+					bid: value.substr( 0, value.indexOf('@') ),
+					bizcustomurl: $('#AdLinkType_biz2').val()
+				}, function( re ) {
+					if ( !re.ok ) {
+						error = re.error;
+						missing = true;
+					}
+				});
+				this.rpc.async = true;
+			}
+
+			if ( missing ) {
+				D.scrollIntoView( document.getElementById('linkSection') );
+			}
+
+		} else if ( step == 2 ) {
+			var title = trim($('#AdContentTitle').val());
+			var body = trim($('#AdContentBody').val());
+
+			var titleNode = document.getElementById('AdContentTitle');
+			var textNode = document.getElementById('AdContentBody');
+
+			if (empty(title)) {
+				missing = true;
+				error = 'err_enter_title_text';
+				T.Forms.setError( '#Forms_AdContentTitle', this.l.get( 'err_enter_title' ) );
+				D.scrollIntoView( titleNode );
+			} else if ( title.length > titleNode._form.maxLength() ) {
+				missing = true;
+				error = 'err_entered_text_too_long';
+				T.Forms.setError( '#Forms_AdContentTitle', this.l.get( 'err_enter_title_too_long' ) );
+				D.scrollIntoView( titleNode );
+			} else {
+				T.Forms.setError('#Forms_AdContentTitle', false);
+			}
+			if (empty(body)) {
+				missing = true;
+				error = 'err_enter_title_text';
+				T.Forms.setError( '#Forms_AdContentBody', this.l.get( 'err_enter_text' ) );
+				if ( !empty( title ) ) {
+					D.scrollIntoView( textNode );
+				}
+			} else if ( body.length > textNode._form.maxLength() ) {
+				missing = true;
+				error = 'err_entered_text_too_long';
+				T.Forms.setError( '#Forms_AdContentBody', this.l.get( 'err_enter_text_too_long' ) );
+				D.scrollIntoView( textNode );
+			} else {
+				T.Forms.setError('#Forms_AdContentBody', false);
+			}
+
+			if ( $('#designTypeHC').is(':checked') ) {
+				var hasHc = parseInt($('#hcHasImage').val());
+				var hasHc2 = parseInt($('#hc2HasImage').val());
+				var hasHcM = parseInt($('#hcMHasImage').val());
+				var hasHc3 = parseInt($('#hc3HasImage').val());
+				if ( !hasHc && !hasHc2 && !hasHcM && !hasHc3 ) {
+					missing = true;
+					error = 'err_choose_highlight_custom_picture';
+				} else if ( !hasHc && hasHc2 && !hasHcM ) {
+					missing = true;
+					error = 'err_choose_highlight_custom_only_gallery';
+				} else if ( $('#AdURLMobile').val().length && !hasHcM ) {
+					missing = true;
+					error = 'err_mlink_without_hcm';
+				}
+			}
+		} else if ( step == 3 ) {
+			var validLocation = D.Ads.isValidMiniLocation( window.adsLoc.value() );
+			if ( !validLocation ) {
+				error = 'region_highlight_error';
+				missing = true;
+
+				T.Forms.setError( "#Forms_AdTargetLoc", this.l.get(error) );
+				D.scrollIntoView( document.getElementById('AdTargetLoc') );
+			}
+
+			var interests = window.adsInterests.getValues();
+			var notInterests = window.adsNotInterests.getValues();
+			if ( interests.length && notInterests.length ) {
+				var interestsValues = [];
+				var n;
+				var len;
+				for( n = 0, len = interests.length; n < len; n++ ) {
+					interestsValues.push( interests[n].value );
+				}
+				for( n = 0, len = notInterests.length; n < len; n++ ) {
+					if ( $.inArray(notInterests[n].value, interestsValues) != -1 ) {
+						error = 'err_interests_not_interests';
+						missing = true;
+					}
+				}
+			}
+
+			if ( !missing ) {
+				var validAudience = D.Ads.checkMiniAudience();
+				if ( !validAudience ) {
+					error = '';
+					missing = true;
+				}
+			}
+		} else if ( step == 4 ) {
+			if ( document.getElementById('publishToOnDate')._form.value() ) {
+				var ymd = $('[name="ad[publishing][to_date]"]').val().split('-');
+				var hour = parseInt($('[name="ad[publishing][to_time]"]').val());
+				var time = new Date(ymd[0], parseInt(ymd[1]) - 1, parseInt(ymd[2]), hour, 0, 0).getTime() / 1000;
+				if ( time < D.TIME ) {
+					error = '';
+					missing = true;
+					T.Forms.setError( "#Forms_publishingToTime", '' );
+				} else {
+					T.Forms.setError( "#Forms_publishingToTime", false );
+				}
+			}
+		}
+
+		if (missing) {
+			if ( par.loadStepOnError ) {
+				this.setStep( step, { skipValidate: true } );
+			}
+
+			if ( error ) {
+				D.messageBox({type: 'OK', width: 220, html: this.l.get(error), title: this.l.get('attention')});
+			}
+
+			return false;
+		}
+
+		return true;
+	},
+
+	validateAll: function( par ) {
+		par = par || {};
+		par.loadStepOnError = isset(par.loadStepOnError) ? par.loadStepOnError : true;
+		for ( var n = 1; n < 6; n++ ) {
+			if ( !this.validate(n, { loadStepOnError: par.loadStepOnError }) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+};
+
+D.MiniAds.drawMPreviewHighlightCustom = function( container, data ) {
+	clearNode( container );
+	var img;
+
+	mkE({
+		tag: 'div',
+		className: 'miniadsHCItem',
+		els: [
+			{
+				tag: 'div',
+				className: 'hcHeader',
+				els: [
+					{
+						tag: 'div',
+						className: 'yellowBullet',
+						text : 'Reklāma'
+					},
+					{
+						tag: 'a',
+						className: 'spriteIcon iconClose'
+					}
+				]
+			},
+			{
+				tag: 'a',
+				prop: {
+					target: '_blank'
+				},
+				href: data.link,
+				className: 'hcAction',
+				els:[
+					img = mkE({
+						tag: 'img',
+						src: '/ads/mini/img/hc2_blue_pattern_360x180.png'
+					}),
+					{
+						tag: 'div',
+						className: 'footer',
+						els:[
+							{
+								tag: 'div',
+								className: 'mAdTitle',
+								text: htmlspecialchars_decode(data.title)
+							},
+							{
+								tag: 'div',
+								className: 'mAdText',
+								text: htmlspecialchars_decode(data.text)
+							}
+						]
+					}
+				]
+			}
+		]
+	}).append( container );
+
+	// set image
+	if ( !empty(data.image) ) {
+		img.src = data.image;
+	}
+
+	mkE({
+		tag: 'div',
+		className: 'mAdCreditNote',
+		text: htmlspecialchars_decode( data.creditNote )
+	} ).append( container );
+
+	if ( data.ribbon ) {
+		mkE({
+			tag: 'img',
+			className: 'status',
+			src: data.ribbon
+		} ).append( container );
+	}
+};
+
+D.MiniAds.onPaymentAutoChange = function() {
+	var cbx = document.getElementById('Forms_AdPaymentAutoCbx' )._form;
+	var amountNode = document.getElementById('Forms_AdPaymentAutoAmount')._form;
+	if ( cbx.value() ) {
+		amountNode.show();
+		amountNode.focus();
+		if ( $('#AdRecurringPaymentSettings').is(':visible') ) {
+			document.getElementById('Forms_AdRecurringPaymentSettings')._form.value( true );
+		}
+		$('.apMadLegal').show();
+	} else {
+		amountNode.hide();
+		$('.apMadLegal').hide();
+	}
+};
+D.MiniAds.onChangeRecurring = function() {
+	var iRecurring = document.getElementById('Forms_AdRecurringPaymentSettings' )._form;
+	var iAuto = document.getElementById('Forms_AdPaymentAutoCbx')._form;
+	if ( iAuto.value() ) {
+		iRecurring.value( true );
+	}
+};
+D.MiniAds.showExternalStatsSample = function() {
+	var text  = '<img src="https://track.adform.net/adfserve/?bn=00000000;1x1inv=1;srctype=3;ord=[timestamp]" border="0" width="1" height="1"/>';
+
+	var modal = new D.Modal({
+		width: 900
+	});
+	var textarea;
+	modal.els([
+		textarea = new T.Form.TextArea({
+			caption: this.l.get('external_stats_code_sample') + ':',
+			value: text,
+			readOnly: true
+		}),
+		{
+			tag: 'div',
+			style: {
+				textAlign: 'right'
+			},
+			els:[
+				new T.Form.Button({
+					color: 'link',
+					caption: D.Lang.get('close'),
+					onclick: D.closure( this, function() {
+						modal.close();
+					})
+				})
+			]
+		}
+	]);
+	textarea._inputNode.style.height = '120px';
+	textarea._inputNode.style.color = '#777';
+};
+
+D.MiniAds.validateExternalStats = function( extStats ) {
+	var reNode = document.getElementById('validateStatsRe');
+	clearNode( reNode );
+
+	if ( !extStats ) {
+		return;
+	}
+
+	this.rpc.send(
+		'validateExternalStats', {
+			external_stats: extStats
+		},
+		D.closure( this, function( re ) {
+			clearNode( reNode ); // lai nebuutu vairaaki msg, ja sarindojas re
+
+			if ( re ) {
+				T.success( this.l.get('external_stats_code_ok') ).append( reNode );
+			} else {
+				T.error( this.l.get('external_stats_code_not_ok') ).append( reNode );
+			}
+		})
+	);
+};
+
+
+D.MiniAds.setPaymentsAutoStatus = function( aid, btn ) {
+	var pause = existsClassName( btn, 'pauseIcon');
+	this.rpc.send('paymentsAutoPause', {
+		id: aid,
+		pause: pause
+	}, D.closure(this, function() {
+		if ( pause ) {
+			removeClassName( btn, 'pauseIcon');
+			addClassName( btn, 'playIcon');
+			setNodeText( btn, D.MiniAds.l.get('resume2') );
+		} else {
+			removeClassName( btn, 'playIcon');
+			addClassName( btn, 'pauseIcon');
+			setNodeText( btn, D.MiniAds.l.get('pause') );
+		}
+	}));
+};
+D.MiniAds.deletePaymentsAuto = function( aid, jqNodes ) {
+	this.rpc.send('paymentsAutoSave', {
+		id: aid,
+		amount: 0
+	}, D.closure(this, function() {
+		jqNodes.remove();
+	}));
+};
+
+D.MiniAds.PaymentsAuto = function( par ) {
+	this.node = par.container;
+	this.data = par.data;
+	this.count = par.data.length;
+	this.highlight = par.highlight;
+	this.rpc = D.MiniAds.rpc;
+
+	if ( !this.count ) {
+		T.info('Nav automātisko maksājumu.').append( this.node );
+	} else {
+		this._drawList();
+	}
+};
+D.MiniAds.PaymentsAuto.prototype._drawList = function() {
+	var table = new T.Table({
+		className: 'simpleTable paymentsAutoTable'
+	});
+
+	table.addRow(new T.TableRow([
+		new T.TableCell({ header: true, els: [ 'Reklāmas ID' ] } ),
+		new T.TableCell({ header: true, els: [ 'Aptuvens reklāmas teksts' ] } ),
+		new T.TableCell({ header: true, els: [ 'Summa (EUR)' ] } ),
+		new T.TableCell({ header: true, els: [ '' ] } ),
+		new T.TableCell({ header: true, els: [ '' ] } )
+	]));
+
+	for( var n = 0, len = this.data.length; n < len; n++ ) {
+		var item = this.data[n];
+		var input;
+
+		var row = new T.TableRow();
+		if ( this.highlight == item.id ) {
+			row.node.className = 'hl';
+		}
+		row.addCell(
+			new T.TableCell({
+				className: 'vam',
+				els: [{
+					tag: 'a',
+					href: '/ads/mini/?aid=' + item.id,
+					target: '_blank',
+					text: item.id
+				}]
+			})
+		);
+		row.addCell(
+			new T.TableCell({
+				className: 'vam',
+				els: [{
+					tag: 'span',
+					innerHTML: D.shorten(item.title + ' / ' + item.text, 50)
+				}]
+			})
+		);
+		row.addCell(
+			new T.TableCell({ els: [
+				input = new T.Form.Input({
+					value: '' + (item.amount / 100).toFixed(2),
+					onblur: function() {
+						this.value( D.MiniAds.fixAutoBudget( this._inputNode ) );
+					}
+				})
+			] })
+		);
+		row.addCell(
+			new T.TableCell({ els: [
+				new T.Form.Button({
+					caption: D.MiniAds.l.get('save'),
+					onclick: D.closure( this, this._save, { id: item.id, inputNode: input } )
+				})
+			] })
+		);
+		var pauseResumeBtn;
+		row.addCell(
+			new T.TableCell({
+				className: 'vam',
+				els: [
+					pauseResumeBtn = mkE({
+						tag: 'a',
+						className: (item.autoStatus ? 'pauseIcon' : 'playIcon') + ' icon',
+						text: D.MiniAds.l.get(item.autoStatus ? 'pause' : 'resume2')
+					}),
+					{
+						tag: 'span',
+						className: 'middot',
+						innerHTML: '&middot;'
+					},
+					{
+						tag: 'a',
+						text: D.MiniAds.l.get('delete'),
+						onclick: D.closure( this, function( item, input, row ) {
+							D.confirmDelete( D.closure( this, function() {
+								if ( this.count == 1 && document.getElementById('autoCardExists') ) {
+									D.messageBox({title: D.MiniAds.l.get('autopayment_want_del_card_title'), text: D.MiniAds.l.get('autopayment_want_del_card_text'), type:'YESNO'}, D.closure( this, function( yesno ) {
+										this._save({ id: item.id, inputNode: input, del: row, delCard: yesno });
+									}));
+								} else {
+									this._save({ id: item.id, inputNode: input, del: row });
+								}
+							} ));
+						}, item, input, row )
+					}
+				]
+			})
+		);
+		pauseResumeBtn.onclick = D.closure( this, function( item, btn ) {
+			D.MiniAds.setPaymentsAutoStatus( item.id, btn );
+		}, item, pauseResumeBtn );
+
+		table.addRow( row );
+	}
+
+	table.append( this.node );
+};
+D.MiniAds.PaymentsAuto.prototype._save = function( par ) {
+	var del = isset(par.del);
+	var amount = del ? 0 : parseFloat( par.inputNode.value() );
+
+	if ( !del && !amount ) {
+		alert('Nevar papildināt par 0.');
+		return;
+	}
+
+	var callPar = {
+		id: par.id,
+		amount: amount
+	};
+	if ( par.delCard ) {
+		callPar.delCard = par.delCard;
+	}
+	this.rpc.send('paymentsAutoSave', callPar,
+	D.closure(this, function() {
+		if ( del ) {
+			this.count--;
+			removeNode( par.del.node );
+			if ( !this.count ) {
+				D.reload();
+			}
+		} else {
+			alert( D.Lang.get('Saved') );
+		}
+	}));
+};
+
+D.MiniAds.PaymentsAutoCard = function( par ) {
+	var modal = new D.Modal({
+		width: 500
+	});
+	modal.open('/ads/mini/rq/payments_auto_card.php?type=' + par.type);
+};
+
+D.MiniAds.loadExampleInterests = function( bid ) {
+	var node = document.getElementById('exampleInterestList');
+	clearNode( node );
+
+	if ( !bid ) {
+		return;
+	}
+	this.rpc.send('getBizCatList', {
+			bid: bid
+		},
+		D.closure(this, function( re ) {
+			if ( empty(re) ) {
+				return;
+			}
+
+			D.MiniAds.addExampleInterests(re, adsInterests.value());
+		})
+	);
+};
+D.MiniAds.addExampleInterests = function(data, existing) {
+	var node = document.getElementById('exampleInterestList');
+	mkE({
+		tag: 'span',
+		style: {
+			fontWeight: 'bold'
+		},
+		text: 'Piemēram: '
+	}).append( node );
+	mkE({
+		tag: 'span',
+		className: 'icon infoGrayIcon iconHover',
+		prop: {
+			title: 'Piemēros redzi lapu kategorijas, kas norādītas Tavai lapai. Ar tām Tu vari atlasīt tos lietotājus, kuri seko lapām ar tām pašām kategorijām, kādas ir Tavai lapai.<br>Savas lapas izvēlētās kategorijas vari apskatīt lapas sadaļā Uzstādījumi'
+		}
+	}).append( node );
+	for (var i in data) {
+		if (!data.hasOwnProperty(i)) {
+			continue;
+		}
+		var item = data[i];
+		var add = true;
+		var j = 0;
+		while (j < existing.length) {
+			if (existing[j].value == item.value) {
+				add = false;
+				break;
+			}
+			++j;
+		}
+		if (!add) {
+			continue;
+		}
+		mkE({
+			tag: 'span',
+			className: 'items',
+			text: item.title,
+			prop: {
+				id: 'exampleItem' + i,
+				onclick: D.closure(this, this.addExampleItem, {value: item.value, caption: item.title}, i)
+			}
+		}).append( node );
+	}
+};
+
+D.MiniAds.addExampleItem = function(item, i) {
+	adsInterests.addValue(item);
+	removeNode(document.getElementById('exampleItem' + i));
+	if (!$('#exampleInterestList .items').length) {
+		$('#exampleInterestList').hide();
+	}
+};
+
+D.MiniAds.minTotalBudget = D.MiniAds.MIN_TOTAL_BUDGET / 100;
+D.MiniAds.minDailyBudget = D.MiniAds.MIN_DAILY_BUDGET / 100;
+D.MiniAds.minAutoBudget = D.MiniAds.MIN_AUTO_BUDGET / 100;
+D.MiniAds.maxAutoBudget = D.MiniAds.MAX_AUTO_BUDGET / 100;
+D.MiniAds.maxTotalBudget = 10000.00;
+D.MiniAds.maxDailyBudget = 10000.00;
+
+D.MiniAds.prices = {
+	simple: {
+		standart: 15,
+		highlight_custom: 31
+	},
+	biz: {
+		standart: 12,
+		highlight_custom: 25,
+		page_follow: 16
+	}
+};
+
+D.loaded('MiniAds');

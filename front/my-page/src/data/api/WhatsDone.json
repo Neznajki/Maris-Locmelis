@@ -1,13 +1,13 @@
 {
   "title": [
     {"id": 1, "text": "Please notice that I will write only what I can and remember."},
-    {"id": 2, "text": "Everything related to server means &gt; you have PC with hard drive and ssh connection, after that you make everything to get final result"}
+    {"id": 2, "text": "Everything related to server means you have PC with hard drive and ssh connection, after that you make everything to get final result"}
   ],
   "pingnetGames": [
     "TODO ??"
   ],
   "Dynatech": [
-    {"id": 3, "text": "Hay Maris we have random bug appearing here and there// found problem related to generated js uniting hash intersection"},
+    {"id": 3, "text": "Hay Maris we have random bug appearing here and there // found problem related to generated js uniting hash intersection"},
     {"id": 4, "text": "Hay Maris we have 2 frameworks 95% of code is same. please make something to keep only 1 of them. done by adjusting logic and deleting one of them"},
     {"id": 5, "text": "Hey Maris we have page that is glitching on raspberry pi we need optimize it. optimization done, implemention of all requirements."},
     {"id": 6, "text": "Hey Maris we have tons of phone numbers and we need an API that will make round robin on phone numbers. Done (from 2 try and with some help from TL)"},

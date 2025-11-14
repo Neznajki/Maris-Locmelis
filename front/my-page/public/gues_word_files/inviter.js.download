@@ -1,0 +1,487 @@
+/**
+ * @param {D.Inviter.Par} par
+ * @constructor
+ */
+D.Inviter = function(par){
+	if(!D.ID){
+		return;
+	}
+	this.caption = par.caption || '';
+	this.type = par.type;
+	this.itemId = par.itemId;
+	this.count = par.count || 6;
+	this.ageLimits = par.ageLimit || 0;
+	this.searchFilter = par.searchFilter || {}; // Filtra parametri, kas tiek padoti meklējot lietotājus
+
+	this.rpc = new RPC('/invitations/rq/app.php');
+	this.rpcSearch = new RPC('/rq/app.php');
+
+	this._loadedPg = 0;
+	this._pagingPg = 0;
+	this._outOfItems = false;
+	this._itemHeight = 44;
+	this._isSearchMode = false;
+	this.onsend = par.onsend || function(uid){
+	}; // Brīvi maināms callback, kad tiek nosūtīts ielūgums
+	/**
+	 * @type {Array.<D.Inviter.UserItem>}
+	 */
+	this._items = [];
+	/**
+	 * @type {Object.<D.Inviter.UserItem>}
+	 */
+	this._visibleItems = {};
+
+
+	this.nodeItems = mkE({
+		tag : 'div',
+		className : 'inviterList',
+		prop : {
+			style : {
+				maxHeight : (this._itemHeight * this.count) + 'px'
+			}
+		}
+	});
+
+	this.pagingWrap = mkE({
+		tag : 'div'
+	});
+
+	this.inputSearch = new T.Form.Input({
+		placeholder : D.Lang.get('search_term_or_group'),
+		className : 'search',
+		type : 'text',
+		onkeyup : D.closure(this, this._searchKeyUp),
+		size: 'small'
+	});
+
+	this.inputTop = mkE({
+		tag: 'div',
+		className: 'top',
+		els: [
+			this.inputSearch,
+			{
+				tag: 'a',
+				onclick: D.closure(this, this._onClickInviteAll),
+				text: D.Lang.get('invite_all', 'xGlobal')
+			}
+		]
+	});
+
+	this.inviteAll = mkE({
+		tag: 'div',
+		className: 'inviteAll',
+		style: {
+			display: 'none'
+		},
+		els: [
+			this.inviteAllText = mkE({
+				tag: 'p',
+				text: D.Lang.get('send_invite_all').replace('%s', 0)
+			}),
+			{
+				tag: 'div',
+				els: [
+					new T.Form.Button({
+						caption: D.Lang.get('invite_all'),
+						onclick: D.closure(this, this._onClickSendInviteAll),
+						color: 'link'
+					}),
+					{
+						tag: 'a',
+						text: D.Lang.get('cancel'),
+						onclick: D.closure(this, function() {
+							this.inputTop.style.display = '';
+							this.inviteAll.style.display = 'none';
+						})
+					}
+				]
+			}
+		]
+	});
+
+	var caption = '';
+	if(this.caption){
+		caption = {
+			tag : 'h3',
+			className: 'sidebarTitle',
+			text : this.caption
+		};
+	}
+
+	this.node = mkE({
+		tag : 'div',
+		className : 'inviterWrap',
+		els : [
+			caption,
+			this.inputTop,
+			this.inviteAll,
+			this.nodeItems,
+			this.pagingWrap
+		]
+	});
+	this._loadNextItems();
+};
+
+D.Inviter.prototype._loadNextItems = function(){
+	if(this._outOfItems || this._isSearchMode){
+		return;
+	}
+
+	this.rpc.send(
+		'getInvitatorUserList',
+		{
+			count : this.count * 10,
+			pg : ++this._loadedPg,
+			itemId : this.itemId,
+			type : this.type
+		},
+		this._listLoaded,
+		this
+	);
+};
+
+D.Inviter.prototype.append = function(parent){
+	if(!D.ID){
+		return this;
+	}
+	this.node.append(parent);
+	return this;
+};
+
+D.Inviter.prototype.replace = function(node){
+	if(!D.ID){
+		return this;
+	}
+	this.node.replace(node);
+	return this;
+};
+
+D.Inviter.prototype._listLoaded = function(items, isSearching){
+	var isSearching = isSearching || false;
+	if(empty(items)){
+		this.empty(D.Lang.get('all_friends_are_invited'));
+		return;
+	}
+	for(var i in items){
+		var item = new D.Inviter.UserItem(items[i], this);
+		this._items.push(item);
+	}
+
+	// Ja meklē, tad paarmetam uz pirmo lapu, lai redzeetu visus userus pēc kw
+	if( isSearching === true ) {
+		this._pagingPg = 1;
+	}
+
+	this._fillList();
+};
+
+D.Inviter.prototype._fillList = function(pg){
+	pg = pg || this._pagingPg;
+
+	this._pagingPg = pg;
+	var missing = this.count;
+	this._visibleItems = [];
+	$(this.nodeItems).empty();
+
+	pg = Math.max(0,pg-1);
+	var pages = Math.ceil(this._items.length / this.count);
+
+	if ((pg+1) > pages) {
+		pg--;
+		this._pagingPg--;
+	}
+
+
+	for(var i = pg*missing; i < (missing*pg)+missing; i++) {
+		var item = this._items[i];
+		if(empty(item)){
+			break;
+		}
+
+		this._visibleItems[item.id] = item;
+		item.append(this.nodeItems);
+	}
+
+
+	var that = this;
+
+	if (pages > 1) {
+		var paginator = new T.Pg({
+			container: this.pagingWrap,
+			pgs: pages,
+			pg: this._pagingPg,
+			count:7,
+			backNext:false,
+			callback: function(pg) {
+				if (pg<0) return;
+				that._fillList(pg);
+			}
+		});
+	} else {
+		$(this.pagingWrap).empty();
+	}
+
+	if (!this._items.length){
+		this._loadNextItems();
+	}
+
+	if(pg+1 == this._loadedPg*10) {
+		this._outOfItems = false;
+		this._loadNextItems();
+	}
+};
+
+
+D.Inviter.UserItem = function(par, parentObj){
+	this.parentObj = parentObj;
+	this.filtered = par.filtered;
+	this.icon = par.icon;
+	this.age = par.age;
+	this.title = par.title;
+	this.id = par.id; // grupas id vai lietotāja uid
+	this.type = par.type || 'user'; // user vai grupa
+
+	this.node = mkE({
+		tag: 'div',
+		className : 'frInvite ' + (this.filtered ? ' invitationSent' : ''),
+		attr: {
+			title: (this.age < parentObj.ageLimits ? D.Lang.get('set_age_limit_uzaicinators', 'xGlobal') : '')
+		},
+		els: [
+			this._img = mkE({
+				tag : 'div',
+				className : 'img '+(this.age < parentObj.ageLimits ? 'disabled' : ''),
+				els : [
+					{
+						tag : 'img',
+						src : this.icon
+					}
+				]
+			}),
+			this._titleNode = mkE({
+				tag : 'div',
+				className : 'peepTitle '+(this.age < parentObj.ageLimits ? 'disabled' : '')
+			}),
+			mkE({
+				tag: 'div',
+				className: 'inviterRight',
+				els: [
+					this.submitInvite = T.submitButton({
+						onclick : D.closure(this, this._send),
+						caption: D.Lang.get('Uzaicināt', 'xPasakumi'),
+						color: 'link',
+						stretch : false
+					})
+				]
+			})
+			/*,
+			{
+				tag : 'a',
+				className : 'icon closeIcon',
+				prop : {
+					title : D.Lang.get('Aizvērt', 'xEventsNew'),
+					onclick : D.closure(this, this._remove)
+				}
+			}*/
+		]
+	});
+
+	if( par.online ){
+		mkE({
+			tag: 'div',
+			className: 'online online' + par.online
+		}).append(this._img);
+	}
+
+	if( this.type == 'user' ){
+		mkE({
+			tag: 'a',
+			href: par.url,
+			text: htmlspecialchars_decode(this.title)
+		}).append(this._titleNode);
+	}else{
+		setNodeText(this._titleNode, htmlspecialchars_decode(this.title));
+	}
+
+	if( this.type == 'user' && this.age < parentObj.ageLimits ) {
+		removeNode(this.submitInvite)
+	}
+};
+
+D.Inviter.UserItem.prototype._send = function(){
+	this.parentObj.send(this, this._afterSend, this);
+	addClassName(this.node, 'invitationSent');
+	setTimeout(D.closure(this, this._remove), 500);
+};
+
+D.Inviter.UserItem.prototype._afterSend = function(response){
+	this.parentObj.onsend(this.id);
+};
+
+D.Inviter.UserItem.prototype._remove = function(){
+	addClassName(this.node, "aboutToBeRemoved hidden");
+	setTimeout(D.closure(this.node, this.node.remove), 1000);
+
+	delete this.parentObj._visibleItems[this.id];
+	for (var i=0;i<this.parentObj._items.length;i++) {
+		if (this.parentObj._items[i].id == this.id) {
+			this.parentObj._items.splice(i,1);
+		}
+	}
+	this.parentObj._fillList();
+};
+
+D.Inviter.UserItem.prototype.append = function(parent){
+	this.node.append(parent);
+	return this;
+};
+
+/**
+ * @param userItem {D.Inviter.UserItem}
+ * @param cb {Function}
+ * @param context {Object}
+ */
+D.Inviter.prototype.send = function(userItem, cb, context){
+	this.rpc.send(
+		'invitatorSend',
+		{
+			userType : userItem.type,
+			id : userItem.id,
+			itemId : this.itemId,
+			type : this.type
+		},
+		cb,
+		context
+	);
+};
+
+D.Inviter._searchKeyUpTimeoutId = 0;
+
+D.Inviter.prototype._searchKeyUp = function(e){
+	this._isSearchMode = true;
+	if(e.keyCode == 27){
+		this.inputSearch.value('');
+		this._isSearchMode = false;
+		this.reset();
+		return;
+	}
+	clearTimeout(D.Inviter._searchKeyUpTimeoutId);
+	D.Inviter._searchKeyUpTimeoutId = setTimeout(D.closure(this, this.search), 200);
+};
+
+D.Inviter.prototype.search = function(){
+	var value = this.inputSearch.value();
+	if(empty(value)){
+		if(this._isSearchMode){
+			this._isSearchMode = false;
+			this.reset();
+		}
+		return;
+	}
+
+	this.rpcSearch.send(
+		'searchFriends',
+		{
+			v : value,
+			linkSort : true,
+			groups : true,
+			filter : this.searchFilter
+		},
+		this._searchComplete,
+		this
+	);
+};
+
+D.Inviter.prototype.reset = function(){
+	this._loadedPg = 0;
+	this._items = [];
+	this._visibleItems = {};
+	this._outOfItems = false;
+	clearNode(this.nodeItems);
+	this._loadNextItems();
+};
+
+D.Inviter.prototype._searchComplete = function(re){
+	this.reset();
+
+	var i, items = [];
+	for(i in re.gr){
+		items.push({
+			id : re.gr[i].i,
+			icon : '//ifrype.com/i/icons/greyUsersIcon.png',
+			title : re.gr[i].n,
+			type : 'group'
+		});
+	}
+	for(i in re.fr){
+		items.push({
+			id : re.fr[i].i,
+			icon : re.fr[i].icon,
+			age : re.fr[i].age,
+			title : re.fr[i].n,
+			filtered : re.fr[i].d,
+			filteredTitle : re.fr[i].title,
+			type : 'user'
+		});
+	}
+
+	this._listLoaded(items, true);
+};
+
+D.Inviter.prototype._onClickInviteAll = function () {
+	this.rpc.send('getSendToAllCount', {}, function ( re ) {
+		setNodeText(this.inviteAllText, D.Lang.get('send_invite_all').replace('%s', re.count));
+		this.inputTop.style.display = 'none';
+		this.inviteAll.style.display = '';
+	}, this);
+};
+
+D.Inviter.prototype._onClickSendInviteAll = function() {
+	D.loadingOverlay(this.node);
+	this.rpc.send(
+		'sendToAllFriends',
+		{
+			itemId : this.itemId,
+			type : this.type
+		},
+		this._onSentToAll,
+		this
+	);
+};
+
+D.Inviter.prototype._onSentToAll = function ( re ) {
+	D.removeLoadingOverlay(this.node);
+	this.empty(D.Lang.get('sent_invite_all'));
+};
+
+D.Inviter.prototype.empty = function (text) {
+	this._outOfItems = true;
+	this.inputTop.remove();
+	this.inviteAll.remove();
+	this.nodeItems.remove();
+	this.pagingWrap.remove();
+	mkE({
+		tag: 'div',
+		className: 'empty',
+		text: text
+	}).append(this.node);
+};
+
+D.Inviter.Par = function(){
+};
+
+/** @type {Function} */
+D.Inviter.Par.prototype.onsend;
+/** @type {String} */
+D.Inviter.Par.prototype.caption = '';
+/** @type {Number} */
+D.Inviter.Par.prototype.type;
+/** @type {Number} */
+D.Inviter.Par.prototype.itemId = 0;
+/** @type {Number} */
+D.Inviter.Par.prototype.count = 6;
+/** @type {Object} */
+D.Inviter.Par.prototype.searchFilter;
+
+D.loaded('Inviter');

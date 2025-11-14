@@ -1,0 +1,1181 @@
+@import url(//fonts.googleapis.com/css?family=Open+Sans:300,400&subset=latin,cyrillic-ext,latin-ext);
+
+.top-menu .menu .item-container {
+	width: 740px;
+}
+
+.top-menu .menu #breadcrumbSearch {
+	margin-top: 6px;
+}
+
+.applicationPageILike {
+	float: right;
+	display: inline-block;
+}
+
+.important_update.formItemCheckbox label {
+	font-weight: bold;
+}
+
+#lt .sideMenu.application-dev-menu {
+	margin-top: 0;
+}
+
+#appFooter{
+	border-top: 1px solid #e7e7e7;
+}
+#appFooter ul {
+	float:right;
+}
+#appFooter span.appInfo {
+	display:block;
+	padding-top:3px;
+}
+
+.appList td {
+	padding-bottom: 20px;
+}
+
+.appList .profileSmallIcon {
+	margin:5px;
+}
+.appListTd .inlineList li {
+	margin-bottom:0;
+}
+.appListTd .appSettings {
+	visibility:hidden;
+}
+.appListTd h2 {
+	padding-bottom:4px;
+}
+
+
+.appListTd p.appDescription {
+	margin-top:5px;
+}
+
+
+.appListTd:hover .appSettings{
+	visibility: visible;
+}
+.appListTd .badge{
+	display:inline;
+	position:relative;
+	top:0;
+	right:0;
+}
+
+.appOnline {
+	font-size: 12px;
+	color: #8d8d8d;
+}
+
+.appIconBox {
+	position: relative;
+	display: block;
+	width:85px;
+	text-align:center;
+	float:left;
+	overflow:hidden;
+	height:90px;
+	margin:7px;
+	border-radius:5px;
+	-o-border-radius:5px;
+	-khtml-border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	z-index: 0
+}
+
+.appIconBox:hover {
+	background-color: #e7e7e7;
+	text-decoration: none;
+}
+
+.appIconBox div{
+	margin: 5px auto;
+}
+
+.appIconBox .badge{
+	top:40px;
+	right: 17px;
+}
+
+
+#appTops h1 {
+	margin: 0;
+	padding-bottom: 5px;
+}
+#topAppList {
+	margin-right:10px;
+}
+#topAppList, #lastAppList {
+	padding:5px;
+	vertical-align: top;
+	background-color:#f8f8f8;
+}
+
+#myLastApps .rightIcon{
+	display:none;
+	margin:0;
+	padding: 0;
+	position:absolute;
+}
+#myLastApps li:hover .rightIcon{
+	display:block;
+}
+
+
+#topAppList, #topAppTop{
+	border-right:10px solid #fff;
+	width:70%;
+}
+
+
+#content_frame {
+	border-width: 0;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+
+
+#apidocs .document h1 {
+	font-size: 16px;
+	line-height: 19px;
+	color: #1e1e1e;
+	margin: 20px 0 12px;
+	padding-top: 9px;
+	border: 0;
+}
+
+#apidocs .document > h1:first-child {
+	padding-top: 0;
+}
+
+#apidocs h2 {
+	margin-top: 15px;
+	font-size: 14px;
+}
+
+#apidocs div.section {
+	margin-top:0;
+}
+
+#apidocs tt.literal, #apidocs span.pre {
+	font-family:monospace;
+	background-color: #f3f3f3;
+	padding:2px;
+}
+
+#apidocs pre.literal-block {
+	background:#FEEDD1;
+	font-family:  monospace;
+	border: 1px solid #f9c1a8;
+	overflow-x:auto;
+	padding:5px;
+}
+
+#apidocs table.field-list, #apidocs table.docutils, #apidocs div.contents, #apidocs dl {
+	border: 1px solid #cccccc;
+	background-color: #f3f3f3;
+	padding:5px;
+	margin: 0 0 10px 0;
+}
+#apidocs table.docutils td,#apidocs table.docutils th {
+	padding:5px;
+}
+
+
+#apidocs div.contents p.topic-title {
+	font-size:14px;
+	font-weight:bold;
+}
+
+#apidocs div.contents ul {
+	font-weight: bold;
+}
+#apidocs div.contents ul ul {
+	margin-left:50px;
+	font-weight: normal;
+}
+
+#apidocs p {
+	text-align:justify;
+}
+
+#apidocs ul.simple {
+	list-style-type: disc;
+	list-style-position: outside;
+	margin-left:30px;
+}
+#apidocs ol.simple {
+	list-style-position: outside;
+	margin-left:30px;
+}
+
+#apidocs ol.lower-alpha li{
+	list-style-type:  lower-alpha !important;
+}
+
+
+#apidocs ul.simple li{
+	margin-bottom: 5px;
+}
+#apidocs ul.auto-toc{
+	list-style-type: none;
+	list-style-position: inside;
+}
+
+#apidocs dl.docutils dt {
+	font-weight:bold;
+}
+
+#apidocs table.field-list th, #apidocs table.field-list td {
+	padding:3px;
+}
+#apidocs img {
+	margin:5px;
+}
+.apiUserList .apikey{
+	width:265px;
+	display:inline-block;
+}
+
+.apiUserList p{
+	height:30px;
+	line-height:30px;
+	display:inline-block;
+	float:left;
+	margin-right: 10px;
+}
+
+.apiUserList .delete{
+	height:30px;
+	line-height:30px;
+	display:inline-block;
+	float:right;
+}
+.userImage{
+	border-radius: 5px 5px 5px 5px;
+	width:30px;
+	height:30px;
+	background-position:-10px -10px;
+	display:inline-block;
+	float:left;
+	margin-right: 10px;
+}
+
+.applications .topNav{
+	background-color: #F5F5F5;
+	padding:5px;
+	text-align:right;
+}
+
+.applications .topNav .buttonLarge {
+	min-width:240px;
+}
+
+.applications .topNav .buttonLarge{
+	display:inline-block;
+}
+
+.applications .topNav.general{
+	border-top: 1px solid #E7E7E7;
+	margin-top:20px;
+}
+
+.applications .topNav.secondary{
+	margin:-10px 0 10px 0;
+}
+
+.previewImageContent{
+	margin-left:145px;
+}
+
+.imgContent{
+	position:relative;
+	display: inline-block;
+}
+
+.imgContent a.deleteIcon{
+	position:absolute;
+	display:block;
+	width:16px;
+	height:16px;
+	right:2px;
+	top:2px;
+}
+
+a.deleteIcon.icon{
+	display:inline-block;
+	height:20px;
+	background-position: 0px 0px;
+}
+
+/***************************/
+
+
+#spotlightBlock {
+	width: 1080px;
+	margin: 0 auto;
+	position: relative;
+	z-index:0;
+	overflow:hidden;
+}
+#spotlightBlock ul {
+	text-align: center;
+	line-height: 5px;
+}
+#spotlightBlock ul li {
+	margin: 10px 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	background: #bfbfbf;
+	background-position: 0 0;
+	cursor: pointer;
+	-moz-transition: all 0.5s ease-in-out;
+	-webkit-transition: all 0.5s ease-in-out;
+	-o-transition: all 0.5s ease-in-out;
+	-ms-transition: all 0.5s ease-in-out;
+	transition: all 0.5s ease-in-out;
+}
+#spotlightBlock ul li.current {
+	background: #808080;
+}
+
+#spotlightItems {
+	overflow: hidden;
+	background: #000;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+	height: 180px;
+}
+#spotlightItems a {
+	position: absolute;
+	top: 0;
+	left: 1080px;
+	width: 1080px;
+	height: 180px;
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	background-size: 100% 100%;
+	opacity: 0;
+	z-index: 1;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	-moz-transition: all 1s ease-in-out;
+	-webkit-transition: all 1s ease-in-out;
+	-o-transition: all 1s ease-in-out;
+	-ms-transition: all 1s ease-in-out;
+	transition: all 1s ease-in-out;
+}
+#spotlightItems a.previous {
+	left: -1080px;
+	opacity: 0;
+}
+
+#spotlightItems a.current {
+	left: 0;
+	opacity: 1;
+	z-index: 2;
+}
+
+.appThumbList {
+	margin-bottom: 20px;
+}
+
+.appThumbList .app{
+	position:relative;
+	float: left;
+	margin: 0 16px 10px 0;
+	padding:0;
+	overflow: hidden;
+	width: 258px;
+}
+
+.appThumbList .app:nth-child(4n+4){
+	margin-right:0px;
+}
+
+.appThumbList .app .app_image{
+	width: 256px;
+	height: 146px;
+	overflow:hidden;
+	position:relative;
+	border: 1px #e7e7e7 solid;
+	bottom: 0;
+}
+
+.appThumbList .app .app_image img{
+	position:absolute;
+	top:0px;
+	left:0px;
+	min-width: 256px;
+}
+
+.appThumbList .app .overlay{
+	position:absolute;
+	top:0px;
+	left:1px;
+	right:1px;
+	height: 7px;
+	padding:10px;
+	display:block;
+	background-color:black;
+	opacity:0.7;
+	filter:alpha(opacity=70);
+	text-align: center;
+	z-index:0;
+	visibility: hidden;
+	z-index: 2;
+}
+
+.appThumbList .app:hover .overlay{
+	visibility:visible;
+}
+
+.appThumbList .app .actions{
+	padding:8px;
+	text-align: left;
+	border: 1px #e7e7e7 solid;
+	border-top: 0;
+	width: 240px;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.appThumbList .app .actions.with-friends {
+	border-bottom: 0;
+}
+
+.appThumbList .app .actions .title{
+	font-size:14px;
+	font-weight: bold;
+	display:block;
+	/*margin-top:6px;*/
+	max-height: 32px;
+	overflow: hidden;
+}
+
+.appThumbList .app .actions .app_info {
+	margin-top: 5px;
+	color: #6f6f6f;
+}
+
+.appThumbList .app .actions .app_like {
+	float: right;
+}
+
+.appThumbList .app .actions .category{
+	display: block;
+	color: #b5b5b5;
+}
+
+.appThumbList .app .actions .friends{
+	display:block;
+}
+
+.appThumbList .app .actions .goto{
+	width:150px;
+	display:block;
+	position:absolute;
+	bottom:8px;
+}
+
+.appThumbList .app .actions .friends a img{
+	width:25px;
+	height:25px;
+	border:none;
+}
+
+.appThumbList .app .actions .friends a{
+	display:inline-block;
+	margin-right:5px;
+	margin-top:4px;
+}
+
+.appThumbList .app .friends {
+	border: 1px #e7e7e7 solid;
+	border-top: 0;
+	min-height: 40px;
+	padding: 0 9px;
+}
+
+.appThumbList .app .friends .profileSmallIcon {
+	display: inline-block;
+	margin: 0 7px 0 0;
+	width: 30px;
+	height: 30px;
+}
+
+.appThumbList .app .friends .profileSmallIcon:last-child {
+	margin-right: 0;
+}
+
+.appThumbList .app .friends .profileSmallIcon a {
+	width: 30px;
+	height: 30px;
+}
+
+.appThumbList .app .friends .more {
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+	margin: 0;
+	line-height: 30px;
+	vertical-align: top;
+	text-align: center;
+	background-color: #e7e7e7;
+	color:#6f6f6f;
+	font-weight: bold;
+	font-size: 11px;
+}
+
+.appThumbList .app .friends .more:hover {
+	text-decoration: none;
+}
+
+.appThumbList .app .friends.no-friends {
+	line-height: 59px;
+	text-indent: 10px;
+	color: #6F6F6F;
+}
+
+.appThumbList .app .button{
+	display:inline-block;
+	margin-top:4px;
+}
+
+.appThumbList .more{
+	display:block;
+	width:200px;
+	margin:0px auto 0px auto;
+}
+
+#myApps.appThumbList .settingsLightIcon{
+	position:absolute;
+	top:5px;
+	left:5px;
+	display:none;
+	width:16px;
+	height:16px;
+	background: url('//ifrype.com/applications/img/settings.png');
+	z-index: 2;
+}
+
+#myApps.appThumbList .closeLightIcon{
+	position:absolute;
+	top:5px;
+	right:5px;
+	display:none;
+	width:16px;
+	height:16px;
+	background: url('//ifrype.com/applications/img/close.png');
+	z-index: 2;
+}
+
+#myApps .app:hover .settingsLightIcon, #myApps .app:hover .closeLightIcon {
+	display: block;
+}
+
+#appfilter tr td a{
+	height:auto;
+}
+
+#apipreview_content{
+	overflow: hidden;
+	padding: 0px;
+	position: relative;
+}
+
+#apipreview_content .apipreview{
+	border: 1px solid #c9c9c9;
+	display: inline-block;
+	height: 250px;
+	margin: 15px 1px 0;
+	position: relative;
+	vertical-align: top;
+	width: 175px;
+}
+
+#apipreview_content .apipreview .container {
+	position: relative;
+	width: 175px;
+	height: 175px;
+	background-color: #ccc;
+	overflow: hidden;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+
+#apipreview_content .apipreview .container > img {
+	min-width: 175px;
+	min-height: 175px;
+}
+
+#apipreview_content .apipreview textarea {
+	width: 165px;
+	height: 65px;
+	border: none;
+	outline: none;
+	resize: none;
+	margin: 5px;
+}
+
+#apipreview_content .apipreview.loading{
+	background:url('//ifrype.com/i/loading/loading_gray.gif') no-repeat;
+	background-position:50% 50%;
+	background-color:#F5F5F5;
+}
+
+#apipreview_content .apipreview .deleteIcon{
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	width: 21px;
+	height: 21px;
+	background-image: url('//ifrype.com/gallery/img/close.png');
+	-moz-transform: scale(0);
+	-webkit-transform: scale(0);
+	transform: scale(0);
+	-moz-transition: all 0.1s ease-out 0s;
+	-webkit-transition: all 0.1s ease-out 0s;
+	transition: all 0.1s ease-out 0s;
+	cursor: pointer;
+}
+
+#apipreview_content .apipreview:hover .deleteIcon {
+	-moz-transform: scale(1);
+	-webkit-transform: scale(1);
+	transform: scale(1);
+}
+
+#apipreview_thumbs_cont {
+	display: block;
+	position: relative;
+	overflow: hidden;
+	height: 172px;
+}
+
+#apipreview_thumbs {
+	width: 100%;
+	height: 152px;
+	position: relative;
+	padding: 10px 0;
+	white-space: nowrap;
+}
+
+#apipreview_thumbs .apipreview-thumb {
+	width: 145px;
+	display: inline-block;
+	margin-right: 3px;
+	cursor: pointer;
+	opacity: 0.6;
+	border: 2px solid #e7e7e7;
+}
+
+#apipreview_thumbs .apipreview-thumb:hover, #apipreview_thumbs .apipreview-thumb.active {
+	opacity: 1;
+}
+
+#apipreview_thumbs .apipreview-thumb img {
+	width: 145px;
+	height: 145px;
+	display: block;
+}
+
+#apipreview_thumbs .apipreview-thumb:last-child {
+	margin-right: 0;
+}
+
+#ApiPreviewButton{
+	position:relative;
+}
+
+#ApiPreviewButton.buttonLarge .buttonC {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+#preview_images .main{
+	max-width: 100%;
+	max-height: 480px;
+	cursor: pointer;
+}
+
+#preview_images .preview_large {
+	width: 480px;
+	height: 480px;
+	text-align: center;
+}
+
+#preview_images .container{
+	overflow: hidden;
+	width:150px;
+	height:84px;
+	margin-bottom: 10px;
+	cursor: pointer;
+}
+
+#ApiPreviewButton_ {
+	height: 100%;
+}
+
+#ApiPreviewButton_ .flashUploadContent{
+	width: 100%;
+}
+
+.followPage img{
+	float: left;
+	margin-right:10px;
+}
+
+.followPage .description {
+	display:block;
+}
+
+.followPage .button_container {
+	display:block;
+	margin-left: auto;
+	margin-right:auto;
+	margin-top:10px;
+	width:120px;
+}
+
+#app-company table tr td{
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+#app-company table tr td img{
+	margin-right:10px;
+}
+
+#app-company .editbutton{
+	float:left;
+	display:block;
+	margin-top:2px;
+	margin-left:5px;
+}
+
+#app-company .editbutton .formItemSelect {
+	display: inline-block;
+	max-width: 200px;
+	margin-bottom: 0;
+	vertical-align: middle;
+}
+
+#app-company .editbutton .formItemSelect .buttonLink {
+	vertical-align: middle;
+}
+
+#colorPicker > .farbtastic {
+	margin: auto;
+}
+#giftsElementsContainer {
+	position: relative;
+	display: inline-block;
+	margin-left: 145px;
+}
+#giftsElementsContainer > #appPreviewAdsGift {
+
+}
+.dynamicElement {
+	position: absolute;
+	color: #000;
+	line-height: normal;
+}
+#giftsNumber.dynamicElement {
+	top: 50px;
+	left: 50px;
+	font-size: 40px;
+}
+#giftsText.dynamicElement {
+	top: 50px;
+	left: 150px;
+	font-size: 20px;
+}
+#giftsSender.dynamicElement {
+	bottom: 50px;
+	right: 50px;
+	font-size: 20px;
+}
+
+
+#Forms_serviceAutoPaymentPeriod{
+	display:none;
+}
+
+
+/**Made by DoubleT 27.06.2013**/
+
+#message-attachments {
+
+}
+
+#message-attachments #download-screenshot {
+    float:left;
+    width:16px;
+    height:16px;
+    cursor:pointer;
+ }
+
+#message-attachments #view-screenshot {
+    float:left;
+    width:16px;
+    height:16px;
+    margin-right:10px;
+    cursor:pointer;
+}
+
+
+
+/* aplikāciju bloķēšana */
+#appBlock .formsWrap > .formItem {
+	width: 405px;
+}
+#appBlock .formsWrap > .formItem > label {
+	width: 170px;
+}
+#appBlock .formsWrap > .formItem > div {
+	margin-left: 175px;
+}
+#appBlock .formsWrap .formFooter {
+	padding-left: 175px;
+}
+#appBlock .formItem .help {
+	margin-top:-3px;
+}
+#appBlock .multiACInput input {
+	margin: 0 5px 5px;
+}
+#appBlock .multiACListItem {
+	height: 22px;
+	line-height: 22px;
+	padding: 2px 5px;
+	max-width: 222px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+#appBlock .multiACListItem img.thumb,
+#appBlock .multiACValue img.thumb {
+	clear: left;
+	display: block !important;
+	float: left;
+	height: 20px;
+	margin-right: 4px;
+	margin-top: 1px;
+	width: 20px;
+}
+
+#appBlock .appMultiAC.multiItems {
+	overflow: visible;
+}
+
+#appBlock .appMultiAC .multiACValues .closeIcon {
+	position: absolute;
+	top: 4px;
+}
+#appBlock .appMultiAC .multiACValue > div {
+	color: #000000;
+	display: inline-block;
+	float: left;
+	max-width: 170px;
+	padding: 0;
+}
+#appBlock .appMultiAC .multiACValues {
+	border: 1px solid #c9c9c9;
+	border-radius: 3px 3px 3px 3px;
+	float: left;
+	width: 99%;
+	max-height:none;
+}
+#appBlock .appMultiAC .multiACValues > div {
+	background: none repeat scroll 0 0 transparent;
+	float: none;
+	height: 22px;
+	line-height: 22px;
+	padding: 1px 2px;
+	border: none;
+}
+
+#appBlock .appMultiAC .item {
+	position:relative;
+	padding-right: 0;
+	margin-bottom: 10px;
+}
+#appBlock .appMultiAC .remove {
+	position: absolute;
+	right: -26px;
+	top: 0;
+	background: url("//n.ifrype.com/i/sbook/forms/removeItem.png") no-repeat scroll center center transparent;
+	display: block;
+	height: 16px;
+	padding: 5px;
+	width: 16px;
+}
+#appBlock .multiACListItem.disabled {
+	background: #f0f0f0;
+	border: 1px solid #c9c9c9;
+	border-radius: 3px 3px 3px 3px;
+	color:#989898;
+	margin: 0 0 10px;
+	padding-left: 3px;
+	padding-right: 3px;
+	cursor: default;
+}
+#appBlock .multiAcText {
+	bottom: 5px;
+	top:auto;
+}
+#appBlock .introDesc {
+	margin-bottom: 10px;
+}
+#appBlock .deleteBlocking {
+	float: right;
+	margin-right: 5px;
+	margin-top: 3px;
+}
+
+#appBlock .addButtonMultiAC {
+	background: url("//frype.com/i/sbook/forms/addItem.png") no-repeat scroll right center transparent;
+	color: #393939;
+	display: inline-block;
+	height: 24px;
+	padding-right: 22px;
+	line-height: 26px;
+	float: right;
+	margin-right: -21px;
+	margin-bottom: 15px;
+}
+#appBlock .appMultiAC .closeIcon {
+	display: none;
+}
+
+.miniadsClickForm {
+	overflow: hidden;
+	margin-bottom: 15px;
+}
+.miniadsClickForm .formItemSelect label {
+	float: left;
+	padding-top: 4px;
+	margin-right: 3px;
+}
+.miniadsClickForm .formItemSelect .formItemBorder {
+	float: left;
+	margin-right: 10px;
+}
+
+/* +++ izceltais runā +++ */
+h1 + .sayHlHeader {
+	margin-top: -10px;
+}
+.sayHlHeader {
+	background: url("/lapas/img/pageads/say_highlight_header.jpg") no-repeat center top;
+	width: 730px;
+	min-height: 305px;
+	overflow: hidden;
+	margin-bottom: 25px;
+}
+.sayHlHeader .headerContent {
+	padding: 0 20px;
+	width: 375px;
+}
+.sayHlHeader .orangeTitle {
+	border-bottom: 0;
+	padding-bottom: 0;
+	margin-bottom: 15px;
+	margin-top: 6px;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 300;
+	font-size: 38px;
+	color: #ff6600;
+	line-height: normal;
+}
+.sayHlHeader .subTitle {
+	font-size: 17px;
+	margin-bottom: 20px;
+}
+.sayHlNotificationLink {
+	float: right;
+	font-size: 12px;
+	font-weight: normal;
+}
+.sayHlNotificationsTable {
+	margin-bottom: 20px;
+}
+.sayHlNotificationsTable th {
+	text-align: center;
+}
+/* --- izceltais runā --- */
+
+.cbx {
+	margin-bottom: 5px;
+}
+.cbx .cbxArrow {
+	background-image: url('/i/sbook/select_open.png');
+	background-repeat: no-repeat;
+	background-position: -5px 1px;
+	padding-left: 10px;
+}
+.cbxCaption a {
+	text-decoration: none;
+}
+.sayHlHeader .aboutTitle {
+	font-size: 16px;
+	margin-bottom: 10px;
+	display: inline-block;
+}
+h2:first-child {
+	margin-top: 0;
+}
+.cbx>.cbxContent {
+	display: none;
+}
+.cbxContent {
+	/* margin-left: 20px; */
+	padding-top: 5px;
+	padding-bottom: 10px;
+}
+.sayHlHeader .howItWorks {
+	margin-bottom: 20px;
+}
+
+h1.applicationsProfileTitle {
+	margin-bottom: 16px;
+}
+
+.help-browser-flash {
+	background: transparent url("/applications/img/help/flash/header-bg.png") no-repeat top center;
+	text-align: center;
+}
+
+.help-browser-flash .header {
+	font-size: 28px;
+	font-weight: bold;
+	line-height: 1.29;
+	color: #1e1e1e;
+	padding: 49px 0 24px;
+}
+
+.help-browser-flash .header-exp {
+	width: 590px;
+	font-size: 16px;
+	line-height: 1.5;
+	letter-spacing: 0.1px;
+	color: #424242;
+	margin: 0 auto;
+}
+
+.help-browser-flash .important-note {
+	width: 860px;
+	height: 67px;
+	border-radius: 100px;
+	background-color: #d7efff;
+	border: solid 1px #a6dcff;
+	margin: 22px auto 0;
+	position: relative;
+	font-size: 14px;
+	letter-spacing: 0.1px;
+	text-align: center;
+	color: #1e1e1e;
+	padding: 15px 18px;
+	box-sizing: border-box;
+	line-height: 1.36;
+}
+
+.help-browser-flash .important-note .importante {
+	width: 72px;
+	height: 27px;
+	line-height: 27px;
+	border-radius: 100px;
+	background-color: #ff4141;
+	position: absolute;
+	top: -15px;
+	left: 54px;
+	font-size: 14px;
+	font-weight: bold;
+	letter-spacing: 0.1px;
+	text-align: center;
+	color: #ffffff;
+}
+
+.help-browser-flash .important-note .importante:before {
+	content: url('/applications/img/help/flash/icn-important.png');
+	position: absolute;
+	top: -15px;
+	left: -12px;
+}
+
+.help-browser-flash .important-note.auto-height {
+	height: auto;
+}
+
+#help-chrome-flash-video {
+	width: 860px;
+	height: 484px;
+	margin: 24px auto 0;
+}
+#help-chrome-flash-video2 {
+	width: 636px;
+	height: 564px;
+	margin: 24px auto 0;
+}
+#help-chrome-flash-video2 .posterPlay {
+	background: rgba(240, 240, 240, .5);
+}
+
+.help-browser-flash .bullsep {
+	margin: 54px auto 42px;
+}
+
+.help-browser-flash .bullsep > div {
+	width: 10px;
+	height: 10px;
+	background-color: #dbdbdb;
+	border-radius: 100%;
+	margin: 0 4px;
+	display: inline-block;
+}
+
+.help-browser-flash .help-step .title {
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 1.25;
+	letter-spacing: 0.1px;
+	color: #1e1e1e;
+	margin: 56px 0 30px;
+}
+
+.help-browser-flash .help-step .image {
+	width: 860px;
+	height: 484px;
+	object-fit: contain;
+	box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.06);
+	border: solid 1px #dbdbdb;
+	margin: 0 auto;
+}
+
+.help-firefox-flash .help-step .image {
+	height: 466px;
+}
+
+.help-browser-flash .footer {
+	width: 590px;
+	font-size: 16px;
+	line-height: 1.5;
+	letter-spacing: 0.1px;
+	text-align: center;
+	color: #424242;
+	margin: 50px auto;
+}
