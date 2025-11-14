@@ -7,17 +7,9 @@ This ZIP only adds tests/configs without touching your existing dependencies or 
 From `front/my-page`:
 
 ```bash
-pnpm install   # uses your existing package.json
-pnpm test
-pnpm test:cov
-```
-
-End-to-end:
-
-```bash
-pnpm build
-npx serve -s dist -l 5173 &
-pnpm e2e
+npm install   # uses your existing package.json
+npm test
+npm test:cov
 ```
 
 If selectors in e2e don’t match your markup, tweak them in `e2e/navigation.spec.ts`.

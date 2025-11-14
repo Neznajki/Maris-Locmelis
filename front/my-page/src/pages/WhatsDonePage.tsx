@@ -16,7 +16,7 @@ export const WhatsDonePage: React.FC = () => {
           {PageData.title.map(p => (
             <Paragraph key={"wdp_" + p.id}>{p.text}</Paragraph>
           ))}
-<br/><br/>
+      <br/><br/>
       <PopupSpoiler title="PingnetGames">
         <Paragraph key="piratello_game">
           <a href="/piratello_game.html" target="_blank">
