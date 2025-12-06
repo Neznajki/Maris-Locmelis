@@ -15,6 +15,9 @@
     "e2e": "playwright test",
     "e2e:headed": "playwright test --headed"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "@remix-run/router": "^1.23.0",
     "i18next": "^25.6.0",
