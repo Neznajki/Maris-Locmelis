@@ -2,12 +2,11 @@
 import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
 import { Paragraph } from '@/components/Paragraph'
-import { PersonalityTitle } from '@/pages/meta/Personality.meta'
 import PageData  from '@/data/api/Personality.json'
 
-export const Personality: React.FC = () => {
+export const Personality: React.FC<{ title: React.ReactNode }> = ({ title }) => {
   return (
-    <PageContainer title={PersonalityTitle}>
+    <PageContainer title={title}>
         {PageData.map(p => (
           <Paragraph key={p.id}>{p.text}</Paragraph>
         ))}

@@ -1,11 +1,12 @@
 export interface ApiMenuEntry extends CommonMenuFields {
   path: string | null
-  submenuItems?: Array<CommonMenuFields>
+  items?: Array<CommonMenuFields>
 }
 
 export interface CommonMenuFields {
   id: string
   path: string | null
-  titleComponent: string | null
-  bodyComponent: string | null
+  title: string
+  bodyComponent: string
+  displayOrder: number
 }

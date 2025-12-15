@@ -3,15 +3,14 @@ import { Document, Page, pdfjs } from "react-pdf";
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 
-// Point pdf.js worker to a CDN (works with Vite, CRA, Next, etc.)
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
   import.meta.url,
 ).toString();
 
 type Props = {
-  file: string | File | Blob | ArrayBuffer; // e.g. "/example.pdf"
-  maxWidth?: number;                         // optional page width cap
+  file: string | File | Blob | ArrayBuffer;
+  maxWidth?: number;
   className?: string;
 };
 
@@ -20,7 +19,6 @@ export default function AutoSizedPdf({ file, maxWidth, className }: Props) {
   const [numPages, setNumPages] = useState<number>(0);
   const [pageWidth, setPageWidth] = useState<number | undefined>(undefined);
 
-  // Observe container width so pages fit responsively
   useEffect(() => {
     if (!containerRef.current) return;
     const el = containerRef.current;

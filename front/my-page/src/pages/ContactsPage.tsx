@@ -1,12 +1,11 @@
 
 import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
-import { ContactsTitle } from '@/pages/meta/Contacts.meta'
 import { Paragraph } from '@/components/Paragraph'
 
-export const Contacts: React.FC = () => {
+export const Contacts: React.FC<{ title: React.ReactNode }> = ({ title }) => {
   return (
-    <PageContainer title={ContactsTitle}>
+    <PageContainer title={title}>
       <Paragraph>How to reach me.</Paragraph>
       <a href="mailto:dev@maris-locmelis.lv" className="text-blue-600 underline">
         dev@maris-locmelis.lv

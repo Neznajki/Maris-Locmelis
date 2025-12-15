@@ -1,13 +1,12 @@
 
 import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
-import { CoverLetterTitle } from '@/pages/meta/CoverLetter.meta'
 import { Paragraph } from '@/components/Paragraph'
 import PageData  from '@/data/api/CoverLetter.json'
 
-export const CoverLetter: React.FC = () => {
+export const CoverLetter: React.FC<{ title: React.ReactNode }> = ({ title }) => {
   return (
-    <PageContainer title={CoverLetterTitle}>
+    <PageContainer title={title}>
       {PageData.map(p => (
         <Paragraph key={p.id}>{p.text}</Paragraph>
       ))}

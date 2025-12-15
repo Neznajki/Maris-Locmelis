@@ -1,11 +1,9 @@
 
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect, useMemo, useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { TopMenu2D } from '@/components/TopMenu2D'
-import { menuItems } from '@/data/menuItems'
-import { allRoutes } from '@/types/menu'
-import SpaceBackground from './components/SpaceBackground';
-import Home from '@/pages/HomePage'
+import { loadMenuItems } from '@/data/menuItems'
+import { allRoutes, type MenuItem } from '@/types/menu'
 import './index.css'
 
 const Loader = () => (
@@ -17,7 +15,9 @@ const Loader = () => (
 )
 
 export default function App() {
-  const routes = allRoutes(menuItems)
+  const [menuItems, setitems] = useState<MenuItem[]>([])
+  useEffect(() => { (async () => setitems(await loadMenuItems()))() }, [])
+  const routes = useMemo(() => allRoutes(menuItems), [menuItems])
 
   return (
     <>
@@ -25,9 +25,8 @@ export default function App() {
       <main className="pt-16 relative z-10 p-8">
         <Suspense fallback={<Loader />}>
           <Routes>
-          <Route path="/" element={<Home />} />
-          {routes.filter(r => r.path !== '/').map(r => (
-            <Route key={r.id} path={r.path} element={<LazyElement id={r.id} />} />
+          {routes.map(r => (
+            <Route key={r.id} path={r.path} element={<LazyElement id={r.id} menuItems={menuItems} />} />
           ))}
           <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
@@ -37,18 +36,18 @@ export default function App() {
   )
 }
 
-function LazyElement({ id }: { id: string }) {
+function LazyElement({ id, menuItems }: { id: string, menuItems: MenuItem[] }) {
   const item = menuItems.find(i => i.kind === 'item' && i.id === id)
   if (item && item.kind === 'item') {
     const Comp = item.body as React.ComponentType<any>
-    return <Comp />
+    return <Comp title={item.title} />
   }
   for (const g of menuItems) {
     if (g.kind === 'group') {
       const found = g.sections.find(s => s.id === id)
       if (found) {
         const Comp = found.body as React.ComponentType<any>
-        return <Comp />
+        return <Comp title={found.title} />
       }
     }
   }
