@@ -1,6 +1,6 @@
 import type { MenuItem, TwoDSection } from '@/types/menu'
 import { fetchMenuItemsResponse, redirectToFallback } from '@/api/client'
-import type { ApiMenuEntry } from '@/contract/ApiMenuEntry'
+import type {ApiMenuEntry, CommonMenuFields} from '@/contract/ApiMenuEntry'
 import { lazyPage } from '@/data/pageLoader'
 
 function resolveBody(name: string | null | undefined) {
@@ -14,6 +14,22 @@ function resolveBody(name: string | null | undefined) {
 }
 
 export async function loadMenuItems(): Promise<MenuItem[]> {
+  function addSubMenuItem(items: CommonMenuFields[], sections: TwoDSection[]) {
+    for (const submenuItem of items) {
+      if (!submenuItem.path) {
+        console.warn('Skipping section without path', submenuItem);
+        continue
+      }
+      const cTitle = submenuItem.title;
+      const cBody = resolveBody(submenuItem.bodyComponent)
+      if (!cTitle || !cBody) {
+        console.warn('Skipping section due to missing title/body', submenuItem);
+        continue
+      }
+      sections.push({id: submenuItem.id, path: submenuItem.path, title: cTitle, body: cBody})
+    }
+  }
+
   try {
     const res = await fetchMenuItemsResponse()
     if (res.status === 500) {
@@ -21,7 +37,6 @@ export async function loadMenuItems(): Promise<MenuItem[]> {
       return []
     }
     if (!res.ok) {
-      // Log and return empty (will trigger redirect by caller if empty menu is considered fatal)
       console.error('Menu API returned non-OK status', res.status)
       return []
     }
@@ -30,7 +45,6 @@ export async function loadMenuItems(): Promise<MenuItem[]> {
     const out: MenuItem[] = []
     for (const mainMenuItem of apiItems) {
       const title = mainMenuItem.title;
-      // Simple item if it has a path
       if (mainMenuItem.path) {
         const body = resolveBody(mainMenuItem.bodyComponent)
         if (!title || !body) {
@@ -46,15 +60,9 @@ export async function loadMenuItems(): Promise<MenuItem[]> {
         continue;
       }
 
-      const children = mainMenuItem.items
       const sections: TwoDSection[] = []
-      for (const submenuItem of children) {
-        if (!submenuItem.path) { console.warn('Skipping section without path', submenuItem); continue }
-        const cTitle = submenuItem.title;
-        const cBody = resolveBody(submenuItem.bodyComponent)
-        if (!cTitle || !cBody) { console.warn('Skipping section due to missing title/body', submenuItem); continue }
-        sections.push({ id: submenuItem.id, path: submenuItem.path, title: cTitle, body: cBody })
-      }
+      addSubMenuItem(mainMenuItem.items, sections);
+
       if (!title || sections.length === 0) {
         console.warn('Skipping group due to missing title or empty sections', mainMenuItem)
         continue
@@ -63,12 +71,11 @@ export async function loadMenuItems(): Promise<MenuItem[]> {
     }
 
     if (out.length === 0) {
-      // Redirect if there are no usable items at all
       redirectToFallback('No menu items available after filtering')
     }
+
     return out
   } catch (err) {
-    // Network or parsing error → no items; redirect handled by caller if needed, but also allowed when empty
     console.error('Failed to load menu items', err)
     redirectToFallback(err)
     return []
