@@ -1,0 +1,99 @@
+[
+    {
+        "id": "home",
+        "path": "/",
+        "title": "Home",
+        "displayOrder": 1,
+        "bodyComponent": "Home",
+        "items": []
+    },
+    {
+        "id": "fun",
+        "path": "/fun",
+        "title": "Fun Page",
+        "displayOrder": 2,
+        "bodyComponent": "Fun",
+        "items": []
+    },
+    {
+        "id": "info",
+        "path": null,
+        "title": "Information",
+        "displayOrder": 3,
+        "bodyComponent": null,
+        "items": [
+            {
+                "id": "about",
+                "path": "/about",
+                "title": "About Me",
+                "displayOrder": 1,
+                "bodyComponent": "AboutMe"
+            },
+            {
+                "id": "personality",
+                "path": "/personality",
+                "title": "Personality",
+                "displayOrder": 2,
+                "bodyComponent": "Personality"
+            },
+            {
+                "id": "contacts",
+                "path": "/contacts",
+                "title": "Contacts",
+                "displayOrder": 3,
+                "bodyComponent": "Contacts"
+            },
+            {
+                "id": "tech",
+                "path": "/tech",
+                "title": "Site Tech Stack",
+                "displayOrder": 4,
+                "bodyComponent": "SiteTechStack"
+            },
+            {
+                "id": "recommendations",
+                "path": "/recommendations",
+                "title": "Recommendations",
+                "displayOrder": 5,
+                "bodyComponent": "Recommendations"
+            }
+        ]
+    },
+    {
+        "id": "recruiters",
+        "path": null,
+        "title": "For Recruiters",
+        "displayOrder": 4,
+        "bodyComponent": null,
+        "items": [
+            {
+                "id": "cv",
+                "path": "/cv",
+                "title": "My CV",
+                "displayOrder": 6,
+                "bodyComponent": "Cv"
+            },
+            {
+                "id": "recruitersContacts",
+                "path": "/contacts",
+                "title": "Contacts",
+                "displayOrder": 7,
+                "bodyComponent": "Contacts"
+            },
+            {
+                "id": "whatsDone",
+                "path": "/whats-done",
+                "title": "What I have done",
+                "displayOrder": 8,
+                "bodyComponent": "WhatsDone"
+            },
+            {
+                "id": "coverLetter",
+                "path": "/cover-letter",
+                "title": "Cover Letter",
+                "displayOrder": 9,
+                "bodyComponent": "CoverLetter"
+            }
+        ]
+    }
+]

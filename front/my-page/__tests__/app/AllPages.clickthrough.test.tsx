@@ -6,14 +6,35 @@ import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider, RouteObject } from 'react-router-dom'
 
 import App from '@/App'
-import { menuItems } from '@/data/menuItems'
+import menuItems from './data/menuItems.json'
+
+import { expect, it, beforeEach } from "vitest";
+
+beforeEach(() => {
+  // make base URL non-empty so URL is absolute
+  (import.meta as any).env = {
+    ...(import.meta as any).env,
+    VITE_API_BASE_URL: "http://test.local/",
+  };
+
+  (fetch as any).mockReset();
+
+  (fetch as any).mockResolvedValue({
+    ok: true,
+    json: async () => menuItems,
+  });
+});
+
 
 function collectPaths(): string[] {
   const paths: string[] = []
   for (const item of menuItems as any[]) {
-    if (item.kind === 'item' && item.path) paths.push(item.path)
-    if (item.kind === 'group' && Array.isArray(item.sections)) {
-      for (const s of item.sections) if (s?.path) paths.push(s.path)
+    if (item.path) {
+      paths.push(item.path)
+    } else if (item.items) {
+      for (const i of item.items) {
+        paths.push(i.path);
+      }
     }
   }
   if (!paths.includes('/')) paths.unshift('/')
