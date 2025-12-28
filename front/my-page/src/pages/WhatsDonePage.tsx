@@ -2,16 +2,14 @@
 import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
 import { Paragraph } from '@/components/Paragraph'
-import SoftSkills from '@/assets/360-Degree-Soft skill review Maris Locmelis Feb_2025.xlsx?url'
 import PopupSpoiler from '@/components/PopupSpoiler'
 import '@/assets/popupSpoiler.css'
 import '@/styles/WhatsDonePageCss.css'
-import { WhatsDoneTitle } from '@/pages/meta/WhatsDone.meta'
 import PageData from '@/data/api/WhatsDone.json'
 
-export const WhatsDonePage: React.FC = () => {
+export const WhatsDonePage: React.FC<{ title: React.ReactNode }> = ({ title }) => {
   return (
-    <PageContainer title={WhatsDoneTitle}>
+    <PageContainer title={title}>
       <div className="WhatsDonePage">
           {PageData.title.map(p => (
             <Paragraph key={"wdp_" + p.id}>{p.text}</Paragraph>

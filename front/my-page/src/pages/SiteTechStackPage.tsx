@@ -1,11 +1,9 @@
 
 import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
-import { SiteTechStackTitle } from '@/pages/meta/SiteTechStack.meta'
-
-export const SiteTechStack: React.FC = () => {
+export const SiteTechStack: React.FC<{ title: React.ReactNode }> = ({ title }) => {
   return (
-    <PageContainer title={SiteTechStackTitle}>
+    <PageContainer title={title}>
       <ul className="list-disc pl-6 text-gray-700 space-y-1">
         <li>React + TypeScript</li>
         <li>Tailwind CSS</li>

@@ -1,54 +1,83 @@
-import { lazy } from 'react'
-import type { MenuItem } from '@/types/menu'
-import { Home } from '@/pages/HomePage'
+import type { MenuItem, TwoDSection } from '@/types/menu'
+import { fetchMenuItemsResponse, redirectToFallback } from '@/api/client'
+import type {ApiMenuEntry, CommonMenuFields} from '@/contract/ApiMenuEntry'
+import { lazyPage } from '@/data/pageLoader'
 
-import { HomeTitle } from '@/pages/meta/Home.meta'
-import { AboutMeTitle } from '@/pages/meta/AboutMe.meta'
-import { PersonalityTitle } from '@/pages/meta/Personality.meta'
-import { ContactsTitle } from '@/pages/meta/Contacts.meta'
-import { SiteTechStackTitle } from '@/pages/meta/SiteTechStack.meta'
-import { RecommendationsTitle } from '@/pages/meta/Recommendations.meta'
-import { CvTitle } from '@/pages/meta/Cv.meta'
-import { FunTitle } from '@/pages/meta/Fun.meta'
-import { WhatsDoneTitle } from '@/pages/meta/WhatsDone.meta'
-import { CoverLetterTitle } from '@/pages/meta/CoverLetter.meta'
+function resolveBody(name: string | null | undefined) {
+  if (!name) return null
+  try {
+    return lazyPage(name)
+  } catch (e) {
+    console.warn('Unknown body component, skipping:', name, e)
+    return null
+  }
+}
 
-const AboutMe         = lazy(() => import('@/pages/AboutMePage'))
-const Personality     = lazy(() => import('@/pages/PersonalityPage'))
-const Contacts        = lazy(() => import('@/pages/ContactsPage'))
-const SiteTechStack   = lazy(() => import('@/pages/SiteTechStackPage'))
-const Recommendations = lazy(() => import('@/pages/RecommendationsPage'))
-const CvPage          = lazy(() => import('@/pages/CvPage'))
-const FunPage         = lazy(() => import('@/pages/FunPage'))
-const WhatsDone       = lazy(() => import('@/pages/WhatsDonePage'))
-const CoverLetter     = lazy(() => import('@/pages/CoverLetterPage'))
+export async function loadMenuItems(): Promise<MenuItem[]> {
+  function addSubMenuItem(items: CommonMenuFields[], sections: TwoDSection[]) {
+    for (const submenuItem of items) {
+      if (!submenuItem.path) {
+        console.warn('Skipping section without path', submenuItem);
+        continue
+      }
+      const cTitle = submenuItem.title;
+      const cBody = resolveBody(submenuItem.bodyComponent)
+      if (!cTitle || !cBody) {
+        console.warn('Skipping section due to missing title/body', submenuItem);
+        continue
+      }
+      sections.push({id: submenuItem.id, path: submenuItem.path, title: cTitle, body: cBody})
+    }
+  }
 
-export const menuItems: MenuItem[] = [
-  { kind: 'item', id: 'home', path: '/', title: HomeTitle, body: Home },
-  { kind: 'item', id: 'fun',  path: '/fun', title: FunTitle, body: FunPage },
+  try {
+    const res = await fetchMenuItemsResponse()
+    if (res.status === 500) {
+      redirectToFallback('HTTP 500 from menu API')
+      return []
+    }
+    if (!res.ok) {
+      console.error('Menu API returned non-OK status', res.status)
+      return []
+    }
+    const apiItems = (await res.json()) as ApiMenuEntry[]
 
-  {
-    kind: 'group',
-    id: 'info',
-    title: 'Information',
-    sections: [
-      { id: 'about',          path: '/about',          title: AboutMeTitle,         body: AboutMe },
-      { id: 'personality',    path: '/personality',    title: PersonalityTitle,     body: Personality },
-      { id: 'contacts',       path: '/contacts',       title: ContactsTitle,        body: Contacts },
-      { id: 'tech',           path: '/tech',           title: SiteTechStackTitle,   body: SiteTechStack },
-      { id: 'recommendations',path: '/recommendations',title: RecommendationsTitle, body: Recommendations },
-    ],
-  },
+    const out: MenuItem[] = []
+    for (const mainMenuItem of apiItems) {
+      const title = mainMenuItem.title;
+      if (mainMenuItem.path) {
+        const body = resolveBody(mainMenuItem.bodyComponent)
+        if (!title || !body) {
+          console.warn('Skipping menu item due to missing title/body', mainMenuItem)
+          continue
+        }
 
-  {
-    kind: 'group',
-    id: 'recruiters',
-    title: 'For Recruiters',
-    sections: [
-      { id: 'cv',                path: '/cv',           title: CvTitle,           body: CvPage },
-      { id: 'recruitersContacts',path: '/contacts',     title: ContactsTitle,     body: Contacts },
-      { id: 'whatsDone',         path: '/whats-done',   title: WhatsDoneTitle,    body: WhatsDone },
-      { id: 'coverLetter',       path: '/cover-letter', title: CoverLetterTitle,  body: CoverLetter },
-    ],
-  },
-]
+        out.push({ kind: 'item', id: mainMenuItem.id, path: mainMenuItem.path, title, body })
+        continue
+      }
+
+      if (!mainMenuItem.items) {
+        continue;
+      }
+
+      const sections: TwoDSection[] = []
+      addSubMenuItem(mainMenuItem.items, sections);
+
+      if (!title || sections.length === 0) {
+        console.warn('Skipping group due to missing title or empty sections', mainMenuItem)
+        continue
+      }
+      out.push({ kind: 'group', id: mainMenuItem.id, title, sections })
+    }
+
+    if (out.length === 0) {
+      redirectToFallback('No menu items available after filtering')
+    }
+
+    return out
+  } catch (err) {
+    console.error('Failed to load menu items', err)
+    redirectToFallback(err)
+    return []
+  }
+}

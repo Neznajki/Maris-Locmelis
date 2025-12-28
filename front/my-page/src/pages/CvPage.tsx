@@ -5,11 +5,10 @@ import AutoSizedPdf from '@/components/AutoSizedPdf';
 import GetServerFileTime from '@/components/GetServerFileTime';
 import CvPdf from '@/assets/MyCV.pdf'
 import '@/assets/popupSpoiler.css'
-import { CvTitle } from '@/pages/meta/Cv.meta'
 
-export const Cv: React.FC = () => {
+export const Cv: React.FC<{ title: React.ReactNode }> = ({ title }) => {
   return (
-    <PageContainer title={CvTitle}>
+    <PageContainer title={title}>
       <div style={{ padding: 16 }}>
         <div className="popup-spoiler">
           <button className="popup-trigger">
