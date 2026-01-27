@@ -8,7 +8,7 @@ export const Home: React.FC<{ title?: React.ReactNode }> = ({ title }) => {
   return (
     <PageContainer title={title ?? null}>
       <Paragraph>Hello there I'm Māris Ločmelis and this is page about my self</Paragraph>
-      <a href="https://github.com/Neznajki" target="_blank" rel="noopener noreferrer">
+      <a href="https://github.com/Neznajki" target="_blank" rel="noopener noreferrer" style={{ display: "inline-block" }}>
         <img src={sunFlight} alt="Sunny Day !!" />
       </a>
     </PageContainer>

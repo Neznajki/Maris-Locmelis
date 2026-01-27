@@ -3,6 +3,7 @@ import { DesktopNav } from './DesktopNav'
 import { MobileNav } from './MobileNav'
 import type { MenuItem } from '@/types/menu'
 import { useLocation } from 'react-router-dom'
+import { GoogleLoginPanel } from "@/components/GoogleLoginPanel";
 
 export interface TopMenu2DProps {
   items: MenuItem[]
@@ -74,6 +75,8 @@ export const TopMenu2D: React.FC<TopMenu2DProps> = ({ items }) => {
               </svg>
             </button>
           </div>
+
+          <GoogleLoginPanel />
         </div>
 
         {mobileOpen && (
