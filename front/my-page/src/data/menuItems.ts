@@ -13,7 +13,7 @@ function resolveBody(name: string | null | undefined) {
   }
 }
 
-export async function loadMenuItems(): Promise<MenuItem[]> {
+export async function loadMenuItems(retry: number = 0): Promise<MenuItem[]> {
   function addSubMenuItem(items: CommonMenuFields[], sections: TwoDSection[]) {
     for (const submenuItem of items) {
       if (!submenuItem.path) {
@@ -30,9 +30,11 @@ export async function loadMenuItems(): Promise<MenuItem[]> {
     }
   }
 
+  let retryCountThreshold = 3;
   try {
     const res = await fetchMenuItemsResponse()
     if (res.status === 500) {
+      if (retry < retryCountThreshold) return loadMenuItems(retry + 1);
       redirectToFallback('HTTP 500 from menu API')
       return []
     }
@@ -71,12 +73,14 @@ export async function loadMenuItems(): Promise<MenuItem[]> {
     }
 
     if (out.length === 0) {
+      if (retry < retryCountThreshold) return loadMenuItems(retry + 1);
       redirectToFallback('No menu items available after filtering')
     }
 
     return out
   } catch (err) {
     console.error('Failed to load menu items', err)
+    if (retry < retryCountThreshold) return loadMenuItems(retry + 1);
     redirectToFallback(err)
     return []
   }
