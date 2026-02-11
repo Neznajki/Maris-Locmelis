@@ -28,7 +28,11 @@ export default function App() {
           {routes.map(r => (
             <Route key={r.id} path={r.path} element={<LazyElement id={r.id} menuItems={menuItems} />} />
           ))}
-          <Route path="*" element={<Navigate to="/" replace />} />
+            {routes.length > 0 ? (
+                <Route path="*" element={<Navigate to="/" replace />} />
+            ) : (
+                <Route path="*" element={<Loader />} />
+            )}
           </Routes>
         </Suspense>
       </main>
