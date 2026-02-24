@@ -1,87 +1,93 @@
-import type { MenuItem, TwoDSection } from '@/types/menu'
-import { fetchMenuItemsResponse, redirectToFallback } from '@/api/client'
+import type {MenuItem, TwoDSection} from '@/types/menu'
+import {fetchMenuItemsResponse, redirectToFallback} from '@/api/client'
 import type {ApiMenuEntry, CommonMenuFields} from '@/contract/ApiMenuEntry'
-import { lazyPage } from '@/data/pageLoader'
+import {lazyPage} from '@/data/pageLoader'
 
 function resolveBody(name: string | null | undefined) {
-  if (!name) return null
-  try {
-    return lazyPage(name)
-  } catch (e) {
-    console.warn('Unknown body component, skipping:', name, e)
-    return null
-  }
+    if (!name) return null
+    try {
+        return lazyPage(name)
+    } catch (e) {
+        console.warn('Unknown body component, skipping:', name, e)
+        return null
+    }
 }
 
-export async function loadMenuItems(retry: number = 0): Promise<MenuItem[]> {
-  function addSubMenuItem(items: CommonMenuFields[], sections: TwoDSection[]) {
-    for (const submenuItem of items) {
-      if (!submenuItem.path) {
-        console.warn('Skipping section without path', submenuItem);
-        continue
-      }
-      const cTitle = submenuItem.title;
-      const cBody = resolveBody(submenuItem.bodyComponent)
-      if (!cTitle || !cBody) {
-        console.warn('Skipping section due to missing title/body', submenuItem);
-        continue
-      }
-      sections.push({id: submenuItem.id, path: submenuItem.path, title: cTitle, body: cBody})
-    }
-  }
-
-  let retryCountThreshold = 3;
-  try {
+export async function loadMenuItemsWithRetry(retry: number = 0) {
+    let retryCountThreshold = 3;
     const res = await fetchMenuItemsResponse()
+
     if (res.status === 500) {
-      if (retry < retryCountThreshold) return loadMenuItems(retry + 1);
-      redirectToFallback('HTTP 500 from menu API')
-      return []
+        if (retry < retryCountThreshold) return loadMenuItemsWithRetry(retry + 1);
+        redirectToFallback('HTTP 500 from menu API');
+        return [];
     }
     if (!res.ok) {
-      console.error('Menu API returned non-OK status', res.status)
-      return []
+        console.error('Menu API returned non-OK status', res.status);
+        return [];
     }
-    const apiItems = (await res.json()) as ApiMenuEntry[]
+
+    try {
+        let result = await loadMenuItems((await res.json()) as ApiMenuEntry[]);
+
+        if (result.length === 0) {
+            if (retry < retryCountThreshold) return loadMenuItemsWithRetry(retry + 1);
+            redirectToFallback('No menu items available after filtering')
+        }
+
+        return result;
+    } catch (err) {
+        console.error('Failed to load menu items', err)
+        if (retry < retryCountThreshold) return loadMenuItemsWithRetry(retry + 1);
+        redirectToFallback(err)
+        return []
+    }
+}
+
+export async function loadMenuItems(apiItems: ApiMenuEntry[]): Promise<MenuItem[]> {
+    function addSubMenuItem(items: CommonMenuFields[], sections: TwoDSection[]) {
+        for (const submenuItem of items) {
+            if (!submenuItem.path) {
+                console.warn('Skipping section without path', submenuItem);
+                continue
+            }
+            const cTitle = submenuItem.title;
+            const cBody = resolveBody(submenuItem.bodyComponent)
+            if (!cTitle || !cBody) {
+                console.warn('Skipping section due to missing title/body', submenuItem);
+                continue
+            }
+            sections.push({id: submenuItem.id, path: submenuItem.path, title: cTitle, body: cBody})
+        }
+    }
 
     const out: MenuItem[] = []
     for (const mainMenuItem of apiItems) {
-      const title = mainMenuItem.title;
-      if (mainMenuItem.path) {
-        const body = resolveBody(mainMenuItem.bodyComponent)
-        if (!title || !body) {
-          console.warn('Skipping menu item due to missing title/body', mainMenuItem)
-          continue
+        const title = mainMenuItem.title;
+        if (mainMenuItem.path) {
+            const body = resolveBody(mainMenuItem.bodyComponent)
+            if (!title || !body) {
+                console.warn('Skipping menu item due to missing title/body', mainMenuItem)
+                continue
+            }
+
+            out.push({kind: 'item', id: mainMenuItem.id, path: mainMenuItem.path, title, body})
+            continue
         }
 
-        out.push({ kind: 'item', id: mainMenuItem.id, path: mainMenuItem.path, title, body })
-        continue
-      }
+        if (!mainMenuItem.items) {
+            continue;
+        }
 
-      if (!mainMenuItem.items) {
-        continue;
-      }
+        const sections: TwoDSection[] = []
+        addSubMenuItem(mainMenuItem.items, sections);
 
-      const sections: TwoDSection[] = []
-      addSubMenuItem(mainMenuItem.items, sections);
-
-      if (!title || sections.length === 0) {
-        console.warn('Skipping group due to missing title or empty sections', mainMenuItem)
-        continue
-      }
-      out.push({ kind: 'group', id: mainMenuItem.id, title, sections })
-    }
-
-    if (out.length === 0) {
-      if (retry < retryCountThreshold) return loadMenuItems(retry + 1);
-      redirectToFallback('No menu items available after filtering')
+        if (!title || sections.length === 0) {
+            console.warn('Skipping group due to missing title or empty sections', mainMenuItem)
+            continue
+        }
+        out.push({kind: 'group', id: mainMenuItem.id, title, sections})
     }
 
     return out
-  } catch (err) {
-    console.error('Failed to load menu items', err)
-    if (retry < retryCountThreshold) return loadMenuItems(retry + 1);
-    redirectToFallback(err)
-    return []
-  }
 }
