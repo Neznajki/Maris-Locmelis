@@ -54,6 +54,16 @@ export async function logout(): Promise<void> {
   }
 }
 
+export async function fetchPageContent(path: string): Promise<Response> {
+  const params = new URLSearchParams({
+    path: path,
+  });
+
+  const base = getApiUrl()
+  const url = `${base}pages/sections/by/path?${params.toString()}`
+  return fetch(url, { method: 'GET', headers: { Accept: 'application/json', } })
+}
+
 export async function fetchMenuItemsResponse(): Promise<Response> {
   const base = getApiUrl()
   const url = `${base}menu/items`
