@@ -2,7 +2,7 @@
 import React, { Suspense, useEffect, useMemo, useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { TopMenu2D } from '@/components/TopMenu2D'
-import { loadMenuItems } from '@/data/menuItems'
+import { loadMenuItemsWithRetry } from '@/data/menuItems'
 import { allRoutes, type MenuItem } from '@/types/menu'
 import './index.css'
 
@@ -16,7 +16,7 @@ const Loader = () => (
 
 export default function App() {
   const [menuItems, setitems] = useState<MenuItem[]>([])
-  useEffect(() => { (async () => setitems(await loadMenuItems()))() }, [])
+  useEffect(() => { (async () => setitems(await loadMenuItemsWithRetry()))() }, [])
   const routes = useMemo(() => allRoutes(menuItems), [menuItems])
 
   return (
