@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {PageContainer} from '@/components/PageContainer'
+import {PageContainer} from '@/components/PageRenderer'
 import {PageSection} from "@/contract/PageSection";
 import {loadPageDataWithRetry} from "@/data/pageApiLoader";
 import {RenderPage} from "@/components/page/service/RenderPage";

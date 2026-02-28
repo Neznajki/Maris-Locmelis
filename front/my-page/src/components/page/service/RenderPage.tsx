@@ -1,7 +1,7 @@
 
 import React, {ReactNode, useEffect, useState} from 'react'
 import {PageSection} from "@/contract/PageSection";
-import {PageContainer} from "@/components/PageContainer";
+import {PageContainer} from "@/components/PageRenderer";
 import getRenderComponent from "@/components/page/service/DetectorPage";
 import {SectionPart} from "@/components/page/type/SectionPart";
 
