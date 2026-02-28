@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { PageContainer } from '@/components/PageRenderer'
+import { PageContainer } from '@/components/PageContainer'
 import { Paragraph } from '@/components/Paragraph'
 
 export const Contacts: React.FC<{ title: React.ReactNode }> = ({ title }) => {

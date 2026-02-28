@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { PageContainer } from '@/components/PageRenderer'
+import { PageContainer } from '@/components/PageContainer'
 import AutoSizedPdf from '@/components/AutoSizedPdf';
 import GetServerFileTime from '@/components/GetServerFileTime';
 import CvPdf from '@/assets/MyCV.pdf'

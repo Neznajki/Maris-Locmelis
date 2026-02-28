@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { PageContainer } from '@/components/PageRenderer'
+import { PageContainer } from '@/components/PageContainer'
 import { Paragraph } from '@/components/Paragraph'
 import PageData  from '@/data/api/Personality.json'
 

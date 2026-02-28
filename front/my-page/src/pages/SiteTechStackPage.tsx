@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { PageContainer } from '@/components/PageRenderer'
+import { PageContainer } from '@/components/PageContainer'
 export const SiteTechStack: React.FC<{ title: React.ReactNode }> = ({ title }) => {
   return (
     <PageContainer title={title}>
