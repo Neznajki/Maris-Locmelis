@@ -1,4 +1,5 @@
-import {PageSectionPartContentResult} from "@/contract/PageType";
+import {Type} from "@/contract/PageType";
+import {ReactNode} from "react";
 
 export interface PageSection {
     id: number
@@ -24,10 +25,10 @@ export interface PageSectionPartContent {
 
 export interface PageSectionType {
     name: string
-    fe_handler_index: string
+    feHandlerIndex: string
 }
 
-export interface PageHandler {
-    parseContent: (content: string | object) => PageSectionPartContentResult
-    createContent: (part: PageSectionPartContent) => Element
+export interface PageHandler<T extends Type> {
+    parseContent: (content: string | object) => T
+    render: (content: Type) => ReactNode
 }
