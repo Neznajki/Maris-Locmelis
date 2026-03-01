@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { PageContainer } from '@/components/PageContainer'
+import { PageContainer } from '@/components/PageRenderer'
 import RocketInvestigation from '@/assets/fun/rocket_investigation.jpg'
 import RocketRide from '@/assets/fun/rocket_ride.jpg'
 

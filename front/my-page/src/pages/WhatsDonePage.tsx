@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { PageContainer } from '@/components/PageContainer'
+import { PageContainer } from '@/components/PageRenderer'
 import { Paragraph } from '@/components/Paragraph'
 import PopupSpoiler from '@/components/PopupSpoiler'
 import '@/assets/popupSpoiler.css'
