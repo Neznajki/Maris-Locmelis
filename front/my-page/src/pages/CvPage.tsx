@@ -5,19 +5,32 @@ import AutoSizedPdf from '@/components/AutoSizedPdf';
 import GetServerFileTime from '@/components/GetServerFileTime';
 import CvPdf from '@/assets/MyCV.pdf'
 import '@/assets/popupSpoiler.css'
+import PopupSpoiler from "@/components/PopupSpoiler";
 
 export const Cv: React.FC<{ title: React.ReactNode }> = ({ title }) => {
   return (
     <PageContainer title={title}>
-      <div style={{ padding: 16 }}>
-        <div className="popup-spoiler">
-          <button className="popup-trigger">
-            <a style={{ color: "#ededed" }} href={CvPdf} download="Maris_Locmelis_2025_11_14_CV.pdf" className="text-gray-600">Download pdf CV updated  {GetServerFileTime(CvPdf)}</a>
-          </button>
+      <PopupSpoiler title="Web Version">
+      <iframe
+          src="/cv.html"
+          width="100%"
+          height="800px"
+          style={{ border: "none" }}
+          title="CV"
+      />
+      </PopupSpoiler>
+<br/>
+      <PopupSpoiler title="cv.lv version (better to see in cv.lv)">
+        <div style={{ padding: 16 }}>
+          <div className="popup-spoiler">
+            <button className="popup-trigger">
+              <a style={{ color: "#ededed" }} href={CvPdf} download="Maris_Locmelis_2025_11_14_CV.pdf" className="text-gray-600">Download pdf CV updated  {GetServerFileTime(CvPdf)}</a>
+            </button>
+          </div>
+          <h1></h1>
+          <AutoSizedPdf file={CvPdf} maxWidth={900} />
         </div>
-        <h1></h1>
-        <AutoSizedPdf file={CvPdf} maxWidth={900} />
-      </div>
+      </PopupSpoiler>
     </PageContainer>
   )
 }

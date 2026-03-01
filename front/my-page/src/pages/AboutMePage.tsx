@@ -1,31 +1,34 @@
+import React, {useEffect, useState} from 'react'
+import {PageContainer} from '@/components/PageRenderer'
+import {PageSection} from "@/contract/PageSection";
+import {loadPageDataWithRetry} from "@/data/pageApiLoader";
+import {RenderPage} from "@/components/page/service/RenderPage";
 
-import React from 'react'
-import { PageContainer } from '@/components/PageRenderer'
-import { Paragraph } from '@/components/Paragraph'
-import PageData  from '@/data/api/AboutMe.json'
-import AlvaLogic from "@/assets/Alva Labs Logic Test Report - Māris Ločmelis (eng).pdf";
-import AlvaPersonality from "@/assets/Alva Labs Personality Test Report - Māris Ločmelis (eng).pdf";
+export const AboutMe: React.FC<{ title: React.ReactNode }> = () => {
+    const [content, setContent] = useState<PageSection>();
 
-export const AboutMe: React.FC<{ title: React.ReactNode }> = ({ title }) => {
-  return (
-    <PageContainer title={title}>
-      <div>
-        <div className="popup-spoiler">
-          <button className="popup-trigger">
-            <a href={AlvaPersonality} download="Maris_Locmelis_2026_02_06_pers.pdf">Alva Personality Test Results</a>
-          </button>
-        </div>
+    useEffect(() => {
+        const load = async () => {
+            const response = await loadPageDataWithRetry("/about");
 
-        <div className="popup-spoiler">
-          <button className="popup-trigger">
-            <a href={AlvaLogic} download="Maris_Locmelis_2026_02_06_logi.pdf">Alva Logic Test Results</a>
-          </button>
-        </div>
-      </div>
-      {PageData.map(p => (
-        <Paragraph key={p.id}>{p.text}</Paragraph>
-      ))}
-    </PageContainer>
-  )
+            if (response) {
+                setContent(response);
+            }
+        };
+
+        load();
+    }, []);
+
+    if (!content) {
+        return;
+    }
+
+    content.parts.sort((a, b) => a.displayOrder - b.displayOrder)
+
+    return (
+        <PageContainer title={content.title}>
+            <RenderPage pageSectionContent={content}/>
+        </PageContainer>
+    )
 }
 export default AboutMe
