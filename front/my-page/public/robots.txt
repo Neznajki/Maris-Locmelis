@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://maris-locmelis.lv/sitemap.xml
