@@ -11,6 +11,14 @@ export interface DownloadButtonType extends Type {
     content: string
 }
 
+export interface EmailHrefType extends Type, String {
+}
+
+export interface LinkHrefType extends Type {
+    href: string,
+    text: string
+}
+
 export interface ParagraphType extends Type, String {
 }
 
