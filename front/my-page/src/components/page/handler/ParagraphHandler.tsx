@@ -6,7 +6,7 @@ import {Paragraph} from "@/components/Paragraph";
 export const ParagraphHandler: PageHandler<ParagraphType> = {
     render(data: ParagraphType): React.JSX.Element {
         return (
-            <Paragraph>{data}</Paragraph>
+            <Paragraph key={Math.random()}>{data}</Paragraph>
         );
     },
 
