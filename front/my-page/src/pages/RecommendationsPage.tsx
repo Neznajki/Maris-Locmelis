@@ -1,16 +1,8 @@
 
 import React from 'react'
-import { PageContainer } from '@/components/PageRenderer'
-import { Paragraph } from '@/components/Paragraph'
-import PageData  from '@/data/api/Recommendations.json'
+import PageByPath from "@/pages/PageByPath";
 
-export const Recommendations: React.FC<{ title: React.ReactNode }> = ({ title }) => {
-  return (
-    <PageContainer title={title}>
-        {PageData.map(p => (
-          <Paragraph key={p.id}>{p.text}</Paragraph>
-        ))}
-    </PageContainer>
-  )
-}
+export const Recommendations: React.FC<{ title: React.ReactNode }> = () => (
+    <PageByPath path="/recommendations" />
+)
 export default Recommendations
