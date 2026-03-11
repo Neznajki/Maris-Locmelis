@@ -19,6 +19,12 @@ export interface LinkHrefType extends Type {
     text: string
 }
 
+export interface ImageHrefType extends Type {
+    href: string,
+    alt: string,
+    imageHref: string
+}
+
 export interface ParagraphType extends Type, String {
 }
 
