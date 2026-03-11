@@ -1,7 +1,7 @@
 import {PageHandler} from "@/contract/PageSection";
 import {ParagraphType} from "@/contract/PageType";
 import React from "react";
-import {Paragraph} from "@/components/Paragraph";
+import {Paragraph} from "@/components/page/type/Paragraph";
 
 export const ParagraphHandler: PageHandler<ParagraphType> = {
     render(data: ParagraphType): React.JSX.Element {

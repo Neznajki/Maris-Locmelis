@@ -6,7 +6,7 @@ import EmailHref from "@/components/page/type/EmailHref";
 export const EmailHrefHandler: PageHandler<EmailHrefType> = {
     render(data: EmailHrefType): React.JSX.Element {
         return (
-            <EmailHref key={data.toString()} data={data.toString()} />
+            <EmailHref key={data.toString()}>{data}</EmailHref>
         );
     },
 

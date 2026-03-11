@@ -30,5 +30,6 @@ export interface PageSectionType {
 
 export interface PageHandler<T extends Type> {
     parseContent: (content: string | object) => T
-    render: (content: T) => ReactNode
+    render: (content: T) => ReactNode,
+    pageType?: "Section" | string
 }

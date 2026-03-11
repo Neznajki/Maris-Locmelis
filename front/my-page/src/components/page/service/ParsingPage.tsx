@@ -1,7 +1,8 @@
 import { ReactNode } from "react";
 import { PageSection } from "@/contract/PageSection";
 import getRenderComponent from "@/components/page/service/DetectorPage";
-import { SectionPart } from "@/components/page/type/SectionPart";
+import { SectionPart } from "@/components/page/part/SectionPart";
+import {BulletPointPart} from "@/components/page/part/BulletPointPart";
 
 export function parsePageToElements(pageSectionContent: PageSection): ReactNode[] {
     const result: ReactNode[] = [];
@@ -15,13 +16,21 @@ export function parsePageToElements(pageSectionContent: PageSection): ReactNode[
             jsxChildElements.push(handler.render(parsedContent));
         }
 
-        result.push(
-            <SectionPart
+        let sectionContainer;
+        if (handler.pageType == "BulletPoint") {
+            sectionContainer = <BulletPointPart
                 key={element.id}
                 nodes={jsxChildElements}
                 displayText={element.displayText}
-            />
-        );
+            />;
+        } else {
+            sectionContainer = <SectionPart
+                key={element.id}
+                nodes={jsxChildElements}
+                displayText={element.displayText}
+            />;
+        }
+        result.push(sectionContainer);
     }
 
     return result;

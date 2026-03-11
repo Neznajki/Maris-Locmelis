@@ -28,6 +28,10 @@ export interface ImageHrefType extends Type {
 export interface ParagraphType extends Type, String {
 }
 
+export interface BulletPointType extends Type, String {
+}
+
+
 export interface Type {
 
 }
