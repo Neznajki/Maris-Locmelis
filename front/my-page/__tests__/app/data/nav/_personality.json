@@ -1,0 +1,393 @@
+{
+  "id": 36,
+  "title": "Personality",
+  "created": "2026-03-11T08:24:28.493865",
+  "updated": null,
+  "parts": [
+    {
+      "id": 38,
+      "section": {
+        "id": 36,
+        "title": "Personality",
+        "created": "2026-03-11T08:24:28.493865",
+        "updated": null,
+        "parts": null
+      },
+      "type": {
+        "id": 1,
+        "name": "Paragraph",
+        "feHandlerIndex": "Paragraph"
+      },
+      "displayText": "One worder:",
+      "created": "2026-03-11T08:24:28.493865Z",
+      "updated": null,
+      "displayOrder": 1,
+      "contents": [
+        {
+          "id": 57,
+          "content": "Technocrat",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 2
+        },
+        {
+          "id": 58,
+          "content": "Instrumentalist",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 3
+        },
+        {
+          "id": 59,
+          "content": "Centrist",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 4
+        },
+        {
+          "id": 60,
+          "content": "Honest",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 5
+        },
+        {
+          "id": 61,
+          "content": "Fair",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 6
+        },
+        {
+          "id": 62,
+          "content": "Logical",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 7
+        },
+        {
+          "id": 63,
+          "content": "Patriot",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 8
+        },
+        {
+          "id": 64,
+          "content": "Professional",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 9
+        },
+        {
+          "id": 65,
+          "content": "Reasonable",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 10
+        },
+        {
+          "id": 66,
+          "content": "Polyglot",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 11
+        },
+        {
+          "id": 67,
+          "content": "Responsible",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 12
+        },
+        {
+          "id": 68,
+          "content": "Creative",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 13
+        },
+        {
+          "id": 69,
+          "content": "Smart?",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 14
+        },
+        {
+          "id": 70,
+          "content": "Cat",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 15
+        },
+        {
+          "id": 71,
+          "content": "Lion",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 16
+        },
+        {
+          "id": 72,
+          "content": "Learning",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 17
+        },
+        {
+          "id": 73,
+          "content": "Improve",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 18
+        },
+        {
+          "id": 74,
+          "content": "Sharing",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 19
+        },
+        {
+          "id": 75,
+          "content": "Communicative",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 20
+        },
+        {
+          "id": 76,
+          "content": "Abstract",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 21
+        },
+        {
+          "id": 77,
+          "content": "Flexible",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 22
+        },
+        {
+          "id": 78,
+          "content": "Multitasking",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 23
+        },
+        {
+          "id": 79,
+          "content": "Focused",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 24
+        },
+        {
+          "id": 80,
+          "content": "Purposeful",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 25
+        },
+        {
+          "id": 81,
+          "content": "Determined",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 26
+        },
+        {
+          "id": 82,
+          "content": "Random?",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 27
+        },
+        {
+          "id": 83,
+          "content": "Lazy",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 100
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "section": {
+        "id": 36,
+        "title": "Personality",
+        "created": "2026-03-11T08:24:28.493865",
+        "updated": null,
+        "parts": null
+      },
+      "type": {
+        "id": 1,
+        "name": "Paragraph",
+        "feHandlerIndex": "Paragraph"
+      },
+      "displayText": "Sentence from me about me:",
+      "created": "2026-03-11T08:24:28.493865Z",
+      "updated": null,
+      "displayOrder": 2,
+      "contents": [
+        {
+          "id": 84,
+          "content": "Don't like to give orders prefer to ask favors.",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 1
+        },
+        {
+          "id": 85,
+          "content": "love to improve everything, You are included.",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 2
+        },
+        {
+          "id": 86,
+          "content": "Love results, hate processes. If there is a way to get results without process, I will definitely find it.",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 3
+        },
+        {
+          "id": 87,
+          "content": "I'm a lion person (like a cat one but with a loud roar).",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 4
+        },
+        {
+          "id": 88,
+          "content": "Love standing my ground.",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 5
+        },
+        {
+          "id": 89,
+          "content": "Like to move by small steps, don't like rushing.",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 6
+        },
+        {
+          "id": 90,
+          "content": "Like to get maximum out of what I have, won't search for something new if I can use the existing one.",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 7
+        },
+        {
+          "id": 91,
+          "content": "Hate spaghetti. Love SOLID, work LoD",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 8
+        },
+        {
+          "id": 92,
+          "content": "Hate to do everything by myself. We are who we are due to uniting, not because someone had big biceps.",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 9
+        },
+        {
+          "id": 93,
+          "content": "Brains are a muscle. If you need them, you must train them.",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 10
+        },
+        {
+          "id": 94,
+          "content": "Don't say 'Maris, I'm okay with it' if it's not true. I will eat you like an ice-cream (with taste).",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 11
+        },
+        {
+          "id": 95,
+          "content": "Love predictable risk, hate risks that are not calculated.",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 12
+        },
+        {
+          "id": 96,
+          "content": "If I fall, I will jump right back. Anything that doesn't kill me makes me stronger.",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 13
+        },
+        {
+          "id": 97,
+          "content": "Don't be scared that you will harm my feelings.",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 14
+        },
+        {
+          "id": 98,
+          "content": "I'm a mirror — I throw back everything you throw at me (it will fly even if I won't be able to lift it).",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 15
+        },
+        {
+          "id": 99,
+          "content": "Try harder is good, but think smarter is better!",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 16
+        },
+        {
+          "id": 100,
+          "content": "If you ask me to do something in the middle of the night, it will be done. But I will expect that we’ll work to make sure it never happens again.",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 17
+        },
+        {
+          "id": 101,
+          "content": "I believe that valuable things need time. If you make something fast, why do you expect it to live another day without a problem?",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 18
+        },
+        {
+          "id": 102,
+          "content": "If I can calculate mistake at the end, I won't do it — as the result is fully predictable.",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 19
+        },
+        {
+          "id": 103,
+          "content": "Lazy bastard making the maximum out of doing nothing.",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 20
+        },
+        {
+          "id": 104,
+          "content": "My ideas are unique. If you think they are not, then you just never discussed anything with me.",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 21
+        },
+        {
+          "id": 105,
+          "content": "I respect all people, no matter their status, skills, or any other thing that seems important for most people.",
+          "created": "2026-03-11T08:24:28.493865Z",
+          "updated": null,
+          "displayOrder": 22
+        }
+      ]
+    }
+  ]
+}

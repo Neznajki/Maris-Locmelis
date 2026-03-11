@@ -4,6 +4,8 @@ import React from 'react'
 import { render, screen, within, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider, RouteObject } from 'react-router-dom'
+import fs from "fs";
+import path from "path";
 
 import App from '@/App'
 import menuItems from './data/menuItems.json'
@@ -11,7 +13,6 @@ import menuItems from './data/menuItems.json'
 import { expect, it, beforeEach } from "vitest";
 
 beforeEach(() => {
-  // make base URL non-empty so URL is absolute
   (import.meta as any).env = {
     ...(import.meta as any).env,
     VITE_API_BASE_URL: "http://test.local/",
@@ -19,9 +20,45 @@ beforeEach(() => {
 
   (fetch as any).mockReset();
 
-  (fetch as any).mockResolvedValue({
-    ok: true,
-    json: async () => menuItems,
+  (fetch as any).mockImplementation(async (url: string) => {
+    const endpoint = url.replace(/https?:\/\/[^\/]+\//, '/');
+
+    // special endpoint
+    if (endpoint === "/api/menu/items") {
+      return {
+        ok: true,
+        json: async () => menuItems,
+      };
+    }
+
+    if (endpoint === "/api/users/me") {
+      return {
+        ok: true,
+        json: async () => "",
+      };
+    }
+
+    // map URL to file
+    const mapped = endpoint.replace("/api/pages/sections/by/path?path=%2F", "_").replace("%2F", '_');
+
+    let mockedFilePath = path.join(__dirname, `/data/nav/${mapped}.json`);
+    // console.log("Mocking fetch for", mapped, " with file ", mockedFilePath);
+    const filePath = path.resolve(mockedFilePath);
+
+    if (!fs.existsSync(filePath)) {
+      return {
+        ok: false,
+        status: 404,
+        json: async () => ({ error: "Mock file not found" }),
+      };
+    }
+
+    const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
+
+    return {
+      ok: true,
+      json: async () => data,
+    };
   });
 });
 

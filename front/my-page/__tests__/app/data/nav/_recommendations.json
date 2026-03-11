@@ -1,0 +1,190 @@
+{
+  "id": 35,
+  "title": "Recommendations",
+  "created": "2026-03-09T09:39:25.318858",
+  "updated": null,
+  "parts": [
+    {
+      "id": 36,
+      "section": {
+        "id": 35,
+        "title": "Recommendations",
+        "created": "2026-03-09T09:39:25.318858",
+        "updated": null,
+        "parts": null
+      },
+      "type": {
+        "id": 1,
+        "name": "Paragraph",
+        "feHandlerIndex": "Paragraph"
+      },
+      "displayText": "Recommendations from me:",
+      "created": "2026-03-09T09:39:25.318858Z",
+      "updated": null,
+      "displayOrder": 1,
+      "contents": [
+        {
+          "id": 37,
+          "content": "Every recommendation you give, try to follow it yourself.",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 1
+        },
+        {
+          "id": 38,
+          "content": "Make code more readable (Clean Code, DRY).",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 3
+        },
+        {
+          "id": 39,
+          "content": "Don't expect others to do something you wouldn't do yourself.",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 5
+        },
+        {
+          "id": 40,
+          "content": "Before changing anything, try creating something new instead.",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 6
+        },
+        {
+          "id": 41,
+          "content": "Gather suggestions and do something if they are to many.",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 7
+        },
+        {
+          "id": 42,
+          "content": "If you'd like to change something, think twice — sometimes changing your mind about the problem is easier and better.",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 8
+        },
+        {
+          "id": 43,
+          "content": "Don't take new tools until you've mastered the existing ones.",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 10
+        },
+        {
+          "id": 44,
+          "content": "don't rush time, or time will break you down.",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 11
+        },
+        {
+          "id": 45,
+          "content": "when you see something think how some one sees this in they're eyes.",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 12
+        },
+        {
+          "id": 46,
+          "content": "don't solve imagined problems use imagination to create something new.",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 13
+        },
+        {
+          "id": 47,
+          "content": "don't break something, before you make something to take it's place.",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 14
+        },
+        {
+          "id": 48,
+          "content": "Use tools but doesn't allow tools to own you.",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 15
+        },
+        {
+          "id": 49,
+          "content": "Run single direction a time",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 16
+        },
+        {
+          "id": 50,
+          "content": "The more turns you make the worth path you have chosen.",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 17
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "section": {
+        "id": 35,
+        "title": "Recommendations",
+        "created": "2026-03-09T09:39:25.318858",
+        "updated": null,
+        "parts": null
+      },
+      "type": {
+        "id": 1,
+        "name": "Paragraph",
+        "feHandlerIndex": "Paragraph"
+      },
+      "displayText": "Recommendations related to dev:",
+      "created": "2026-03-09T09:39:25.318858Z",
+      "updated": null,
+      "displayOrder": 2,
+      "contents": [
+        {
+          "id": 51,
+          "content": "SOLID — even if you can't fully apply it, aim for the closest option.",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 1
+        },
+        {
+          "id": 52,
+          "content": "Try to follow KISS, but if it's impossible, keep it complex only when necessary.",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 2
+        },
+        {
+          "id": 53,
+          "content": "YARGNI — use it always and you'll find some free time.",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 3
+        },
+        {
+          "id": 54,
+          "content": "Clean Code doesn't make your code better, faster or simpler. It makes your code more readable!",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 4
+        },
+        {
+          "id": 55,
+          "content": "Humans should work with humans, not on creating code that no one understands!",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 5
+        },
+        {
+          "id": 56,
+          "content": "Don't take dogs leg and move forward, learn how properly to give command.",
+          "created": "2026-03-09T09:39:25.318858Z",
+          "updated": null,
+          "displayOrder": 6
+        }
+      ]
+    }
+  ]
+}

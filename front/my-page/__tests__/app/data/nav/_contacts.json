@@ -1,0 +1,74 @@
+{
+  "id": 34,
+  "title": "Contact Me Page",
+  "created": "2026-03-09T09:39:25.20441",
+  "updated": null,
+  "parts": [
+    {
+      "id": 34,
+      "section": {
+        "id": 34,
+        "title": "Contact Me Page",
+        "created": "2026-03-09T09:39:25.20441",
+        "updated": null,
+        "parts": null
+      },
+      "type": {
+        "id": 34,
+        "name": "EmailHref",
+        "feHandlerIndex": "EmailHref"
+      },
+      "displayText": "Contact emails:",
+      "created": "2026-03-09T09:39:25.204410Z",
+      "updated": null,
+      "displayOrder": 1,
+      "contents": [
+        {
+          "id": 34,
+          "content": "dev@maris-locmelis.lv",
+          "created": "2026-03-09T09:39:25.204410Z",
+          "updated": null,
+          "displayOrder": 1
+        },
+        {
+          "id": 35,
+          "content": "neznajki@gmail.com",
+          "created": "2026-03-09T09:39:25.204410Z",
+          "updated": null,
+          "displayOrder": 2
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "section": {
+        "id": 34,
+        "title": "Contact Me Page",
+        "created": "2026-03-09T09:39:25.20441",
+        "updated": null,
+        "parts": null
+      },
+      "type": {
+        "id": 35,
+        "name": "LinkHref",
+        "feHandlerIndex": "LinkHref"
+      },
+      "displayText": "Contact social network:",
+      "created": "2026-03-09T09:39:25.204410Z",
+      "updated": null,
+      "displayOrder": 2,
+      "contents": [
+        {
+          "id": 36,
+          "content": {
+            "href": "https://www.linkedin.com/in/ml-698627181/",
+            "text": "Linked-In Māris Ločmelis"
+          },
+          "created": "2026-03-09T09:39:25.204410Z",
+          "updated": null,
+          "displayOrder": 1
+        }
+      ]
+    }
+  ]
+}

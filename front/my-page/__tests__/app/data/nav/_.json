@@ -1,0 +1,40 @@
+{
+  "id": 37,
+  "title": "Home",
+  "created": "2026-03-11T08:24:28.654657",
+  "updated": null,
+  "parts": [
+    {
+      "id": 40,
+      "section": {
+        "id": 37,
+        "title": "Home",
+        "created": "2026-03-11T08:24:28.654657",
+        "updated": null,
+        "parts": null
+      },
+      "type": {
+        "id": 36,
+        "name": "ImageHref",
+        "feHandlerIndex": "ImageHref"
+      },
+      "displayText": "Hello there I'm Māris Ločmelis and this is page about my self",
+      "created": "2026-03-11T08:24:28.654657Z",
+      "updated": null,
+      "displayOrder": 1,
+      "contents": [
+        {
+          "id": 106,
+          "content": {
+            "href": "https://github.com/Neznajki",
+            "alt": "Sunny Day !!",
+            "imageHref": "/sunFlight.jpg"
+          },
+          "created": "2026-03-11T08:24:28.654657Z",
+          "updated": null,
+          "displayOrder": 1
+        }
+      ]
+    }
+  ]
+}

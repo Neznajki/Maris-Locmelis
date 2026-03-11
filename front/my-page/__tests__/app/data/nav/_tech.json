@@ -1,0 +1,267 @@
+{
+  "id": 38,
+  "title": "Site Tech Stack",
+  "created": "2026-03-11T08:24:28.694324",
+  "updated": null,
+  "parts": [
+    {
+      "id": 41,
+      "section": {
+        "id": 38,
+        "title": "Site Tech Stack",
+        "created": "2026-03-11T08:24:28.694324",
+        "updated": null,
+        "parts": null
+      },
+      "type": {
+        "id": 37,
+        "name": "BulletPoint",
+        "feHandlerIndex": "BulletPoint"
+      },
+      "displayText": "FE stack:",
+      "created": "2026-03-11T08:24:28.694324Z",
+      "updated": null,
+      "displayOrder": 1,
+      "contents": [
+        {
+          "id": 107,
+          "content": "React + TypeScript",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 1
+        },
+        {
+          "id": 108,
+          "content": "Tailwind CSS",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 2
+        },
+        {
+          "id": 109,
+          "content": "Vite",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 3
+        },
+        {
+          "id": 110,
+          "content": "WebStorm",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 4
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "section": {
+        "id": 38,
+        "title": "Site Tech Stack",
+        "created": "2026-03-11T08:24:28.694324",
+        "updated": null,
+        "parts": null
+      },
+      "type": {
+        "id": 37,
+        "name": "BulletPoint",
+        "feHandlerIndex": "BulletPoint"
+      },
+      "displayText": "BE stack:",
+      "created": "2026-03-11T08:24:28.694324Z",
+      "updated": null,
+      "displayOrder": 2,
+      "contents": [
+        {
+          "id": 111,
+          "content": "JAVA 21",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 1
+        },
+        {
+          "id": 112,
+          "content": "Gradle",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 2
+        },
+        {
+          "id": 120,
+          "content": "flyway 10",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 5
+        },
+        {
+          "id": 121,
+          "content": "PostgreSQL",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 6
+        },
+        {
+          "id": 122,
+          "content": "Mapstruct 1.6",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 7
+        },
+        {
+          "id": 123,
+          "content": "JUnit",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 8
+        },
+        {
+          "id": 124,
+          "content": "IntelIJ Ultimate",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 9
+        },
+        {
+          "id": 125,
+          "content": "Application Insights",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 11
+        },
+        {
+          "id": 126,
+          "content": "Ubuntu VM",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 12
+        },
+        {
+          "id": 127,
+          "content": "OAuth",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 13
+        },
+        {
+          "id": 128,
+          "content": "nginx",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 14
+        },
+        {
+          "id": 129,
+          "content": "Docker",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 15
+        },
+        {
+          "id": 113,
+          "content": "Spring Boot 3.3",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 100
+        },
+        {
+          "id": 114,
+          "content": "SBS - Data JPA",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 101
+        },
+        {
+          "id": 115,
+          "content": "SBS - Security",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 102
+        },
+        {
+          "id": 116,
+          "content": "SBS - Web",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 103
+        },
+        {
+          "id": 117,
+          "content": "SBS - Cache",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 104
+        },
+        {
+          "id": 118,
+          "content": "SBS - Test",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 105
+        },
+        {
+          "id": 119,
+          "content": "SBS - TestContainers",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 106
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "section": {
+        "id": 38,
+        "title": "Site Tech Stack",
+        "created": "2026-03-11T08:24:28.694324",
+        "updated": null,
+        "parts": null
+      },
+      "type": {
+        "id": 37,
+        "name": "BulletPoint",
+        "feHandlerIndex": "BulletPoint"
+      },
+      "displayText": "Common stack:",
+      "created": "2026-03-11T08:24:28.694324Z",
+      "updated": null,
+      "displayOrder": 3,
+      "contents": [
+        {
+          "id": 130,
+          "content": "Github Repository",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 1
+        },
+        {
+          "id": 131,
+          "content": "Github Actions",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 2
+        },
+        {
+          "id": 132,
+          "content": "Azure Portal",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 3
+        },
+        {
+          "id": 133,
+          "content": "Chat GPT",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 4
+        },
+        {
+          "id": 134,
+          "content": "Junie",
+          "created": "2026-03-11T08:24:28.694324Z",
+          "updated": null,
+          "displayOrder": 5
+        }
+      ]
+    }
+  ]
+}

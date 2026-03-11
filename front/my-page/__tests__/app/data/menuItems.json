@@ -1,6 +1,46 @@
 [
     {
         "id": "home",
+        "pageSection": {
+            "id": 37,
+            "title": "Home",
+            "created": "2026-03-11T08:24:28.654657",
+            "updated": null,
+            "parts": [
+                {
+                    "id": 40,
+                    "section": {
+                        "id": 37,
+                        "title": "Home",
+                        "created": "2026-03-11T08:24:28.654657",
+                        "updated": null,
+                        "parts": null
+                    },
+                    "type": {
+                        "id": 36,
+                        "name": "ImageHref",
+                        "feHandlerIndex": "ImageHref"
+                    },
+                    "displayText": "Hello there I'm Māris Ločmelis and this is page about my self",
+                    "created": "2026-03-11T08:24:28.654657Z",
+                    "updated": null,
+                    "displayOrder": 1,
+                    "contents": [
+                        {
+                            "id": 106,
+                            "content": {
+                                "href": "https://github.com/Neznajki",
+                                "alt": "Sunny Day !!",
+                                "imageHref": "/sunFlight.jpg"
+                            },
+                            "created": "2026-03-11T08:24:28.654657Z",
+                            "updated": null,
+                            "displayOrder": 1
+                        }
+                    ]
+                }
+            ]
+        },
         "path": "/",
         "title": "Home",
         "displayOrder": 1,
@@ -9,6 +49,7 @@
     },
     {
         "id": "fun",
+        "pageSection": null,
         "path": "/fun",
         "title": "Fun Page",
         "displayOrder": 2,
@@ -17,6 +58,7 @@
     },
     {
         "id": "info",
+        "pageSection": null,
         "path": null,
         "title": "Information",
         "displayOrder": 3,
@@ -24,6 +66,113 @@
         "items": [
             {
                 "id": "about",
+                "pageSection": {
+                    "id": 1,
+                    "title": "About Me Page",
+                    "created": "2026-02-20T07:57:12.401908",
+                    "updated": null,
+                    "parts": [
+                        {
+                            "id": 1,
+                            "section": {
+                                "id": 1,
+                                "title": "About Me Page",
+                                "created": "2026-02-20T07:57:12.401908",
+                                "updated": null,
+                                "parts": null
+                            },
+                            "type": {
+                                "id": 2,
+                                "name": "DownloadButton",
+                                "feHandlerIndex": "DownloadButton"
+                            },
+                            "displayText": "Useful Related Info",
+                            "created": "2026-02-20T07:58:44.939121Z",
+                            "updated": null,
+                            "displayOrder": 1,
+                            "contents": [
+                                {
+                                    "id": 7,
+                                    "content": {
+                                        "href": "/about/Alva%20Labs%20Personality%20Test%20Report%20-%20M%C4%81ris%20Lo%C4%8Dmelis%20(eng).pdf",
+                                        "fileName": "Maris_Locmelis_2026_02_06_pers.pdf",
+                                        "content": "Alva Personality Test Results"
+                                    },
+                                    "created": "2026-02-20T08:03:23.416765Z",
+                                    "updated": null,
+                                    "displayOrder": 1
+                                },
+                                {
+                                    "id": 6,
+                                    "content": {
+                                        "href": "/about/Alva%20Labs%20Logic%20Test%20Report%20-%20Māris%20Ločmelis%20(eng).pdf",
+                                        "fileName": "Maris_Locmelis_2026_02_06_logi.pdf",
+                                        "content": "Alva Logic Test Results"
+                                    },
+                                    "created": "2026-02-20T08:03:45.072533Z",
+                                    "updated": null,
+                                    "displayOrder": 2
+                                }
+                            ]
+                        },
+                        {
+                            "id": 2,
+                            "section": {
+                                "id": 1,
+                                "title": "About Me Page",
+                                "created": "2026-02-20T07:57:12.401908",
+                                "updated": null,
+                                "parts": null
+                            },
+                            "type": {
+                                "id": 1,
+                                "name": "Paragraph",
+                                "feHandlerIndex": "Paragraph"
+                            },
+                            "displayText": "Information From Myself",
+                            "created": "2026-02-20T09:34:29.717923Z",
+                            "updated": null,
+                            "displayOrder": 2,
+                            "contents": [
+                                {
+                                    "id": 1,
+                                    "content": "I was born in 1987. My hobbies are related to PCs (playing games, watching anime, listening to educational videos).",
+                                    "created": "2026-02-20T09:35:53.491488Z",
+                                    "updated": null,
+                                    "displayOrder": 3
+                                },
+                                {
+                                    "id": 2,
+                                    "content": "Love results, hate processes. If a process can be skipped, I will skip it for sure.",
+                                    "created": "2026-02-20T09:35:53.491488Z",
+                                    "updated": null,
+                                    "displayOrder": 4
+                                },
+                                {
+                                    "id": 3,
+                                    "content": "I like talking — you may ask me to stop and I will stop.",
+                                    "created": "2026-02-20T09:35:53.491488Z",
+                                    "updated": null,
+                                    "displayOrder": 5
+                                },
+                                {
+                                    "id": 4,
+                                    "content": "I'm trying to pay attention",
+                                    "created": "2026-02-20T09:35:53.491488Z",
+                                    "updated": null,
+                                    "displayOrder": 6
+                                },
+                                {
+                                    "id": 5,
+                                    "content": "I hate reading books but love reading code.",
+                                    "created": "2026-02-20T09:35:53.491488Z",
+                                    "updated": null,
+                                    "displayOrder": 7
+                                }
+                            ]
+                        }
+                    ]
+                },
                 "path": "/about",
                 "title": "About Me",
                 "displayOrder": 1,
@@ -31,6 +180,399 @@
             },
             {
                 "id": "personality",
+                "pageSection": {
+                    "id": 36,
+                    "title": "Personality",
+                    "created": "2026-03-11T08:24:28.493865",
+                    "updated": null,
+                    "parts": [
+                        {
+                            "id": 38,
+                            "section": {
+                                "id": 36,
+                                "title": "Personality",
+                                "created": "2026-03-11T08:24:28.493865",
+                                "updated": null,
+                                "parts": null
+                            },
+                            "type": {
+                                "id": 1,
+                                "name": "Paragraph",
+                                "feHandlerIndex": "Paragraph"
+                            },
+                            "displayText": "One worder:",
+                            "created": "2026-03-11T08:24:28.493865Z",
+                            "updated": null,
+                            "displayOrder": 1,
+                            "contents": [
+                                {
+                                    "id": 57,
+                                    "content": "Technocrat",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 2
+                                },
+                                {
+                                    "id": 58,
+                                    "content": "Instrumentalist",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 3
+                                },
+                                {
+                                    "id": 59,
+                                    "content": "Centrist",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 4
+                                },
+                                {
+                                    "id": 60,
+                                    "content": "Honest",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 5
+                                },
+                                {
+                                    "id": 61,
+                                    "content": "Fair",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 6
+                                },
+                                {
+                                    "id": 62,
+                                    "content": "Logical",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 7
+                                },
+                                {
+                                    "id": 63,
+                                    "content": "Patriot",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 8
+                                },
+                                {
+                                    "id": 64,
+                                    "content": "Professional",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 9
+                                },
+                                {
+                                    "id": 65,
+                                    "content": "Reasonable",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 10
+                                },
+                                {
+                                    "id": 66,
+                                    "content": "Polyglot",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 11
+                                },
+                                {
+                                    "id": 67,
+                                    "content": "Responsible",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 12
+                                },
+                                {
+                                    "id": 68,
+                                    "content": "Creative",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 13
+                                },
+                                {
+                                    "id": 69,
+                                    "content": "Smart?",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 14
+                                },
+                                {
+                                    "id": 70,
+                                    "content": "Cat",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 15
+                                },
+                                {
+                                    "id": 71,
+                                    "content": "Lion",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 16
+                                },
+                                {
+                                    "id": 72,
+                                    "content": "Learning",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 17
+                                },
+                                {
+                                    "id": 73,
+                                    "content": "Improve",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 18
+                                },
+                                {
+                                    "id": 74,
+                                    "content": "Sharing",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 19
+                                },
+                                {
+                                    "id": 75,
+                                    "content": "Communicative",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 20
+                                },
+                                {
+                                    "id": 76,
+                                    "content": "Abstract",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 21
+                                },
+                                {
+                                    "id": 77,
+                                    "content": "Flexible",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 22
+                                },
+                                {
+                                    "id": 78,
+                                    "content": "Multitasking",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 23
+                                },
+                                {
+                                    "id": 79,
+                                    "content": "Focused",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 24
+                                },
+                                {
+                                    "id": 80,
+                                    "content": "Purposeful",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 25
+                                },
+                                {
+                                    "id": 81,
+                                    "content": "Determined",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 26
+                                },
+                                {
+                                    "id": 82,
+                                    "content": "Random?",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 27
+                                },
+                                {
+                                    "id": 83,
+                                    "content": "Lazy",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 100
+                                }
+                            ]
+                        },
+                        {
+                            "id": 39,
+                            "section": {
+                                "id": 36,
+                                "title": "Personality",
+                                "created": "2026-03-11T08:24:28.493865",
+                                "updated": null,
+                                "parts": null
+                            },
+                            "type": {
+                                "id": 1,
+                                "name": "Paragraph",
+                                "feHandlerIndex": "Paragraph"
+                            },
+                            "displayText": "Sentence from me about me:",
+                            "created": "2026-03-11T08:24:28.493865Z",
+                            "updated": null,
+                            "displayOrder": 2,
+                            "contents": [
+                                {
+                                    "id": 84,
+                                    "content": "Don't like to give orders prefer to ask favors.",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 1
+                                },
+                                {
+                                    "id": 85,
+                                    "content": "love to improve everything, You are included.",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 2
+                                },
+                                {
+                                    "id": 86,
+                                    "content": "Love results, hate processes. If there is a way to get results without process, I will definitely find it.",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 3
+                                },
+                                {
+                                    "id": 87,
+                                    "content": "I'm a lion person (like a cat one but with a loud roar).",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 4
+                                },
+                                {
+                                    "id": 88,
+                                    "content": "Love standing my ground.",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 5
+                                },
+                                {
+                                    "id": 89,
+                                    "content": "Like to move by small steps, don't like rushing.",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 6
+                                },
+                                {
+                                    "id": 90,
+                                    "content": "Like to get maximum out of what I have, won't search for something new if I can use the existing one.",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 7
+                                },
+                                {
+                                    "id": 91,
+                                    "content": "Hate spaghetti. Love SOLID, work LoD",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 8
+                                },
+                                {
+                                    "id": 92,
+                                    "content": "Hate to do everything by myself. We are who we are due to uniting, not because someone had big biceps.",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 9
+                                },
+                                {
+                                    "id": 93,
+                                    "content": "Brains are a muscle. If you need them, you must train them.",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 10
+                                },
+                                {
+                                    "id": 94,
+                                    "content": "Don't say 'Maris, I'm okay with it' if it's not true. I will eat you like an ice-cream (with taste).",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 11
+                                },
+                                {
+                                    "id": 95,
+                                    "content": "Love predictable risk, hate risks that are not calculated.",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 12
+                                },
+                                {
+                                    "id": 96,
+                                    "content": "If I fall, I will jump right back. Anything that doesn't kill me makes me stronger.",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 13
+                                },
+                                {
+                                    "id": 97,
+                                    "content": "Don't be scared that you will harm my feelings.",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 14
+                                },
+                                {
+                                    "id": 98,
+                                    "content": "I'm a mirror — I throw back everything you throw at me (it will fly even if I won't be able to lift it).",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 15
+                                },
+                                {
+                                    "id": 99,
+                                    "content": "Try harder is good, but think smarter is better!",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 16
+                                },
+                                {
+                                    "id": 100,
+                                    "content": "If you ask me to do something in the middle of the night, it will be done. But I will expect that we’ll work to make sure it never happens again.",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 17
+                                },
+                                {
+                                    "id": 101,
+                                    "content": "I believe that valuable things need time. If you make something fast, why do you expect it to live another day without a problem?",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 18
+                                },
+                                {
+                                    "id": 102,
+                                    "content": "If I can calculate mistake at the end, I won't do it — as the result is fully predictable.",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 19
+                                },
+                                {
+                                    "id": 103,
+                                    "content": "Lazy bastard making the maximum out of doing nothing.",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 20
+                                },
+                                {
+                                    "id": 104,
+                                    "content": "My ideas are unique. If you think they are not, then you just never discussed anything with me.",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 21
+                                },
+                                {
+                                    "id": 105,
+                                    "content": "I respect all people, no matter their status, skills, or any other thing that seems important for most people.",
+                                    "created": "2026-03-11T08:24:28.493865Z",
+                                    "updated": null,
+                                    "displayOrder": 22
+                                }
+                            ]
+                        }
+                    ]
+                },
                 "path": "/personality",
                 "title": "Personality",
                 "displayOrder": 2,
@@ -38,6 +580,80 @@
             },
             {
                 "id": "contacts",
+                "pageSection": {
+                    "id": 34,
+                    "title": "Contact Me Page",
+                    "created": "2026-03-09T09:39:25.20441",
+                    "updated": null,
+                    "parts": [
+                        {
+                            "id": 34,
+                            "section": {
+                                "id": 34,
+                                "title": "Contact Me Page",
+                                "created": "2026-03-09T09:39:25.20441",
+                                "updated": null,
+                                "parts": null
+                            },
+                            "type": {
+                                "id": 34,
+                                "name": "EmailHref",
+                                "feHandlerIndex": "EmailHref"
+                            },
+                            "displayText": "Contact emails:",
+                            "created": "2026-03-09T09:39:25.204410Z",
+                            "updated": null,
+                            "displayOrder": 1,
+                            "contents": [
+                                {
+                                    "id": 34,
+                                    "content": "dev@maris-locmelis.lv",
+                                    "created": "2026-03-09T09:39:25.204410Z",
+                                    "updated": null,
+                                    "displayOrder": 1
+                                },
+                                {
+                                    "id": 35,
+                                    "content": "neznajki@gmail.com",
+                                    "created": "2026-03-09T09:39:25.204410Z",
+                                    "updated": null,
+                                    "displayOrder": 2
+                                }
+                            ]
+                        },
+                        {
+                            "id": 35,
+                            "section": {
+                                "id": 34,
+                                "title": "Contact Me Page",
+                                "created": "2026-03-09T09:39:25.20441",
+                                "updated": null,
+                                "parts": null
+                            },
+                            "type": {
+                                "id": 35,
+                                "name": "LinkHref",
+                                "feHandlerIndex": "LinkHref"
+                            },
+                            "displayText": "Contact social network:",
+                            "created": "2026-03-09T09:39:25.204410Z",
+                            "updated": null,
+                            "displayOrder": 2,
+                            "contents": [
+                                {
+                                    "id": 36,
+                                    "content": {
+                                        "href": "https://www.linkedin.com/in/ml-698627181/",
+                                        "text": "Linked-In Māris Ločmelis"
+                                    },
+                                    "created": "2026-03-09T09:39:25.204410Z",
+                                    "updated": null,
+                                    "displayOrder": 1
+                                }
+                            ]
+                        }
+                    ]
+                },
                 "path": "/contacts",
                 "title": "Contacts",
                 "displayOrder": 3,
@@ -45,6 +661,273 @@
             },
             {
                 "id": "tech",
+                "pageSection": {
+                    "id": 38,
+                    "title": "Site Tech Stack",
+                    "created": "2026-03-11T08:24:28.694324",
+                    "updated": null,
+                    "parts": [
+                        {
+                            "id": 41,
+                            "section": {
+                                "id": 38,
+                                "title": "Site Tech Stack",
+                                "created": "2026-03-11T08:24:28.694324",
+                                "updated": null,
+                                "parts": null
+                            },
+                            "type": {
+                                "id": 37,
+                                "name": "BulletPoint",
+                                "feHandlerIndex": "BulletPoint"
+                            },
+                            "displayText": "FE stack:",
+                            "created": "2026-03-11T08:24:28.694324Z",
+                            "updated": null,
+                            "displayOrder": 1,
+                            "contents": [
+                                {
+                                    "id": 107,
+                                    "content": "React + TypeScript",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 1
+                                },
+                                {
+                                    "id": 108,
+                                    "content": "Tailwind CSS",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 2
+                                },
+                                {
+                                    "id": 109,
+                                    "content": "Vite",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 3
+                                },
+                                {
+                                    "id": 110,
+                                    "content": "WebStorm",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 4
+                                }
+                            ]
+                        },
+                        {
+                            "id": 42,
+                            "section": {
+                                "id": 38,
+                                "title": "Site Tech Stack",
+                                "created": "2026-03-11T08:24:28.694324",
+                                "updated": null,
+                                "parts": null
+                            },
+                            "type": {
+                                "id": 37,
+                                "name": "BulletPoint",
+                                "feHandlerIndex": "BulletPoint"
+                            },
+                            "displayText": "BE stack:",
+                            "created": "2026-03-11T08:24:28.694324Z",
+                            "updated": null,
+                            "displayOrder": 2,
+                            "contents": [
+                                {
+                                    "id": 111,
+                                    "content": "JAVA 21",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 1
+                                },
+                                {
+                                    "id": 112,
+                                    "content": "Gradle",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 2
+                                },
+                                {
+                                    "id": 120,
+                                    "content": "flyway 10",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 5
+                                },
+                                {
+                                    "id": 121,
+                                    "content": "PostgreSQL",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 6
+                                },
+                                {
+                                    "id": 122,
+                                    "content": "Mapstruct 1.6",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 7
+                                },
+                                {
+                                    "id": 123,
+                                    "content": "JUnit",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 8
+                                },
+                                {
+                                    "id": 124,
+                                    "content": "IntelIJ Ultimate",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 9
+                                },
+                                {
+                                    "id": 125,
+                                    "content": "Application Insights",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 11
+                                },
+                                {
+                                    "id": 126,
+                                    "content": "Ubuntu VM",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 12
+                                },
+                                {
+                                    "id": 127,
+                                    "content": "OAuth",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 13
+                                },
+                                {
+                                    "id": 128,
+                                    "content": "nginx",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 14
+                                },
+                                {
+                                    "id": 129,
+                                    "content": "Docker",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 15
+                                },
+                                {
+                                    "id": 113,
+                                    "content": "Spring Boot 3.3",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 100
+                                },
+                                {
+                                    "id": 114,
+                                    "content": "SBS - Data JPA",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 101
+                                },
+                                {
+                                    "id": 115,
+                                    "content": "SBS - Security",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 102
+                                },
+                                {
+                                    "id": 116,
+                                    "content": "SBS - Web",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 103
+                                },
+                                {
+                                    "id": 117,
+                                    "content": "SBS - Cache",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 104
+                                },
+                                {
+                                    "id": 118,
+                                    "content": "SBS - Test",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 105
+                                },
+                                {
+                                    "id": 119,
+                                    "content": "SBS - TestContainers",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 106
+                                }
+                            ]
+                        },
+                        {
+                            "id": 43,
+                            "section": {
+                                "id": 38,
+                                "title": "Site Tech Stack",
+                                "created": "2026-03-11T08:24:28.694324",
+                                "updated": null,
+                                "parts": null
+                            },
+                            "type": {
+                                "id": 37,
+                                "name": "BulletPoint",
+                                "feHandlerIndex": "BulletPoint"
+                            },
+                            "displayText": "Common stack:",
+                            "created": "2026-03-11T08:24:28.694324Z",
+                            "updated": null,
+                            "displayOrder": 3,
+                            "contents": [
+                                {
+                                    "id": 130,
+                                    "content": "Github Repository",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 1
+                                },
+                                {
+                                    "id": 131,
+                                    "content": "Github Actions",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 2
+                                },
+                                {
+                                    "id": 132,
+                                    "content": "Azure Portal",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 3
+                                },
+                                {
+                                    "id": 133,
+                                    "content": "Chat GPT",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 4
+                                },
+                                {
+                                    "id": 134,
+                                    "content": "Junie",
+                                    "created": "2026-03-11T08:24:28.694324Z",
+                                    "updated": null,
+                                    "displayOrder": 5
+                                }
+                            ]
+                        }
+                    ]
+                },
                 "path": "/tech",
                 "title": "Site Tech Stack",
                 "displayOrder": 4,
@@ -52,6 +935,196 @@
             },
             {
                 "id": "recommendations",
+                "pageSection": {
+                    "id": 35,
+                    "title": "Recommendations",
+                    "created": "2026-03-09T09:39:25.318858",
+                    "updated": null,
+                    "parts": [
+                        {
+                            "id": 36,
+                            "section": {
+                                "id": 35,
+                                "title": "Recommendations",
+                                "created": "2026-03-09T09:39:25.318858",
+                                "updated": null,
+                                "parts": null
+                            },
+                            "type": {
+                                "id": 1,
+                                "name": "Paragraph",
+                                "feHandlerIndex": "Paragraph"
+                            },
+                            "displayText": "Recommendations from me:",
+                            "created": "2026-03-09T09:39:25.318858Z",
+                            "updated": null,
+                            "displayOrder": 1,
+                            "contents": [
+                                {
+                                    "id": 37,
+                                    "content": "Every recommendation you give, try to follow it yourself.",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 1
+                                },
+                                {
+                                    "id": 38,
+                                    "content": "Make code more readable (Clean Code, DRY).",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 3
+                                },
+                                {
+                                    "id": 39,
+                                    "content": "Don't expect others to do something you wouldn't do yourself.",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 5
+                                },
+                                {
+                                    "id": 40,
+                                    "content": "Before changing anything, try creating something new instead.",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 6
+                                },
+                                {
+                                    "id": 41,
+                                    "content": "Gather suggestions and do something if they are to many.",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 7
+                                },
+                                {
+                                    "id": 42,
+                                    "content": "If you'd like to change something, think twice — sometimes changing your mind about the problem is easier and better.",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 8
+                                },
+                                {
+                                    "id": 43,
+                                    "content": "Don't take new tools until you've mastered the existing ones.",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 10
+                                },
+                                {
+                                    "id": 44,
+                                    "content": "don't rush time, or time will break you down.",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 11
+                                },
+                                {
+                                    "id": 45,
+                                    "content": "when you see something think how some one sees this in they're eyes.",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 12
+                                },
+                                {
+                                    "id": 46,
+                                    "content": "don't solve imagined problems use imagination to create something new.",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 13
+                                },
+                                {
+                                    "id": 47,
+                                    "content": "don't break something, before you make something to take it's place.",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 14
+                                },
+                                {
+                                    "id": 48,
+                                    "content": "Use tools but doesn't allow tools to own you.",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 15
+                                },
+                                {
+                                    "id": 49,
+                                    "content": "Run single direction a time",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 16
+                                },
+                                {
+                                    "id": 50,
+                                    "content": "The more turns you make the worth path you have chosen.",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 17
+                                }
+                            ]
+                        },
+                        {
+                            "id": 37,
+                            "section": {
+                                "id": 35,
+                                "title": "Recommendations",
+                                "created": "2026-03-09T09:39:25.318858",
+                                "updated": null,
+                                "parts": null
+                            },
+                            "type": {
+                                "id": 1,
+                                "name": "Paragraph",
+                                "feHandlerIndex": "Paragraph"
+                            },
+                            "displayText": "Recommendations related to dev:",
+                            "created": "2026-03-09T09:39:25.318858Z",
+                            "updated": null,
+                            "displayOrder": 2,
+                            "contents": [
+                                {
+                                    "id": 51,
+                                    "content": "SOLID — even if you can't fully apply it, aim for the closest option.",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 1
+                                },
+                                {
+                                    "id": 52,
+                                    "content": "Try to follow KISS, but if it's impossible, keep it complex only when necessary.",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 2
+                                },
+                                {
+                                    "id": 53,
+                                    "content": "YARGNI — use it always and you'll find some free time.",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 3
+                                },
+                                {
+                                    "id": 54,
+                                    "content": "Clean Code doesn't make your code better, faster or simpler. It makes your code more readable!",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 4
+                                },
+                                {
+                                    "id": 55,
+                                    "content": "Humans should work with humans, not on creating code that no one understands!",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 5
+                                },
+                                {
+                                    "id": 56,
+                                    "content": "Don't take dogs leg and move forward, learn how properly to give command.",
+                                    "created": "2026-03-09T09:39:25.318858Z",
+                                    "updated": null,
+                                    "displayOrder": 6
+                                }
+                            ]
+                        }
+                    ]
+                },
                 "path": "/recommendations",
                 "title": "Recommendations",
                 "displayOrder": 5,
@@ -61,6 +1134,7 @@
     },
     {
         "id": "recruiters",
+        "pageSection": null,
         "path": null,
         "title": "For Recruiters",
         "displayOrder": 4,
@@ -68,6 +1142,7 @@
         "items": [
             {
                 "id": "cv",
+                "pageSection": null,
                 "path": "/cv",
                 "title": "My CV",
                 "displayOrder": 6,
@@ -75,6 +1150,80 @@
             },
             {
                 "id": "recruitersContacts",
+                "pageSection": {
+                    "id": 34,
+                    "title": "Contact Me Page",
+                    "created": "2026-03-09T09:39:25.20441",
+                    "updated": null,
+                    "parts": [
+                        {
+                            "id": 34,
+                            "section": {
+                                "id": 34,
+                                "title": "Contact Me Page",
+                                "created": "2026-03-09T09:39:25.20441",
+                                "updated": null,
+                                "parts": null
+                            },
+                            "type": {
+                                "id": 34,
+                                "name": "EmailHref",
+                                "feHandlerIndex": "EmailHref"
+                            },
+                            "displayText": "Contact emails:",
+                            "created": "2026-03-09T09:39:25.204410Z",
+                            "updated": null,
+                            "displayOrder": 1,
+                            "contents": [
+                                {
+                                    "id": 34,
+                                    "content": "dev@maris-locmelis.lv",
+                                    "created": "2026-03-09T09:39:25.204410Z",
+                                    "updated": null,
+                                    "displayOrder": 1
+                                },
+                                {
+                                    "id": 35,
+                                    "content": "neznajki@gmail.com",
+                                    "created": "2026-03-09T09:39:25.204410Z",
+                                    "updated": null,
+                                    "displayOrder": 2
+                                }
+                            ]
+                        },
+                        {
+                            "id": 35,
+                            "section": {
+                                "id": 34,
+                                "title": "Contact Me Page",
+                                "created": "2026-03-09T09:39:25.20441",
+                                "updated": null,
+                                "parts": null
+                            },
+                            "type": {
+                                "id": 35,
+                                "name": "LinkHref",
+                                "feHandlerIndex": "LinkHref"
+                            },
+                            "displayText": "Contact social network:",
+                            "created": "2026-03-09T09:39:25.204410Z",
+                            "updated": null,
+                            "displayOrder": 2,
+                            "contents": [
+                                {
+                                    "id": 36,
+                                    "content": {
+                                        "href": "https://www.linkedin.com/in/ml-698627181/",
+                                        "text": "Linked-In Māris Ločmelis"
+                                    },
+                                    "created": "2026-03-09T09:39:25.204410Z",
+                                    "updated": null,
+                                    "displayOrder": 1
+                                }
+                            ]
+                        }
+                    ]
+                },
                 "path": "/contacts",
                 "title": "Contacts",
                 "displayOrder": 7,
@@ -82,6 +1231,7 @@
             },
             {
                 "id": "whatsDone",
+                "pageSection": null,
                 "path": "/whats-done",
                 "title": "What I have done",
                 "displayOrder": 8,
@@ -89,6 +1239,7 @@
             },
             {
                 "id": "coverLetter",
+                "pageSection": null,
                 "path": "/cover-letter",
                 "title": "Cover Letter",
                 "displayOrder": 9,
