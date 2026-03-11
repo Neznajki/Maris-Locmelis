@@ -70,3 +70,15 @@ button:focus-visible {
   overflow: hidden;
   touch-action: none; /* blocks background gestures on mobile */
 }
+
+.fit-content {
+  width: fit-content;
+  display: block;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
