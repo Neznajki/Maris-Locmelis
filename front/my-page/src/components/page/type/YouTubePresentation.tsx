@@ -7,8 +7,13 @@ export const YouTubePresentation: React.FC<YouTubePresentationType> = ({ link, t
         <Paragraph key={'video_' + link}>
             <h2>{title}</h2>
             <iframe
-                width="640"
-                height="360"
+                style={{
+                    margin: 20,
+                    width: "100%",
+                    aspectRatio: "16/9",
+                    border: "none"
+                }}
+                referrerPolicy="strict-origin-when-cross-origin"
                 src={link}
                 title={title}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
