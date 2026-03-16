@@ -31,6 +31,12 @@ export interface ParagraphType extends Type, String {
 export interface BulletPointType extends Type, String {
 }
 
+export interface YouTubePresentationType extends Type {
+    link: string,
+    title: string,
+    comment: string
+}
+
 
 export interface Type {
 
