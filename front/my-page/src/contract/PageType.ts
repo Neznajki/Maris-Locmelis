@@ -37,6 +37,9 @@ export interface YouTubePresentationType extends Type {
     comment: string
 }
 
+export interface PlaySongType extends Type {
+    songLink: string
+}
 
 export interface Type {
 
