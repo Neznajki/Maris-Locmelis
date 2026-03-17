@@ -1,7 +1,7 @@
 import React, {useRef, useState} from "react";
 import {PlaySongType} from "@/contract/PageType";
 
-export const PlaySong: React.FC<PlaySongType> = ({ songLink }) => {
+export const PlaySong: React.FC<PlaySongType> = ({ songLink, songTitle, songLang, songArtist, }) => {
     const audioRef = useRef<HTMLAudioElement>(null);
     const playPromiseRef = useRef<Promise<void> | null>(null);
     const [playing, setPlaying] = useState(false);
@@ -55,7 +55,7 @@ export const PlaySong: React.FC<PlaySongType> = ({ songLink }) => {
         <>
             <div className={"center"}>
                 <button onClick={toggleMusic}>
-                    {playing ? "🔊 Stop song" : "🔇 Play song (LV)"}
+                    {playing ? `🔊 Stop: ${songArtist} - ${songTitle}` : `🔇 Play song: ${songArtist} - ${songTitle} (${songLang})`}
                 </button>
             </div>
             <div style={{ width: "300px", margin: "20px auto" }} className={"center"}>

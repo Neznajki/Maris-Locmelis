@@ -6,7 +6,13 @@ import {PlaySong} from "@/components/page/type/PlaySong";
 export const PlaySongHandler: PageHandler<PlaySongType> = {
     render(data: PlaySongType): React.JSX.Element {
         return (
-            <PlaySong key={`song_${data.songLink}`} songLink={data.songLink} />
+            <PlaySong
+                key={`song_${data.songLink}`}
+                songLink={data.songLink}
+                songArtist={data.songArtist}
+                songLang={data.songLang}
+                songTitle={data.songTitle}
+            />
         );
     },
 

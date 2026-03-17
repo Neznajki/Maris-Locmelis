@@ -38,7 +38,10 @@ export interface YouTubePresentationType extends Type {
 }
 
 export interface PlaySongType extends Type {
-    songLink: string
+    songLink: string,
+    songTitle: string,
+    songLang: string,
+    songArtist: string,
 }
 
 export interface Type {
