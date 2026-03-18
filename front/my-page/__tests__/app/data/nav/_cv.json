@@ -1,0 +1,84 @@
+{
+  "id": 18,
+  "title": "Curriculum Vitae",
+  "created": "2026-03-18T13:12:26.190016",
+  "updated": null,
+  "parts": [
+    {
+      "id": 37,
+      "section": {
+        "id": 18,
+        "title": "Curriculum Vitae",
+        "created": "2026-03-18T13:12:26.190016",
+        "updated": null,
+        "parts": null
+      },
+      "type": {
+        "id": 2,
+        "name": "DownloadButton",
+        "feHandlerIndex": "DownloadButton"
+      },
+      "displayText": "",
+      "created": "2026-03-18T11:12:26.190016Z",
+      "updated": null,
+      "displayOrder": 1,
+      "contents": [
+        {
+          "id": 264,
+          "content": {
+            "href": "/cv/cv.pdf",
+            "fileName": "Maris_Locmelis_2026_03_02_CV.pdf",
+            "content": "Download pdf version CV updated 2026-03-02"
+          },
+          "created": "2026-03-18T11:12:26.190016Z",
+          "updated": null,
+          "displayOrder": 1
+        },
+        {
+          "id": 265,
+          "content": {
+            "href": "/cv/cv.html",
+            "fileName": "Maris_Locmelis_2026_03_02_CV.html",
+            "content": "Download html version CV updated 2026-03-02"
+          },
+          "created": "2026-03-18T11:12:26.190016Z",
+          "updated": null,
+          "displayOrder": 2
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "section": {
+        "id": 18,
+        "title": "Curriculum Vitae",
+        "created": "2026-03-18T13:12:26.190016",
+        "updated": null,
+        "parts": null
+      },
+      "type": {
+        "id": 20,
+        "name": "IframePreview",
+        "feHandlerIndex": "IframePreview"
+      },
+      "displayText": "Online CV Preview",
+      "created": "2026-03-18T11:12:26.190016Z",
+      "updated": null,
+      "displayOrder": 2,
+      "contents": [
+        {
+          "id": 266,
+          "content": {
+            "src": "/cv/cv.hmtl",
+            "title": "CV",
+            "height": "400px",
+            "width": "100%"
+          },
+          "created": "2026-03-18T11:12:26.190016Z",
+          "updated": null,
+          "displayOrder": 1
+        }
+      ]
+    }
+  ]
+}
