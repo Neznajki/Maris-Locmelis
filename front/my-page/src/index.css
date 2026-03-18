@@ -82,3 +82,7 @@ button:focus-visible {
   align-items: center;
   margin: auto;
 }
+
+.download-button {
+  margin-bottom: 10px;
+}

@@ -44,6 +44,14 @@ export interface PlaySongType extends Type {
     songArtist: string,
 }
 
+export interface IframePreviewType extends Type {
+    src: string,
+    title: string,
+    height: string,
+    width: string,
+}
+
+
 export interface Type {
 
 }
