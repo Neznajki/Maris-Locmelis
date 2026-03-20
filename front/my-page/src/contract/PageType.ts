@@ -51,6 +51,13 @@ export interface IframePreviewType extends Type {
     width: string,
 }
 
+export interface ImageStoryType extends Type {
+    img: string | undefined,
+    text: string | undefined,
+    width: string | undefined,
+    alt: string | undefined,
+}
+
 
 export interface Type {
 

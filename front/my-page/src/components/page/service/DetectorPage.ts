@@ -8,6 +8,7 @@ import {BulletPointHandler} from "@/components/page/handler/BulletPointHandler";
 import {YouTubePresentationHandler} from "@/components/page/handler/YouTubePresentationHandler";
 import {PlaySongHandler} from "@/components/page/handler/PlaySongHandler";
 import {IframePreviewHandler} from "@/components/page/handler/IframePreviewHandler";
+import {ImageStoryHandler} from "@/components/page/handler/ImageStoryHandler";
 
 export default function getRenderComponent(pageSectionPart: PageSectionPart): PageHandler<any> {
     switch (pageSectionPart.type.feHandlerIndex) {
@@ -20,6 +21,7 @@ export default function getRenderComponent(pageSectionPart: PageSectionPart): Pa
         case 'YouTubePresentation': return YouTubePresentationHandler;
         case 'PlaySong': return PlaySongHandler;
         case 'IframePreview': return IframePreviewHandler;
+        case 'ImageStory': return ImageStoryHandler;
         default: throw new Error(`Unknown handler: ${pageSectionPart.type.feHandlerIndex}`);
     }
 }

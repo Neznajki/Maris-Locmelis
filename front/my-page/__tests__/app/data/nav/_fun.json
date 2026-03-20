@@ -1,0 +1,91 @@
+{
+  "id": 20,
+  "title": "Just For Fun",
+  "created": "2026-03-20T11:11:49.711121",
+  "updated": null,
+  "parts": [
+    {
+      "id": 41,
+      "section": {
+        "id": 20,
+        "title": "Just For Fun",
+        "created": "2026-03-20T11:11:49.711121",
+        "updated": null,
+        "parts": null
+      },
+      "type": {
+        "id": 22,
+        "name": "ImageStory",
+        "feHandlerIndex": "ImageStory"
+      },
+      "displayText": "World Around Us:",
+      "created": "2026-03-20T09:11:49.711121Z",
+      "updated": null,
+      "displayOrder": 1,
+      "contents": [
+        {
+          "id": 286,
+          "content": {
+            "img": "/fun/rocket/rocket_investigation.jpg",
+            "width": "300px",
+            "alt": "Rocket Investigation"
+          },
+          "created": "2026-03-20T09:28:15.805737Z",
+          "updated": null,
+          "displayOrder": 1
+        },
+        {
+          "id": 283,
+          "content": {
+            "text": "10 seconds later"
+          },
+          "created": "2026-03-20T09:25:39.049380Z",
+          "updated": null,
+          "displayOrder": 2
+        },
+        {
+          "id": 288,
+          "content": {
+            "img": "/fun/rocket/rocket_ride.jpg",
+            "width": "300px",
+            "alt": "Rocket Ride"
+          },
+          "created": "2026-03-20T09:28:15.805737Z",
+          "updated": null,
+          "displayOrder": 3
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "section": {
+        "id": 20,
+        "title": "Just For Fun",
+        "created": "2026-03-20T11:11:49.711121",
+        "updated": null,
+        "parts": null
+      },
+      "type": {
+        "id": 4,
+        "name": "LinkHref",
+        "feHandlerIndex": "LinkHref"
+      },
+      "displayText": "How it works? Examples:",
+      "created": "2026-03-20T09:11:49.711121Z",
+      "updated": null,
+      "displayOrder": 2,
+      "contents": [
+        {
+          "id": 293,
+          "content": {
+            "href": "https://www.youtube.com/shorts/EvBeqE08r7c",
+            "text": "Lesson to cat. (Youtube Video)"
+          },
+          "created": "2026-03-20T09:37:30.856154Z",
+          "updated": null,
+          "displayOrder": 1
+        }
+      ]
+    }
+  ]
+}

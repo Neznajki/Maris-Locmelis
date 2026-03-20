@@ -1,16 +1,19 @@
 
 import React from 'react'
-import { PageContainer } from '@/components/PageRenderer'
-import RocketInvestigation from '@/assets/fun/rocket_investigation.jpg'
-import RocketRide from '@/assets/fun/rocket_ride.jpg'
+import PageByPath from "@/pages/PageByPath";
+import {PlaySong} from "@/components/page/type/PlaySong";
 
-export const Fun: React.FC<{ title: React.ReactNode }> = ({ title }) => {
+export const Fun: React.FC = () => {
   return (
-    <PageContainer title={title}>
-      <div style={{ display: "inline-flex", alignItems: "center", whiteSpace: "nowrap" }}>
-        <img src={RocketInvestigation} style={{ width: 300 }}  alt={"rocket investigation"}/> <p style={{ padding: 10 }}> 10 seconds later</p> <img alt={"rocket result"} src={RocketRide} style={{ width: 300 }} />
-      </div>
-    </PageContainer>
+    <>
+      <PlaySong
+        songLink={"/music/OneRepublic-Good_Life.mp3"}
+        songArtist={"OneRepublic"}
+        songLang={"EN"}
+        songTitle={"Good Life"}
+      ></PlaySong>
+      <PageByPath path="/fun" />
+    </>
   )
 }
 export default Fun
