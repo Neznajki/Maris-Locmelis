@@ -65,7 +65,7 @@ export const WhatsDonePage: React.FC<{ title: React.ReactNode }> = ({ title }) =
       <br />
 
         <PopupSpoiler title="Dyninno and Dynatech">
-          {PageData.Dynatech.map(p => (
+          {PageData.Dyninno.map(p => (
             <Paragraph key={"dyn_" + p.id}>{p.text}</Paragraph>
           ))}
         </PopupSpoiler><br/><br/>
@@ -73,6 +73,12 @@ export const WhatsDonePage: React.FC<{ title: React.ReactNode }> = ({ title }) =
         <PopupSpoiler title="Stock Guru">
           {PageData.StockGuru.map(p => (
             <Paragraph key={"sg_" + p.id}>{p.text}</Paragraph>
+          ))}
+        </PopupSpoiler><br/><br/>
+
+        <PopupSpoiler title="Dyninno and Dynatech">
+          {PageData.Dynatech.map(p => (
+              <Paragraph key={"dyn_" + p.id}>{p.text}</Paragraph>
           ))}
         </PopupSpoiler><br/><br/>
 
