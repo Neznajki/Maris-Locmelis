@@ -64,19 +64,19 @@ export const WhatsDonePage: React.FC<{ title: React.ReactNode }> = ({ title }) =
       <br />
       <br />
 
-        <PopupSpoiler title="Dyninno and Dynatech">
+        <PopupSpoiler title="Dyninno and Dynatech, PHP Junior > Senior Full-Stack Developer">
           {PageData.Dyninno.map(p => (
             <Paragraph key={"dyn_" + p.id}>{p.text}</Paragraph>
           ))}
         </PopupSpoiler><br/><br/>
 
-        <PopupSpoiler title="Stock Guru">
+        <PopupSpoiler title="Stock Guru > JAVA Senior Developer">
           {PageData.StockGuru.map(p => (
             <Paragraph key={"sg_" + p.id}>{p.text}</Paragraph>
           ))}
         </PopupSpoiler><br/><br/>
 
-        <PopupSpoiler title="Dyninno and Dynatech">
+        <PopupSpoiler title="Dyninno and Dynatech > PHP Senior Full-Stack Developer (TL 2 years)">
           {PageData.Dynatech.map(p => (
               <Paragraph key={"dyn_" + p.id}>{p.text}</Paragraph>
           ))}
@@ -88,19 +88,19 @@ export const WhatsDonePage: React.FC<{ title: React.ReactNode }> = ({ title }) =
           ))}
         </PopupSpoiler><br/><br/>
 
-        <PopupSpoiler title="IT Labs // AGC Soft">
+        <PopupSpoiler title="IT Labs // AGC Soft, PHP Senior Backend Developer">
           {PageData.AGC.map(p => (
             <Paragraph key={"agc_"+p.id}>{p.text}</Paragraph>
           ))}
         </PopupSpoiler><br/><br/>
 
-        <PopupSpoiler title="C.T.CO">
+        <PopupSpoiler title="C.T.CO, Hired as Full-Stack but path was > Backend Developer -> Lead Backend Developer">
           {PageData.CTCO.map(p => (
             <Paragraph key={"ctco_" + p.id}>{p.text}</Paragraph>
           ))}
         </PopupSpoiler><br/><br/>
 
-        <PopupSpoiler title="Sapiens">
+        <PopupSpoiler title="Sapiens, Senior Full-Stack Developer">
           {PageData.Sapiens.map(p => (
             <Paragraph key={"homo_" + p.id}>{p.text}</Paragraph>
           ))}

@@ -65,11 +65,11 @@
     {"id": 17, "text": "rarely missed sprints"}
   ],
   "Sapiens": [
-    {"id": 0, "text": "Left during probation period"},
-    {"id": 0, "text": "Worked on legacy data migration (have some success and some questionable things)"},
-    {"id": 1, "text": "Closed about 10-20 tasks"},
-    {"id": 2, "text": "left with 7 PR opened without comments to solve"},
-    {"id": 3, "text": "Bye"}
+    {"id": 1, "text": "Left during probation period"},
+    {"id": 2, "text": "Worked on legacy data migration (have some success and some questionable things)"},
+    {"id": 3, "text": "Closed about 10-20 tasks"},
+    {"id": 4, "text": "left with 7 PR opened without comments to solve"},
+    {"id": 5, "text": "Bye"}
   ],
   "SomethingGoneWrong": [
     {"id": 1, "text": "Working on this website and gathering useful data."},
