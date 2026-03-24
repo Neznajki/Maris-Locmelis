@@ -14,39 +14,52 @@
         .bold {
             font-weight: bold;
         }
+
+        .page-break {
+            margin-top: 20px;
+            display: block;
+            page-break-before: always;
+            page-break-after: always;
+        }
     </style>
 </head>
 <body>
     <div>
         <div id="root">
-            <div class="contacts_part">
-                <h1 style="text-align: center">Contacts</h1>
-                <table>
-                    <tr><td></td><td>Māris Ločmelis</td></tr>
-                    <tr><td></td><td>Senior Full Stack developer (most backend tasks)</td></tr>
-                    <tr><td></td><td>Location: Rīga, Latvia</td></tr>
-                    <tr><td></td><td>Phone <a href="tel:+37126120882" style="color: black; text-decoration: none">+371 2612 0882</a></td></tr>
-                    <tr><td></td><td>Phone <a href="mailto:dev@maris-locmelis.lv" style="color: black; text-decoration: none">dev@maris-locmelis.lv</a></td></tr>
-                    <tr><td></td><td>https://maris-locmelis.lv/#/about</td></tr>
-                </table>
+            <div class="page-break">
+
+                <div class="contacts_part">
+                    <h1 style="text-align: center">Contacts</h1>
+                    <table>
+                        <tr><td></td><td>Māris Ločmelis</td></tr>
+                        <tr><td></td><td>Senior Full Stack developer (most backend tasks)</td></tr>
+                        <tr><td></td><td>Location: Rīga, Latvia</td></tr>
+                        <tr><td></td><td>Phone <a href="tel:+37126120882" style="color: black; text-decoration: none">+371 2612 0882</a></td></tr>
+                        <tr><td></td><td>Phone <a href="mailto:dev@maris-locmelis.lv" style="color: black; text-decoration: none">dev@maris-locmelis.lv</a></td></tr>
+                        <tr><td></td><td>https://maris-locmelis.lv/#/about</td></tr>
+                    </table>
+                </div>
+                <div class="other_part">
+                    <h1 style="text-align: center">Something About</h1>
+                    <table>
+                        <tr><td></td><td>there are no impossible tasks, there are tasks that takes some time to handle.</td></tr>
+                        <tr><td></td><td>there are no need in technology if you can't use it.</td></tr>
+                        <tr><td></td><td>if you need to eliminate bribe, gift them something they cannot support (dump truck or internet).</td></tr>
+                        <tr><td></td><td>small steps is everything you need to reach any spot in any place.</td></tr>
+                        <tr><td></td><td>don't start with final, start with something and you won't be stuck.</td></tr>
+                        <tr><td></td><td>perfection is good target, but unreachable goal.</td></tr>
+                        <tr><td></td><td>don't worry be happy.</td></tr>
+                        <tr><td></td><td>https://maris-locmelis.lv/#/about</td></tr>
+                    </table>
+                </div>
+                <br/>
+                <br/>
+                <div style="text-align: center">Work Experience (Please Notice same company without something in between is just split into some logical parts.)</div>
             </div>
-            <div class="other_part">
-                <h1 style="text-align: center">Something About</h1>
-                <table>
-                    <tr><td></td><td>there are no impossible tasks, there are tasks that takes some time to handle.</td></tr>
-                    <tr><td></td><td>there are no need in technology if you can't use it.</td></tr>
-                    <tr><td></td><td>if you need to eliminate bribe, gift them something they cannot support (dump truck or internet).</td></tr>
-                    <tr><td></td><td>small steps is everything you need to reach any spot in any place.</td></tr>
-                    <tr><td></td><td>don't start with final, start with something and you won't be stuck.</td></tr>
-                    <tr><td></td><td>perfection is good target, but unreachable goal.</td></tr>
-                    <tr><td></td><td>don't worry be happy.</td></tr>
-                    <tr><td></td><td>https://maris-locmelis.lv/#/about</td></tr>
-                </table>
-            </div>
-            <br/><br/>
+
             <div class="main_part">
-                <h1 style="text-align: center">Work Experience (Please Notice same company without something in between is just split into some logical parts.)</h1>
-                <table>
+
+                <table class="page-break">
                     <tr><td class="bold" style="width: 160px;">Jul 2025–Oct 2025</td><td>Senior Full Stack developer</td></tr>
                     <tr><td>(3 months)</td><td class="space-bot">Sapiens 👎</td></tr>
                     <tr><td></td><td class="space-bot">Technical Skills: Reactive Java 21, git, JUnit, Spring Boot, AWS, Docker, Gradle, TypeScript, React, Oracle, MS SQL, PostgreSQL, Playwright</td></tr>
@@ -68,7 +81,7 @@
                     <tr><td></td><td class="space-bot"></td></tr>
                 </table>
 
-                <table>
+                <table class="page-break">
                     <tr><td class="bold" style="width: 160px;">Jun 2025 – Jul 2025</td><td>Dev OPS</td></tr>
                     <tr><td>~9 months</td><td class="space-bot">C.T.Co (Internal project)</td></tr>
                     <tr><td></td><td class="space-bot">Technical Skills: GO Lang, Java, Confluence, CI/CD, Azure DevOps, Kubernetes</td></tr>
@@ -86,9 +99,8 @@
                     <tr><td></td><td class="space-bot"></td></tr>
                     <tr><td></td><td class="space-bot"></td></tr>
                 </table>
-
-                <table>
-                    <tr><td class="bold" style="width: 140px;">Mar 2022 – Aug 2024</td><td>Insurance, Lead Backend Developer (Full Stack)</td></tr>
+                <table class="page-break">
+                    <tr><td class="bold" style="width: 160px;">Mar 2022 – Aug 2024</td><td>Insurance, Lead Backend Developer (Full Stack)</td></tr>
                     <tr><td>~9 month</td><td class="space-bot">C.T.Co (external project)</td></tr>
                     <tr><td></td><td class="space-bot">Technical Skills: Cucumber, Java 11, JUnit, Mockito, ORM/DAO, Oracle, Docker, Kubernetes, Maven, Bitbucket, Jenkins, CI/CD, Vaadin,
                         MQ, PAIN, PACS, VTK, Generators</td></tr>
@@ -110,7 +122,7 @@
                     <tr><td></td><td class="space-bot"></td></tr>
                 </table>
 
-                <table>
+                <table class="page-break">
                     <tr><td class="bold" style="width: 160px;">Aug 2023 – Aug 2024</td><td>Insurance (L&H) Lead Backend Developer (Full Stack)</td></tr>
                     <tr><td>12 month</td><td class="space-bot">C.T.Co (internal project)</td></tr>
                     <tr><td></td><td class="space-bot">Technical Skills: Cucumber, Java (11, 17),  JUnit, Orika, Mapstruct, LTPA, OAuth, Mockito, Hibernate, PostgreSQL,
@@ -133,8 +145,7 @@
                     <tr><td></td><td class="space-bot"></td></tr>
                     <tr><td></td><td class="space-bot"></td></tr>
                 </table>
-
-                <table>
+                <table class="page-break">
                     <tr><td class="bold" style="width: 160px;">Mar 2022 – Aug 2023</td><td>Insurance (P&C) Backend Developer (Full Stack)</td></tr>
                     <tr><td>18 month</td><td class="space-bot">C.T.Co (internal project) ❤︎❤︎</td></tr>
                     <tr><td></td><td class="space-bot">Technical Skills: Java (11, 17),  JUnit, Mockito, Hibernate, PostgreSQL, Oracle, Spring Boot (2, 3), Angular, Azure DevOps, Maven, WLP, CI/CD, Azure Cloud, Deployment models, Ansible, Confluence, Terraform, Helm, Kubernetes, Docker</td></tr>
@@ -159,8 +170,7 @@
                     <tr><td></td><td class="space-bot"></td></tr>
                     <tr><td></td><td class="space-bot"></td></tr>
                 </table>
-
-                <table>
+                <table class="page-break">
                     <tr><td class="bold" style="width: 160px;">Dec 2020 – Mar 2022</td><td>IGaming, Senior Full Stack developer</td></tr>
                     <tr><td>~13 months</td><td class="space-bot">ITLABS 22 (AGC Soft) ❤︎❤︎❤︎</td></tr>
                     <tr><td></td><td class="space-bot">Technical Skills:  PHP, Symfony (refactoring from Phalcon), RabbitMQ, Redis, MySQL, React, Docker, GitLab (incl. CI/CD pipelines), Graylog, Sentry, PHPUnit, Codeception, Xdebug, Jira, Confluence, Composer, Scrum/Agile</td></tr>
@@ -185,8 +195,7 @@
                     <tr><td></td><td class="space-bot"></td></tr>
                     <tr><td></td><td class="space-bot"></td></tr>
                 </table>
-
-                <table>
+                <table class="page-break">
                     <tr><td class="bold" style="width: 160px;">Sep 2020 – Dec 2020</td><td>IGaming, Senior Full Stack developer</td></tr>
                     <tr><td>~4 months</td><td class="space-bot">ITLABS 22 ❤︎❤︎❤︎</td></tr>
                     <tr><td></td><td class="space-bot">Technical Skills: PHP 8.4, Phalcon, Redis, MySQL, React, Docker, GitLab (incl. CI/CD pipelines), PHPUnit, Codeception, Xdebug, Jira, Confluence, Composer, Scrum/Agile</td></tr>
@@ -204,8 +213,7 @@
                     <tr><td></td><td class="space-bot"></td></tr>
                     <tr><td></td><td class="space-bot"></td></tr>
                 </table>
-
-                <table>
+                <table class="page-break">
                     <tr><td class="bold" style="width: 160px;">Aug 2020 – Feb 2021</td><td>IT Specialist Mentod (Part time approx 10 payed hours per month)</td></tr>
                     <tr><td>(6 months)</td><td class="space-bot">SDAC Academy</td></tr>
                     <tr><td></td><td class="space-bot">Technical Skills: Good Practices such as SOLID, YAGNI, Clean Code, DDD, Java, Git, Slack, Software Development Patterns (Gang of Four)</td></tr>
@@ -222,8 +230,7 @@
                     <tr><td></td><td class="space-bot"></td></tr>
                     <tr><td></td><td class="space-bot"></td></tr>
                 </table>
-
-                <table>
+                <table class="page-break">
                     <tr><td class="bold" style="width: 160px;">Oct 2018 – Apr 2020</td><td>Senior Full Stack developer (SMS, Mail, Stability, Price Gathering and other services)</td></tr>
                     <tr><td>(18 months)</td><td class="space-bot">Sia Dynatech ❤︎❤︎</td></tr>
                     <tr><td></td><td class="space-bot">Technical Skills: Codeception, Datalake, Composer, GeoDump, Redis, Memcached, PHP 8.4, MySQL (MariaDB), JQuery, JS, VueJs, Angular, Git, Gitlab, Sentry, GrayLog, Symfony, Laravel, Custom Framework, JWT, Linux, Code Generators, MicroServices, Docker, CI/CD, partial PROD support</td></tr>
@@ -244,8 +251,7 @@
                     <tr><td></td><td class="space-bot"></td></tr>
                     <tr><td></td><td class="space-bot"></td></tr>
                 </table>
-
-                <table>
+                <table class="page-break">
                     <tr><td class="bold" style="width: 160px;">Oct 2016–Oct 2018</td><td>Team Lead (SMS, Mail, Stability, Price Gathering and other services)</td></tr>
                     <tr><td>(24 months)</td><td class="space-bot">Sia Dynatech (Dyninno) ❤︎❤︎</td></tr>
                     <tr><td></td><td class="space-bot">Technical Skills: Codeception, Composer, Memcached, PHP 6, PHP 8.x, MySQL (MariaDB), JQuery, JS, Angular, Git, Gitlab, Symfony, Custom Framework, Linux, Docker, CI/CD, full PROD support (custom tools)</td></tr>
@@ -274,8 +280,7 @@
                     <tr><td></td><td class="space-bot"></td></tr>
                     <tr><td></td><td class="space-bot"></td></tr>
                 </table>
-
-                <table>
+                <table class="page-break">
                     <tr><td class="bold" style="width: 160px;">Mar 2016–Oct 2016</td><td>Senior Full Stack developer</td></tr>
                     <tr><td>(7 months)</td><td class="space-bot">Sia Dyninno ❤︎❤︎</td></tr>
                     <tr><td></td><td class="space-bot">Technical Skills: Codeception, Memcached, PHP 6, MySQL (MariaDB), JQuery, JS, Git, Gitlab, Linux, CI/CD, partial PROD support</td></tr>
@@ -294,8 +299,7 @@
                     <tr><td></td><td class="space-bot"></td></tr>
                     <tr><td></td><td class="space-bot"></td></tr>
                 </table>
-
-                <table>
+                <table class="page-break">
                     <tr><td class="bold" style="width: 160px;">Jul 2025–Oct 2025</td><td>Software Developer (Stock Exchange company)</td></tr>
                     <tr><td>(1 month)</td><td class="space-bot">Sia Stock Guru</td></tr>
                     <tr><td></td><td class="space-bot">Technical Skills: Excel, Java, Thomson Reuters, Bloomberg</td></tr>
@@ -311,8 +315,7 @@
                     <tr><td></td><td class="space-bot"></td></tr>
                     <tr><td></td><td class="space-bot"></td></tr>
                 </table>
-
-                <table>
+                <table class="page-break">
                     <tr><td class="bold" style="width: 160px;">Jun 2014 – Dec 2016</td><td>Software Developer</td></tr>
                     <tr><td>(30 months)</td><td class="space-bot">Sia Dyninno ❤︎❤︎</td></tr>
                     <tr><td></td><td class="space-bot">Technical Skills: JavaScript, JQuery, PHP6, HTML, CSS, Android, xss, ...From Services</td></tr>
@@ -335,7 +338,7 @@
                     <tr><td></td><td class="space-bot"></td></tr>
                     <tr><td></td><td class="space-bot"></td></tr>
                 </table>
-                <table>
+                <table class="page-break">
                     <tr><td class="bold" style="width: 160px;">Jun 2012 – Dec 2013</td><td>Software Developer (Social network games)</td></tr>
                     <tr><td>(18 months)</td><td class="space-bot">Sia Pingnetgames ❤︎</td></tr>
                     <tr><td></td><td class="space-bot">Technical Skills: Java 8 or lower, PHP 6, NodeJS, MySQL, SmartFoxServer, imagic, html5, MongoDB, svn</td></tr>
@@ -356,8 +359,7 @@
                     <tr><td></td><td class="space-bot"></td></tr>
                     <tr><td></td><td class="space-bot"></td></tr>
                 </table>
-
-                <table>
+                <table class="page-break">
                     <tr><td class="bold" style="width: 160px;">Feb 2010 – Jun 2012</td><td>Software Developer</td></tr>
                     <tr><td>(28 months)</td><td class="space-bot">Many ones.</td></tr>
                     <tr><td></td><td class="space-bot">Technical Skills: Java, Android SDK, PHP, Zend Framework, Google Maps, Sonar Cube, JavaScript, SQL (Oracle, MySQL)</td></tr>
@@ -373,7 +375,6 @@
                     <tr><td></td><td class="space-bot"></td></tr>
                     <tr><td></td><td class="space-bot"></td></tr>
                 </table>
-
                 <h1 style="text-align: center">Education</h1>
                 <div>xxx – 2004: School boy.</div>
                 <div>2004 – 2008: RTK (Rīgas tehniskā koledža), Programming</div>
