@@ -64,6 +64,16 @@ export async function fetchPageContent(path: string): Promise<Response> {
   return fetch(url, { method: 'GET', headers: { Accept: 'application/json', } })
 }
 
+export async function fetchSectionContent(sectionPartId: number): Promise<Response> {
+  const params = new URLSearchParams({
+    partId: sectionPartId + '',
+  });
+
+  const base = getApiUrl()
+  const url = `${base}sections/for/part/id?${params.toString()}`
+  return fetch(url, { method: 'GET', headers: { Accept: 'application/json', } })
+}
+
 export async function fetchMenuItemsResponse(): Promise<Response> {
   const base = getApiUrl()
   const url = `${base}menu/items`

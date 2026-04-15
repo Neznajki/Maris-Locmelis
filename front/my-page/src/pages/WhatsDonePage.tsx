@@ -1,20 +1,15 @@
 
 import React from 'react'
 import { PageContainer } from '@/components/PageRenderer'
-import { Paragraph } from '@/components/Paragraph'
 import PopupSpoiler from '@/components/PopupSpoiler'
 import '@/assets/popupSpoiler.css'
 import '@/styles/WhatsDonePageCss.css'
-import PageData from '@/data/api/WhatsDone.json'
+import PageByPath from "@/pages/PageByPath";
 
 export const WhatsDonePage: React.FC<{ title: React.ReactNode }> = ({ title }) => {
   return (
     <PageContainer title={title}>
       <div className="WhatsDonePage">
-          {PageData.title.map(p => (
-            <Paragraph key={"wdp_" + p.id}>{p.text}</Paragraph>
-          ))}
-      <br/><br/>
       <PopupSpoiler title="PingnetGames">
         Social Network Games (created everything everything related to server) <br/>
         Please notice payments systems and admin pages where we are editing is also server side tasks <br/>
@@ -61,58 +56,11 @@ export const WhatsDonePage: React.FC<{ title: React.ReactNode }> = ({ title }) =
         </PopupSpoiler>
 
       </PopupSpoiler>
-      <br />
-      <br />
 
-        <PopupSpoiler title="Dyninno and Dynatech, PHP Junior > Senior Full-Stack Developer">
-          {PageData.Dyninno.map(p => (
-            <Paragraph key={"dyn_" + p.id}>{p.text}</Paragraph>
-          ))}
-        </PopupSpoiler><br/><br/>
-
-        <PopupSpoiler title="Stock Guru > JAVA Senior Developer">
-          {PageData.StockGuru.map(p => (
-            <Paragraph key={"sg_" + p.id}>{p.text}</Paragraph>
-          ))}
-        </PopupSpoiler><br/><br/>
-
-        <PopupSpoiler title="Dyninno and Dynatech > PHP Senior Full-Stack Developer (TL 2 years)">
-          {PageData.Dynatech.map(p => (
-              <Paragraph key={"dyn_" + p.id}>{p.text}</Paragraph>
-          ))}
-        </PopupSpoiler><br/><br/>
-
-        <PopupSpoiler title="Unemployed">
-          {PageData.Unemployed.map(p => (
-            <Paragraph key={"u1_" + p.id}>{p.text}</Paragraph>
-          ))}
-        </PopupSpoiler><br/><br/>
-
-        <PopupSpoiler title="IT Labs // AGC Soft, PHP Senior Backend Developer">
-          {PageData.AGC.map(p => (
-            <Paragraph key={"agc_"+p.id}>{p.text}</Paragraph>
-          ))}
-        </PopupSpoiler><br/><br/>
-
-        <PopupSpoiler title="C.T.CO, Hired as Full-Stack but path was > Backend Developer -> Lead Backend Developer">
-          {PageData.CTCO.map(p => (
-            <Paragraph key={"ctco_" + p.id}>{p.text}</Paragraph>
-          ))}
-        </PopupSpoiler><br/><br/>
-
-        <PopupSpoiler title="Sapiens, Senior Full-Stack Developer">
-          {PageData.Sapiens.map(p => (
-            <Paragraph key={"homo_" + p.id}>{p.text}</Paragraph>
-          ))}
-        </PopupSpoiler><br/><br/>
-
-        <PopupSpoiler title="2025.10.19 something gone wrong.">
-          {PageData.SomethingGoneWrong.map(p => (
-            <Paragraph key={"u2_" + p.id}>{p.text}</Paragraph>
-          ))}
-        </PopupSpoiler><br/><br/>
+      <PageByPath path="/whats-done" />
       </div>
     </PageContainer>
+
   )
 }
 export default WhatsDonePage

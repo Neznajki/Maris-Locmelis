@@ -25,6 +25,10 @@ export interface ImageHrefType extends Type {
     imageHref: string
 }
 
+export interface SectionType extends Type {
+    sectionId: number
+}
+
 export interface ParagraphType extends Type, String {
 }
 
